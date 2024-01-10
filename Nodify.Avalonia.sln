@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nodify.Avalonia", "Nodify.Avalonia\Nodify.Avalonia.csproj", "{A2A4B4D6-773A-454C-B42F-1451A4D773A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nodify.Avalonia.Example", "Nodify.Avalonia.Example\Nodify.Avalonia.Example.csproj", "{202009E1-19F0-4EFE-8D0A-6800E21A46BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2A4B4D6-773A-454C-B42F-1451A4D773A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2A4B4D6-773A-454C-B42F-1451A4D773A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2A4B4D6-773A-454C-B42F-1451A4D773A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2A4B4D6-773A-454C-B42F-1451A4D773A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{202009E1-19F0-4EFE-8D0A-6800E21A46BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{202009E1-19F0-4EFE-8D0A-6800E21A46BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{202009E1-19F0-4EFE-8D0A-6800E21A46BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{202009E1-19F0-4EFE-8D0A-6800E21A46BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

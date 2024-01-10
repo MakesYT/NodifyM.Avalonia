@@ -1,0 +1,80 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Nodify.Avalonia.Controls">
+    <Design.PreviewWith>
+        <controls:Node Header="design preview" Footer="sds">
+            <Button Content="rr"></Button>
+        </controls:Node>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|Node">
+        <Setter Property="BorderBrush" Value="DodgerBlue"></Setter>
+        <Setter Property="BorderThickness" Value="2"></Setter>
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="3">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!--Header-->
+                            <Border IsVisible="{TemplateBinding HasHeader}"
+                                    Background="{TemplateBinding HeaderBrush}"
+                                    CornerRadius="3 3 0 0"
+                                    Grid.ColumnSpan="3"
+                                    Padding="6 4 6 4">
+                                <ContentPresenter Content="{TemplateBinding Header}" />
+                            </Border>
+
+                            <!--Body-->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <!--Data IN-->
+                                <ItemsControl ItemsSource="{TemplateBinding Input}"
+                                              VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                              ItemTemplate="{TemplateBinding InputConnectorTemplate}"
+                                              Focusable="False" />
+
+                                <!--Content-->
+                                <Border Grid.Column="1" 
+                                        Padding="16 0 16 0"
+                                        Background="{TemplateBinding ContentBrush}">
+                                    <ContentPresenter Content="{TemplateBinding Content}"/>
+                                </Border>
+
+                                <!--Data OUT-->
+                                <ItemsControl ItemsSource="{TemplateBinding Output}"
+                                              ItemTemplate="{TemplateBinding OutputConnectorTemplate}"
+                                              VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                              Grid.Column="2"
+                                              Focusable="False" />
+                            </Grid>
+
+                            <!--Footer-->
+                            <Border IsVisible="{TemplateBinding HasFooter}"
+                                    Background="{TemplateBinding FooterBrush}"
+                                    CornerRadius="0 0 3 3"
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="3"
+                                    Padding="6 4 6 4">
+                                <ContentPresenter Content="{TemplateBinding Footer}"  />
+                            </Border>
+                        </Grid>
+                    </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

@@ -1,0 +1,75 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Nodify.Avalonia.Controls"
+        xmlns:viewModelBase="clr-namespace:Nodify.Avalonia.ViewModelBase"
+        xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls"
+        xmlns:converters1="clr-namespace:Nodify.Avalonia.Converters">
+    <Design.PreviewWith>
+        <controls:NodifyEditor ItemsSource="">
+
+
+        </controls:NodifyEditor>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|NodifyEditor">
+
+        <!-- Set Defaults -->
+        <Style.Resources>
+            <converters1:NodeOffsetCtr x:Key="NodeOffset" />
+        </Style.Resources>
+
+        <Setter Property="Template">
+            <ControlTemplate>
+
+                <Border
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                    <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" Name="ItemsPresenter">
+
+                    </ItemsPresenter>
+
+
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="ItemsPanel">
+            <ItemsPanelTemplate>
+
+                <controls:ZoomCanvas Background="{TemplateBinding Background}" Name="ZoomCanvas">
+
+                </controls:ZoomCanvas>
+            </ItemsPanelTemplate>
+        </Setter>
+        <Setter Property="ItemTemplate">
+            <DataTemplate DataType="viewModelBase:NodeViewModelBase">
+                <controls:Node Name="Node" RenderTransform="{ReflectionBinding $parent.RenderTransform}"
+                               Output="{Binding  Output}"
+                               Input="{Binding Input}">
+                </controls:Node>
+            </DataTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Azure"></Setter>
+    </Style>
+    <Style Selector="controls|NodifyEditor > ContentPresenter">
+
+        <Setter Property="Canvas.Left">
+
+            <Setter.Value>
+                <MultiBinding Converter="{StaticResource NodeOffset}" ConverterParameter="X">
+                    <ReflectionBinding Path="Location.X" />
+                    <ReflectionBinding Path="$parent.ItemsPanelRoot.OffsetX" />
+                </MultiBinding>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Canvas.Top">
+            <Setter.Value>
+                <MultiBinding Converter="{StaticResource NodeOffset}" ConverterParameter="Y">
+                    <ReflectionBinding Path="Location.Y" />
+                    <ReflectionBinding Path="$parent.ItemsPanelRoot.OffsetY" />
+                </MultiBinding>
+            </Setter.Value>
+        </Setter>
+
+    </Style>
+
+</Styles>

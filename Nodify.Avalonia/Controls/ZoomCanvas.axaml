@@ -1,0 +1,15 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Nodify.Avalonia.Controls"
+        xmlns:viewModelBase="clr-namespace:Nodify.Avalonia.ViewModelBase">
+    <Design.PreviewWith>
+        <controls:ZoomCanvas />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|ZoomCanvas">
+        <!-- Set Defaults -->
+        <Setter Property="Transitions">
+            
+        </Setter>
+    </Style>
+</Styles>
