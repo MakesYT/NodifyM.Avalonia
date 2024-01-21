@@ -75,10 +75,10 @@ public class NodifyEditor : ItemsControl
     public NodifyEditor()
     {
 #if DEBUG
+        
         this.ItemsSource = Nodes;
 #endif
         
        
     }
-    
 }

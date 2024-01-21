@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Nodify.Avalonia.Controls">
+    <!-- Add Resources Here -->
+
+    <DataTemplate x:Key="DefaultInputConnectorTemplate">
+        <controls:NodeInput />
+    </DataTemplate>
+
+    <DataTemplate x:Key="DefaultOutputConnectorTemplate">
+        <controls:NodeOutput />
+    </DataTemplate>
+   
+    
+</ResourceDictionary>

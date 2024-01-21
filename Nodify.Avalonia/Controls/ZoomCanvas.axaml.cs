@@ -13,6 +13,7 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using Nodify.Avalonia.Helpers;
+using ReactiveUI;
 
 namespace Nodify.Avalonia.Controls;
 
@@ -41,25 +42,27 @@ public class ZoomCanvas : Canvas
 
     public ZoomCanvas()
     {
+        PointerReleased += OnPointerReleased;
+        PointerWheelChanged+=OnPointerWheelChanged;
+        PointerPressed += OnPointerPressed;
+        PointerMoved+=OnPointerMoved;
         
         
-    }
-
-    public override void ApplyTemplate()
-    {
-        base.ApplyTemplate();
-        ZoomProperty.Changed.AddClassHandler<ZoomCanvas>(OnZoomChanged);
-        PointerWheelChangedEvent.AddClassHandler<ZoomCanvas>(OnPointerWheelChanged);
-        ((Control)Parent).SizeChanged+=(OnSizeChanged);
-        PointerPressedEvent.AddClassHandler<ZoomCanvas>(OnPointerPressed);
-        PointerMovedEvent.AddClassHandler<ZoomCanvas>(OnPointerMoved);
-        PointerReleasedEvent.AddClassHandler<ZoomCanvas>(OnPointerReleased);
+        
         
         _timer = new DispatcherTimer
         {
             Interval = TimeSpan.FromMilliseconds(10)
         };
         _timer.Tick += OnTimerTick;
+    }
+
+    public override void ApplyTemplate()
+    {
+        base.ApplyTemplate();
+        
+        ((Control)Parent).SizeChanged+=(OnSizeChanged);
+        
     }
 
 
@@ -82,22 +85,22 @@ public class ZoomCanvas : Canvas
     /// 需要更新的坐标点
     /// </summary>
     private Point _targetPosition;
-    private void OnTimerTick(object sender, EventArgs e)
+    private void OnTimerTick(object? sender, EventArgs e)
     {
-       
-        if (Math.Abs(OffsetX - _startOffsetX) != Math.Abs(_targetPosition.X) || Math.Abs(OffsetY - _startOffsetY) != Math.Abs(_targetPosition.Y))
-        {
-            // 更新坐标
-            OffsetX = _targetPosition.X+_startOffsetX;
-            OffsetY = _targetPosition.Y+_startOffsetY;
-            //Debug.WriteLine($"更新坐标X:{OffsetX} Y:{OffsetY}");
-            
-        }
+        OffsetX = _targetPosition.X+_startOffsetX;
+        OffsetY = _targetPosition.Y+_startOffsetY;
     }
     private double _startOffsetX;
     private double _startOffsetY;
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
     {
+        foreach (var visualChild in this.GetVisualChildren())
+        {
+            if (visualChild.GetVisualChildren().First() is Node n)
+            {
+                n.IsSelected = false;
+            }
+        }
         if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
         // 启动拖动
         isDragging = true;
@@ -122,7 +125,7 @@ public class ZoomCanvas : Canvas
         _timer.Stop();
         
         // var currentPoint = e.GetCurrentPoint(this);
-         Debug.WriteLine($"停止拖动坐标X:{OffsetX} Y:{OffsetY}");
+       //  Debug.WriteLine($"停止拖动坐标X:{OffsetX} Y:{OffsetY}");
     }
 
     private void OnPointerMoved(object sender, PointerEventArgs e)
@@ -139,21 +142,14 @@ public class ZoomCanvas : Canvas
         // 记录当前坐标
         _targetPosition = new Point(offset.X,
             offset.Y );
-        
+        OffsetX = offset.X+_startOffsetX;
+        OffsetY = offset.Y+_startOffsetY;
         
     }
     
 
     private double _initWeight;
     private double _initHeight;
-    private void OnZoomChanged(ZoomCanvas arg1, AvaloniaPropertyChangedEventArgs arg2)
-    {
-        Width = _initWeight / arg2.GetNewValue<double>();
-        Height = _initHeight /  arg2.GetNewValue<double>();
-         
-        
-    }
-    
     private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
     {
         _initWeight = e.NewSize.Width;
@@ -165,42 +161,26 @@ public class ZoomCanvas : Canvas
     private bool isZooming = false;
 
     private double _nowScale = 1;
-    private void OnPointerWheelChanged(ZoomCanvas nodifyEditor, PointerWheelEventArgs pointerWheelEventArgs)
+    private void OnPointerWheelChanged(object? sender, PointerWheelEventArgs pointerWheelEventArgs)
     {
         var position = pointerWheelEventArgs.GetPosition(this);
-        
-        var delta = pointerWheelEventArgs.Delta.Y;
-        if (delta < 0)
+        var deltaY = pointerWheelEventArgs.Delta.Y;
+        if (deltaY < 0)
         {
-            _nowScale-=0.1d;
-            if (_nowScale<=0.1d)
-            {
-                _nowScale=0.1d;
-            }
-            
-           
+            _nowScale *= 0.9d;
+            _nowScale = Math.Max(0.1d, _nowScale);
         }
         else
         {
-            _nowScale+=0.1d;
-            if (_nowScale>=10d)
-            {
-                _nowScale=10d;
-            }
-           
-           
+            _nowScale *= 1.1d;
+            _nowScale = Math.Min(10d, _nowScale);
         }
-       
-       Debug.WriteLine($"缩放比例:{_nowScale}");
-        Debug.WriteLine( $"X:{OffsetX} Y:{OffsetY}");
-        Debug.WriteLine( $"Pos:X:{position.X} Y:{position.Y}");
-        OffsetX-= (position.X / (_nowScale - 1))/_nowScale;
-        //OffsetY-= (position.Y / (_nowScale - 1))/_nowScale;
-        Debug.WriteLine( $"X:{OffsetX} Y:{OffsetY}");
-        
+        OffsetX += (Zoom - _nowScale) * position.X / _nowScale;
+        OffsetY += (Zoom - _nowScale) * position.Y / _nowScale;
         Zoom = _nowScale;
+        Width = _initWeight / Zoom;
+        Height = _initHeight /  Zoom;
         RenderTransform= new ScaleTransform(Zoom, Zoom);
-       
         pointerWheelEventArgs.Handled = true;
     }
 }

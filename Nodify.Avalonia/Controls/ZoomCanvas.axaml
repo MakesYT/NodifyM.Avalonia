@@ -9,7 +9,9 @@
     <Style Selector="controls|ZoomCanvas">
         <!-- Set Defaults -->
         <Setter Property="Transitions">
-            
+            <Transitions>
+                
+            </Transitions>
         </Setter>
     </Style>
 </Styles>

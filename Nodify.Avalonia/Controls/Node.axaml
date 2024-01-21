@@ -6,10 +6,32 @@
             <Button Content="rr"></Button>
         </controls:Node>
     </Design.PreviewWith>
-
+   
     <Style Selector="controls|Node">
-        <Setter Property="BorderBrush" Value="DodgerBlue"></Setter>
+        <Setter Property="BorderBrush" Value="{StaticResource Node.BorderBrush}"></Setter>
+        <Setter Property="Background" Value="{StaticResource Node.BackgroundBrush}"></Setter>
+        <Setter Property="HeaderBrush" Value="{StaticResource Node.HeaderBrush}"></Setter>
+        <Setter Property="FooterBrush" Value="{StaticResource Node.FooterBrush}"></Setter>
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="MinHeight"
+                Value="15" />
+        <Setter Property="MinWidth"
+                Value="15" />
+        <Setter Property="VerticalAlignment"
+                Value="Top" />
+        <Setter Property="HorizontalAlignment"
+                Value="Center" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
         <Setter Property="BorderThickness" Value="2"></Setter>
+        
+        <Setter Property="InputConnectorTemplate"
+                Value="{StaticResource DefaultInputConnectorTemplate}" />
+        <Setter Property="OutputConnectorTemplate"
+                Value="{StaticResource DefaultOutputConnectorTemplate}" />
         <!-- Set Defaults -->
         <Setter Property="Template">
             <ControlTemplate>
@@ -76,5 +98,13 @@
                     </Border>
             </ControlTemplate>
         </Setter>
+    </Style>
+    <Style Selector="controls|Node:pointerover">
+        <Setter Property="BorderBrush" Value="LightBlue"></Setter>
+        <Setter Property="BorderThickness" Value="2"></Setter>
+    </Style>
+    <Style Selector="controls|Node[IsSelected=True]">
+        <Setter Property="BorderBrush" Value="Orange"></Setter>
+        <Setter Property="BorderThickness" Value="2"></Setter>
     </Style>
 </Styles>
