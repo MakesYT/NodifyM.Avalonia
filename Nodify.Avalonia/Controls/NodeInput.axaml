@@ -39,6 +39,7 @@
                 Value="4 2" />
         <Setter Property="ConnectorTemplate"
                 Value="{StaticResource ConnectorThumbTemplate}" />
+        
         <Setter Property="Header" Value="{Binding Title}"></Setter>
         <!-- Set Defaults -->
         <Setter Property="Template">

@@ -23,4 +23,9 @@
     <StyleInclude Source="../Controls/Connector.axaml"></StyleInclude>
     <StyleInclude Source="../Controls/NodeInput.axaml"></StyleInclude>
     <StyleInclude Source="../Controls/NodeOutput.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/Connection.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/LineConnection.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/PendingConnection.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/BaseConnection.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/TestLine.axaml"></StyleInclude>
 </Styles>

@@ -30,7 +30,12 @@ public class Node : ContentControl
     public static readonly AvaloniaProperty<IEnumerable> InputProperty = AvaloniaProperty.Register<Node, IEnumerable>(nameof(Input));
     public static readonly AvaloniaProperty<IEnumerable> OutputProperty = AvaloniaProperty.Register<Node, IEnumerable>(nameof(Output));
     public static readonly AvaloniaProperty<bool> IsSelectedProperty = AvaloniaProperty.Register<Node, bool>(nameof(IsSelected));
-    
+    public static readonly AvaloniaProperty<Point> LocationProperty = AvaloniaProperty.Register<Node, Point>(nameof(Location));
+    public Point Location
+    {
+        get => (Point)GetValue(LocationProperty);
+        set => SetValue(LocationProperty, value);
+    }
     public bool IsSelected
     {
         get => (bool)GetValue(IsSelectedProperty);
@@ -142,40 +147,18 @@ public class Node : ContentControl
         // PointerMovedEvent.AddClassHandler<Node>(OnPointerMoved);
         // PointerReleasedEvent.AddClassHandler<Node>(OnPointerReleased);
         //
-        _timer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(10)
-        };
-        _timer.Tick += OnTimerTick;
     }
     
      /// <summary>
     /// 记录上一次鼠标位置
     /// </summary>
     private Point lastMousePosition;
-
-    /// <summary>
-    /// 用于平滑更新坐标的计时器
-    /// </summary>
-    private DispatcherTimer _timer;
-
     /// <summary>
     /// 标记是否先启动了拖动
     /// </summary>
     private bool isDragging = false;
 
-    /// <summary>
-    /// 需要更新的坐标点
-    /// </summary>
-    private Point _targetPosition;
-    private void OnTimerTick(object? sender, EventArgs e)
-    {
-       
-        
-        ((NodeViewModelBase)DataContext).Location=new Point((_targetPosition.X + _startOffsetX),_targetPosition.Y+_startOffsetY);
-       
-        
-    }
+    
     private double _startOffsetX;
     private double _startOffsetY;
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
@@ -196,13 +179,12 @@ public class Node : ContentControl
         // 记录当前坐标
         var relativeTo = ((Visual)this.GetLogicalParent()).GetVisualParent();
         lastMousePosition = e.GetPosition((Visual)relativeTo);
-        _targetPosition = new Point(0,0);
+        
         // Debug.WriteLine($"记录当前坐标X:{lastMousePosition.X} Y:{lastMousePosition.Y}");
         _startOffsetX = ((NodeViewModelBase)DataContext).Location.X;
         _startOffsetY = ((NodeViewModelBase)DataContext).Location.Y;
         e.Handled = true;
-        // 启动计时器
-        _timer.Start();
+        
     }
 
     private void OnPointerReleased(object sender, PointerReleasedEventArgs e)
@@ -219,7 +201,7 @@ public class Node : ContentControl
         isDragging = false;
         e.Handled = true;
         // 停止计时器
-        _timer.Stop();
+        
         
         // var currentPoint = e.GetCurrentPoint(this);
        //  Debug.WriteLine($"停止拖动坐标X:{OffsetX} Y:{OffsetY}");
@@ -235,11 +217,8 @@ public class Node : ContentControl
         var currentMousePosition = e.GetPosition(((Visual)this.GetLogicalParent()).GetVisualParent());
         var offset = currentMousePosition - lastMousePosition;
         
-        //lastMousePosition = e.GetPosition(this);
-        // 记录当前坐标
-        _targetPosition = new Point(offset.X,
-            offset.Y );
         
+        ((NodeViewModelBase)DataContext).Location=new Point((offset.X + _startOffsetX),offset.Y+_startOffsetY);
         
     }
 }

@@ -22,7 +22,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:Connector}">
-                    <Ellipse x:Name="Connector"
+                    <Ellipse x:Name="Connector" 
                              Width="{TemplateBinding Width}"
                              Height="{TemplateBinding Height}"
                              Stroke="{TemplateBinding BorderBrush}"

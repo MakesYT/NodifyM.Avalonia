@@ -1,6 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:Nodify.Avalonia.Controls">
+        xmlns:controls="using:Nodify.Avalonia.Controls"
+        xmlns:viewModelBase="clr-namespace:Nodify.Avalonia.ViewModelBase">
     <Design.PreviewWith>
         <controls:Node Header="design preview" Footer="sds">
             <Button Content="rr"></Button>
@@ -27,7 +28,8 @@
         <Setter Property="HorizontalContentAlignment"
                 Value="Center" />
         <Setter Property="BorderThickness" Value="2"></Setter>
-        
+        <Setter Property="Location" x:DataType="viewModelBase:NodeViewModelBase"
+                Value="{Binding Location}" />
         <Setter Property="InputConnectorTemplate"
                 Value="{StaticResource DefaultInputConnectorTemplate}" />
         <Setter Property="OutputConnectorTemplate"
@@ -53,7 +55,7 @@
                                     CornerRadius="3 3 0 0"
                                     Grid.ColumnSpan="3"
                                     Padding="6 4 6 4">
-                                <ContentPresenter Content="{TemplateBinding Header}" />
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center" Content="{TemplateBinding Header}" />
                             </Border>
 
                             <!--Body-->
@@ -92,7 +94,7 @@
                                     Grid.Row="2"
                                     Grid.ColumnSpan="3"
                                     Padding="6 4 6 4">
-                                <ContentPresenter Content="{TemplateBinding Footer}"  />
+                                <ContentPresenter  VerticalAlignment="Center" HorizontalAlignment="Center" Content="{TemplateBinding Footer}"  />
                             </Border>
                         </Grid>
                     </Border>

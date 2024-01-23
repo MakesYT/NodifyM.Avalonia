@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -10,6 +11,7 @@ using Nodify.Avalonia.Helpers;
 using Tmds.DBus.Protocol;
 
 namespace Nodify.Avalonia.Controls;
+
 public enum ConnectionOffsetMode
 {
     /// <summary>
@@ -100,24 +102,48 @@ public enum ArrowHeadShape
     /// </summary>
     Rectangle
 }
+
 public class BaseConnection : Shape
 {
     #region Dependency Properties
 
-       
-    public static readonly AvaloniaProperty<Point> SourceProperty =  AvaloniaProperty.Register<BaseConnection, Point>(nameof(Source), BoxValue.Point);
-    public static readonly AvaloniaProperty<Point> TargetProperty =  AvaloniaProperty.Register<BaseConnection, Point>(nameof(Target), BoxValue.Point);
-    public static readonly AvaloniaProperty<Size> SourceOffsetProperty =  AvaloniaProperty.Register<BaseConnection, Size>(nameof(SourceOffset), BoxValue.ConnectionOffset);
-    public static readonly AvaloniaProperty<Size> TargetOffsetProperty =  AvaloniaProperty.Register<BaseConnection, Size>(nameof(TargetOffset), BoxValue.ConnectionOffset);
-    public static readonly AvaloniaProperty<ConnectionOffsetMode> SourceOffsetModeProperty =  AvaloniaProperty.Register<BaseConnection, ConnectionOffsetMode>(nameof(SourceOffsetMode), ConnectionOffsetMode.Static);
-    public static readonly AvaloniaProperty<ConnectionOffsetMode> TargetOffsetModeProperty =  AvaloniaProperty.Register<BaseConnection, ConnectionOffsetMode>(nameof(TargetOffsetMode), ConnectionOffsetMode.Static);
-    public static readonly AvaloniaProperty<ConnectionDirection> DirectionProperty = AvaloniaProperty.Register<BaseConnection, ConnectionDirection>(nameof(Direction));
-    public static readonly AvaloniaProperty<double> SpacingProperty = AvaloniaProperty.Register<BaseConnection, double>(nameof(Spacing), BoxValue.Double0);
-    public static readonly AvaloniaProperty<Size> ArrowSizeProperty = AvaloniaProperty.Register<BaseConnection, Size>(nameof(ArrowSize), BoxValue.ArrowSize);
-    public static readonly AvaloniaProperty<ArrowHeadEnds> ArrowEndsProperty = AvaloniaProperty.Register<BaseConnection, ArrowHeadEnds>(nameof(ArrowEnds), ArrowHeadEnds.End);
-    public static readonly AvaloniaProperty<ArrowHeadShape> ArrowShapeProperty = AvaloniaProperty.Register<BaseConnection, ArrowHeadShape>(nameof(ArrowShape), ArrowHeadShape.Arrowhead);
-    
-    public static readonly AvaloniaProperty<ICommand> SplitCommandProperty = AvaloniaProperty.Register<BaseConnection, ICommand>(nameof(SplitCommand));
+    public static readonly AvaloniaProperty<Point> SourceProperty =
+        AvaloniaProperty.Register<BaseConnection, Point>(nameof(Source), BoxValue.Point);
+
+    public static readonly AvaloniaProperty<Point> TargetProperty =
+        AvaloniaProperty.Register<BaseConnection, Point>(nameof(Target), BoxValue.Point);
+
+    public static readonly AvaloniaProperty<Size> SourceOffsetProperty =
+        AvaloniaProperty.Register<BaseConnection, Size>(nameof(SourceOffset), BoxValue.ConnectionOffset);
+
+    public static readonly AvaloniaProperty<Size> TargetOffsetProperty =
+        AvaloniaProperty.Register<BaseConnection, Size>(nameof(TargetOffset), BoxValue.ConnectionOffset);
+
+    public static readonly AvaloniaProperty<ConnectionOffsetMode> SourceOffsetModeProperty =
+        AvaloniaProperty.Register<BaseConnection, ConnectionOffsetMode>(nameof(SourceOffsetMode),
+            ConnectionOffsetMode.Static);
+
+    public static readonly AvaloniaProperty<ConnectionOffsetMode> TargetOffsetModeProperty =
+        AvaloniaProperty.Register<BaseConnection, ConnectionOffsetMode>(nameof(TargetOffsetMode),
+            ConnectionOffsetMode.Static);
+
+    public static readonly StyledProperty<ConnectionDirection> DirectionProperty =
+        AvaloniaProperty.Register<BaseConnection, ConnectionDirection>(nameof(Direction));
+
+    public static readonly AvaloniaProperty<double> SpacingProperty =
+        AvaloniaProperty.Register<BaseConnection, double>(nameof(Spacing), BoxValue.Double0);
+
+    public static readonly AvaloniaProperty<Size> ArrowSizeProperty =
+        AvaloniaProperty.Register<BaseConnection, Size>(nameof(ArrowSize), BoxValue.ArrowSize);
+
+    public static readonly AvaloniaProperty<ArrowHeadEnds> ArrowEndsProperty =
+        AvaloniaProperty.Register<BaseConnection, ArrowHeadEnds>(nameof(ArrowEnds), ArrowHeadEnds.End);
+
+    public static readonly AvaloniaProperty<ArrowHeadShape> ArrowShapeProperty =
+        AvaloniaProperty.Register<BaseConnection, ArrowHeadShape>(nameof(ArrowShape), ArrowHeadShape.Arrowhead);
+
+    public static readonly AvaloniaProperty<ICommand> SplitCommandProperty =
+        AvaloniaProperty.Register<BaseConnection, ICommand>(nameof(SplitCommand));
 
     public static readonly AvaloniaProperty<ICommand> DisconnectCommandProperty = Connector.DisconnectCommandProperty;
 
@@ -187,8 +213,8 @@ public class BaseConnection : Shape
     /// <summary>
     /// Gets or sets the arrowhead ends.
     /// </summary>
-    public ArrowHeadEnds ArrowEnds 
-    { 
+    public ArrowHeadEnds ArrowEnds
+    {
         get => (ArrowHeadEnds)GetValue(ArrowEndsProperty);
         set => SetValue(ArrowEndsProperty, value);
     }
@@ -244,9 +270,12 @@ public class BaseConnection : Shape
 
     #region Routed Events
 
-    public static readonly RoutedEvent DisconnectEvent = RoutedEvent.Register<BaseConnection,ConnectionEventArgs>(nameof(Disconnect),RoutingStrategies.Bubble);
-    public static readonly RoutedEvent SplitEvent = RoutedEvent.Register<BaseConnection,ConnectionEventArgs>(nameof(Split),RoutingStrategies.Bubble);
-    
+    public static readonly RoutedEvent DisconnectEvent =
+        RoutedEvent.Register<BaseConnection, ConnectionEventArgs>(nameof(Disconnect), RoutingStrategies.Bubble);
+
+    public static readonly RoutedEvent SplitEvent =
+        RoutedEvent.Register<BaseConnection, ConnectionEventArgs>(nameof(Split), RoutingStrategies.Bubble);
+
 
     /// <summary>Triggered by the <see cref="Connection.Disconnect"/> gesture.</summary>
     public event ConnectionEventHandler Disconnect
@@ -264,54 +293,76 @@ public class BaseConnection : Shape
 
     #endregion
 
+    public BaseConnection()
+    {
+        Shape.AffectsGeometry<BaseConnection>(SourceProperty, TargetProperty);
+    }
     /// <summary>
     /// Gets a vector that has its coordinates set to 0.
     /// </summary>
     protected static readonly Vector ZeroVector = new Vector(0d, 0d);
-    private readonly StreamGeometry _geometry = new StreamGeometry
+
+    private  StreamGeometry _geometry = new StreamGeometry
     {
-        
     };
-    protected override Geometry? CreateDefiningGeometry()
+    
+
+    protected override Geometry CreateDefiningGeometry()
     {
-        using (StreamGeometryContext context = _geometry.Open())
         {
-            (Vector sourceOffset, Vector targetOffset) = GetOffset();
-            Point source = Source + sourceOffset;
-            Point target = Target + targetOffset;
-
-            var (arrowStart, arrowEnd) = DrawLineGeometry(context, source, target);
-
-            if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)
+            _geometry = new StreamGeometry();
+            using (StreamGeometryContext context = _geometry.Open())
             {
-                var reverseDirection = Direction == ConnectionDirection.Forward ? ConnectionDirection.Backward : ConnectionDirection.Forward;
-                switch (ArrowEnds)
+                context.SetFillRule( FillRule.EvenOdd);
+                (Vector sourceOffset, Vector targetOffset) = GetOffset();
+                Point source = Source + sourceOffset;
+                Point target = Target + targetOffset;
+                Debug.WriteLine( "source: " + source + ", target: " + target);
+                var (arrowStart, arrowEnd) = DrawLineGeometry(context, source, target);
+
+                if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)
                 {
-                    case ArrowHeadEnds.Start:
-                        DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
-                        break;
-                    case ArrowHeadEnds.End:
-                        DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
-                        break;
-                    case ArrowHeadEnds.Both:
-                        DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction, ArrowShape);
-                        DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget, reverseDirection, ArrowShape);
-                        break;
-                    case ArrowHeadEnds.None:
-                    default:
-                        break;
+                    var reverseDirection = Direction == ConnectionDirection.Forward
+                        ? ConnectionDirection.Backward
+                        : ConnectionDirection.Forward;
+                    switch (ArrowEnds)
+                    {
+                        case ArrowHeadEnds.Start:
+                            DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget,
+                                reverseDirection, ArrowShape);
+                            break;
+                        case ArrowHeadEnds.End:
+                            DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction,
+                                ArrowShape);
+                            break;
+                        case ArrowHeadEnds.Both:
+                            DrawArrowGeometry(context, arrowEnd.ArrowEndSource, arrowEnd.ArrowEndTarget, Direction,
+                                ArrowShape);
+                            DrawArrowGeometry(context, arrowStart.ArrowStartSource, arrowStart.ArrowStartTarget,
+                                reverseDirection, ArrowShape);
+                            break;
+                        case ArrowHeadEnds.None:
+                        default:
+                            break;
+                    }
                 }
+               context.EndFigure(true);
             }
+
+            return _geometry;
         }
-
-        return _geometry;
     }
-    protected virtual ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget)) DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
+
+    protected virtual ((Point ArrowStartSource, Point ArrowStartTarget), (Point ArrowEndSource, Point ArrowEndTarget))
+        DrawLineGeometry(StreamGeometryContext context, Point source, Point target)
     {
-        throw new NotImplementedException();
+       throw new NotImplementedException();
+       
     }
 
-    protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward, ArrowHeadShape shape = ArrowHeadShape.Arrowhead)
+    protected virtual void DrawArrowGeometry(StreamGeometryContext context, Point source, Point target,
+        ConnectionDirection arrowDirection = ConnectionDirection.Forward,
+        ArrowHeadShape shape = ArrowHeadShape.Arrowhead)
     {
         switch (shape)
         {
@@ -328,7 +379,8 @@ public class BaseConnection : Shape
         }
     }
 
-    protected virtual void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
+    protected virtual void DrawDefaultArrowhead(StreamGeometryContext context, Point source, Point target,
+        ConnectionDirection arrowDirection = ConnectionDirection.Forward)
     {
         double headWidth = ArrowSize.Width;
         double headHeight = ArrowSize.Height / 2;
@@ -342,7 +394,8 @@ public class BaseConnection : Shape
         context.LineTo(to);
     }
 
-    protected virtual void DrawRectangleArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
+    protected virtual void DrawRectangleArrowhead(StreamGeometryContext context, Point source, Point target,
+        ConnectionDirection arrowDirection = ConnectionDirection.Forward)
     {
         double headWidth = ArrowSize.Width;
         double headHeight = ArrowSize.Height / 2;
@@ -350,7 +403,7 @@ public class BaseConnection : Shape
         double direction = arrowDirection == ConnectionDirection.Forward ? 1d : -1d;
         var bottomRight = new Point(target.X, target.Y + headHeight);
         var bottomLeft = new Point(target.X - headWidth * direction, target.Y + headHeight);
-        var topLeft = new Point(target.X - headWidth  * direction, target.Y - headHeight);
+        var topLeft = new Point(target.X - headWidth * direction, target.Y - headHeight);
         var topRight = new Point(target.X, target.Y - headHeight);
 
         context.BeginFigure(target, true);
@@ -360,7 +413,8 @@ public class BaseConnection : Shape
         context.LineTo(topRight);
     }
 
-    protected virtual void DrawEllipseArrowhead(StreamGeometryContext context, Point source, Point target, ConnectionDirection arrowDirection = ConnectionDirection.Forward)
+    protected virtual void DrawEllipseArrowhead(StreamGeometryContext context, Point source, Point target,
+        ConnectionDirection arrowDirection = ConnectionDirection.Forward)
     {
         const double ControlPointRatio = 0.55228474983079356; // (Math.Sqrt(2) - 1) * 4 / 3;
 
@@ -399,17 +453,19 @@ public class BaseConnection : Shape
         Vector targetDelta = Source - Target;
         double arrowDirection = Direction == ConnectionDirection.Forward ? 1d : -1d;
 
-        return (GetOffset(SourceOffsetMode, sourceDelta, SourceOffset, arrowDirection), GetOffset(TargetOffsetMode, targetDelta, TargetOffset, -arrowDirection));
+        return (GetOffset(SourceOffsetMode, sourceDelta, SourceOffset, arrowDirection),
+            GetOffset(TargetOffsetMode, targetDelta, TargetOffset, -arrowDirection));
 
-        static Vector GetOffset(ConnectionOffsetMode mode, Vector delta, Size currentOffset, double arrowDirection) => mode switch
-        {
-            ConnectionOffsetMode.Rectangle => GetRectangleModeOffset(delta, currentOffset),
-            ConnectionOffsetMode.Circle => GetCircleModeOffset(delta, currentOffset),
-            ConnectionOffsetMode.Edge => GetEdgeModeOffset(delta, currentOffset),
-            ConnectionOffsetMode.Static => GetStaticModeOffset(arrowDirection, currentOffset),
-            ConnectionOffsetMode.None => ZeroVector,
-            _ => throw new NotImplementedException()
-        };
+        static Vector GetOffset(ConnectionOffsetMode mode, Vector delta, Size currentOffset, double arrowDirection) =>
+            mode switch
+            {
+                ConnectionOffsetMode.Rectangle => GetRectangleModeOffset(delta, currentOffset),
+                ConnectionOffsetMode.Circle => GetCircleModeOffset(delta, currentOffset),
+                ConnectionOffsetMode.Edge => GetEdgeModeOffset(delta, currentOffset),
+                ConnectionOffsetMode.Static => GetStaticModeOffset(arrowDirection, currentOffset),
+                ConnectionOffsetMode.None => ZeroVector,
+                _ => throw new NotImplementedException()
+            };
 
         static Vector GetStaticModeOffset(double direction, Size offset)
         {
@@ -449,13 +505,11 @@ public class BaseConnection : Shape
 
             if (offset.Width * 2d * Math.Abs(delta.Y) < offset.Height * 2d * Math.Abs(delta.X))
             {
-                result = new Vector(Math.Sign(delta.X) * offset.Width, Math.Tan(angle) * Math.Sign(delta.X) * offset.Width);
-
+                result = new Vector(Math.Sign(delta.X) * offset.Width,
+                    Math.Tan(angle) * Math.Sign(delta.X) * offset.Width);
             }
             else
             {
-               
-
                 result = new Vector(Math.Sign(delta.Y) * offset.Height,
                     1.0d / Math.Tan(angle) * Math.Sign(delta.Y) * offset.Height);
             }
@@ -489,7 +543,7 @@ public class BaseConnection : Shape
 
             e.Handled = true;
         }
-        else if (DisconnectCommand?.CanExecute(this)??false)
+        else if (DisconnectCommand?.CanExecute(this) ?? false)
         {
             Point splitLocation = e.GetPosition(this);
             object? connection = DataContext;
@@ -511,7 +565,4 @@ public class BaseConnection : Shape
             e.Handled = true;
         }
     }
-
-    
-    
 }

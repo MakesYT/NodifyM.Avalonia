@@ -1,0 +1,72 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:Nodify.Avalonia.Controls"
+        xmlns:converters="clr-namespace:Nodify.Avalonia.Converters">
+    <Design.PreviewWith>
+        <Canvas Height="500" Width="500">
+            <controls:PendingConnection SourceAnchor="0,0" TargetAnchor="150,150"></controls:PendingConnection>
+            <controls:LineConnection Stroke="Red" StrokeThickness="2" Source="0,0" Target="250,250" />
+        </Canvas>
+
+    </Design.PreviewWith>
+
+    <Style Selector="controls|PendingConnection">
+        <!-- Set Defaults -->
+        <Style.Resources>
+            <converters:PendingConnectionCanvasWHCtr x:Key="PendingConnectionCanvasWHCtr" />
+        </Style.Resources>
+        <Setter Property="IsHitTestVisible"
+                Value="False" />
+        <Setter Property="Background"
+                Value="#121212" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Stroke"
+                Value="DodgerBlue" />
+        <Setter Property="BorderBrush"
+                Value="Black" />
+        <Setter Property="EnablePreview"
+                Value="True" />
+        <Setter Property="StrokeThickness"
+                Value="3" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+
+        <Setter Property="StrokeDashArray"
+                Value="4.0,4.0" />
+        <Setter Property="Padding"
+                Value="5" />
+        <Setter Property="EnableSnapping"
+                Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:PendingConnection">
+
+                <Canvas x:DataType="Canvas">
+                    <controls:Connection
+                        Source="{Binding  RelativeSource={RelativeSource AncestorType=controls:PendingConnection},Path=SourceAnchor}"
+                        Target="{Binding  RelativeSource={RelativeSource AncestorType=controls:PendingConnection},Path=TargetAnchor}"
+                        Stroke="{TemplateBinding Stroke}"
+                        StrokeThickness="{TemplateBinding StrokeThickness}"
+                        StrokeDashArray="{TemplateBinding StrokeDashArray}"
+                        Direction="{TemplateBinding Direction}"
+                        Spacing="0"
+                        ArrowSize="0 0"
+                        SourceOffsetMode="None"
+                        TargetOffsetMode="None" />
+                    <Border Background="{TemplateBinding Background}"
+                            Canvas.Left="{Binding TargetAnchor.X, RelativeSource={RelativeSource TemplatedParent}}"
+                            Canvas.Top="{Binding TargetAnchor.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                            IsVisible="{TemplateBinding EnablePreview}"
+                            Padding="{TemplateBinding Padding}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="3"
+                            Margin="15">
+                        <TextBlock Text="dsdsd"></TextBlock>
+                    </Border>
+                </Canvas>
+            </ControlTemplate>
+
+        </Setter>
+    </Style>
+</Styles>

@@ -10,6 +10,12 @@
     <DataTemplate x:Key="DefaultOutputConnectorTemplate">
         <controls:NodeOutput />
     </DataTemplate>
-   
+    <DataTemplate x:Key="ConnectionTemplate">
+        <controls:Connection />
+    </DataTemplate>
+
+    <DataTemplate x:Key="PendingConnectionTemplate">
+        <controls:PendingConnection IsTabStop="False" />
+    </DataTemplate>
     
 </ResourceDictionary>

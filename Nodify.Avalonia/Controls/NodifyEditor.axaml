@@ -14,19 +14,39 @@
     <Style Selector="controls|NodifyEditor">
 
         <!-- Set Defaults -->
-        <Style.Resources>
-            <converters1:NodeOffsetCtr x:Key="NodeOffset" />
-        </Style.Resources>
-
+        
+        <Setter Property="ConnectionTemplate"
+                Value="{StaticResource ConnectionTemplate}" />
+        <Setter Property="PendingConnectionTemplate"
+                Value="{StaticResource PendingConnectionTemplate}" />
         <Setter Property="Template">
             <ControlTemplate>
 
                 <Border
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
-                    <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" Name="ItemsPresenter">
-
-                    </ItemsPresenter>
+                    <Canvas Background="{StaticResource NodifyEditor.BackgroundBrush}" >
+                        <ItemsPresenter Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}" ItemsPanel="{TemplateBinding ItemsPanel}" Name="ItemsPresenter" />
+                        <ContentPresenter Name="PendingConnection" Content="1" Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}"
+                                          ContentTemplate="{TemplateBinding PendingConnectionTemplate}" />
+                        <ItemsControl Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}"
+                                      ItemsSource="{TemplateBinding Connections}"
+                                      ItemTemplate="{TemplateBinding ConnectionTemplate}"
+                                      IsTabStop="False">
+                            <ItemsControl.Styles>
+                                <Style Selector="ItemsControl">
+                                    <Setter Property="Panel.ZIndex"
+                                            Value="-1" />
+                                </Style>
+                            </ItemsControl.Styles>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Canvas>
+                    
 
 
                 </Border>
@@ -34,10 +54,9 @@
         </Setter>
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
+                <Canvas x:Name="PART_ItemsHost" Background="{TemplateBinding Background}" Name="ZoomCanvas" >
 
-                <controls:ZoomCanvas Background="{TemplateBinding Background}" Name="ZoomCanvas">
-
-                </controls:ZoomCanvas>
+                </Canvas>
             </ItemsPanelTemplate>
         </Setter>
         <Setter Property="ItemTemplate">
@@ -49,28 +68,14 @@
                                Input="{Binding Input}">
                 </controls:Node>
             </DataTemplate>
+            
         </Setter>
         <Setter Property="Background" Value="Azure"></Setter>
     </Style>
     <Style Selector="controls|NodifyEditor > ContentPresenter">
 
-        <Setter Property="Canvas.Left">
-
-            <Setter.Value>
-                <MultiBinding Converter="{StaticResource NodeOffset}" ConverterParameter="X">
-                    <ReflectionBinding Path="Location.X" />
-                    <ReflectionBinding Path="$parent.ItemsPanelRoot.OffsetX" />
-                </MultiBinding>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Canvas.Top">
-            <Setter.Value>
-                <MultiBinding Converter="{StaticResource NodeOffset}" ConverterParameter="Y">
-                    <ReflectionBinding Path="Location.Y" />
-                    <ReflectionBinding Path="$parent.ItemsPanelRoot.OffsetY" />
-                </MultiBinding>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Canvas.Left" x:DataType="viewModelBase:NodeViewModelBase" Value="{Binding Location.X }" />
+        <Setter Property="Canvas.Top" x:DataType="viewModelBase:NodeViewModelBase" Value="{Binding Location.Y }" />
 
     </Style>
 
