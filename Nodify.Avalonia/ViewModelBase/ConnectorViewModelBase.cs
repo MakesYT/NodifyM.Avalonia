@@ -12,4 +12,6 @@ public partial class ConnectorViewModelBase : ObservableObject
     
     [ObservableProperty]
     private string _title;
+    [ObservableProperty]
+    private bool _isConnected;
 }

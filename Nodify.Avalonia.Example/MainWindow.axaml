@@ -9,13 +9,16 @@
         x:Class="Nodify.Avalonia.Example.MainWindow"
         x:DataType="example:MainWindowViewModel"
         Title="Nodify.Avalonia.Example">
-    <controls:NodifyEditor ItemsSource="{Binding Nodes }" Connections="{Binding Connections}">
+    <controls:NodifyEditor
+        ItemsSource="{Binding Nodes }"
+        Connections="{Binding Connections}"
+        DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
         <controls:NodifyEditor.ConnectionTemplate>
             <DataTemplate DataType="{x:Type viewModelBase:ConnectionViewModelBase}">
                 <Grid>
-                    
+
                     <controls:Connection Source="{Binding Source.Anchor}" Focusable="True"
-                                       Target="{Binding Target.Anchor}">
+                                         Target="{Binding Target.Anchor}">
                         <controls:Connection.Stroke>
                             <SolidColorBrush Color="Red"
                                              Opacity="0.5" />
@@ -25,5 +28,25 @@
 
             </DataTemplate>
         </controls:NodifyEditor.ConnectionTemplate>
+        <controls:NodifyEditor.PendingConnectionTemplate>
+            <DataTemplate DataType="{x:Type viewModelBase:PendingConnectionViewModelBase}">
+                <controls:PendingConnection
+                    StartedCommand="{Binding StartCommand}"
+                    CompletedCommand="{Binding FinishCommand}"
+                    EnablePreview="True"
+                    EnableSnapping="True"
+                    Target="{Binding PreviewTarget, Mode=OneWayToSource}"
+                    PreviewTarget="{Binding PreviewTarget, Mode=OneWayToSource}">
+                    <controls:PendingConnection.Stroke>
+                        <SolidColorBrush Color="Red"
+                                         Opacity="0.5" />
+                    </controls:PendingConnection.Stroke>
+                   
+                    
+                   
+                </controls:PendingConnection>
+
+            </DataTemplate>
+        </controls:NodifyEditor.PendingConnectionTemplate>
     </controls:NodifyEditor>
 </Window>

@@ -1,17 +1,14 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Nodify.Avalonia.Controls;
 using Nodify.Avalonia.ViewModelBase;
 
 namespace Nodify.Avalonia.Example;
 
-public partial class MainWindowViewModel : ObservableObject
-{
-    [ObservableProperty]
-    private ObservableCollection<NodeViewModelBase> nodes = new();
-    [ObservableProperty]
-    private ObservableCollection<ConnectionViewModelBase> connections=new ();
+public partial class MainWindowViewModel : NodifyEditorViewModelBase{
     public MainWindowViewModel()
     {
         var input1 = new ConnectorViewModelBase()

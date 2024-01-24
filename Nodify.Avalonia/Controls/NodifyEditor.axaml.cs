@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -63,10 +64,103 @@ public class NodifyEditor : ItemsControl
         get => (IEnumerable)GetValue(ConnectionsProperty);
         set => SetValue(ConnectionsProperty, value);
     }
+    
+     #region Command Dependency Properties
+
+        public static readonly AvaloniaProperty ConnectionCompletedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ConnectionCompletedCommand));
+        public static readonly AvaloniaProperty ConnectionStartedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ConnectionStartedCommand));
+        public static readonly AvaloniaProperty DisconnectConnectorCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(DisconnectConnectorCommand));
+        public static readonly AvaloniaProperty RemoveConnectionCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(RemoveConnectionCommand));
+        public static readonly AvaloniaProperty ItemsDragStartedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ItemsDragStartedCommand));
+        public static readonly AvaloniaProperty ItemsDragCompletedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ItemsDragCompletedCommand));
+        public static readonly AvaloniaProperty ItemsSelectStartedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ItemsSelectStartedCommand));
+        public static readonly AvaloniaProperty ItemsSelectCompletedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ItemsSelectCompletedCommand));
+
+        /// <summary>
+        /// Invoked when the <see cref="PendingConnection"/> is completed. <br />
+        /// Use <see cref="PendingConnection.StartedCommand"/> if you want to control the visibility of the connection from the viewmodel. <br />
+        /// Parameter is <see cref="PendingConnection.Source"/>.
+        /// </summary>
+        public ICommand? ConnectionStartedCommand
+        {
+            get => (ICommand?)GetValue(ConnectionStartedCommandProperty);
+            set => SetValue(ConnectionStartedCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Invoked when the <see cref="PendingConnection"/> is completed. <br />
+        /// Use <see cref="PendingConnection.CompletedCommand"/> if you want to control the visibility of the connection from the viewmodel. <br />
+        /// Parameter is <see cref="Tuple{T, U}"/> where <see cref="Tuple{T, U}.Item1"/> is the <see cref="PendingConnection.Source"/> and <see cref="Tuple{T, U}.Item2"/> is <see cref="PendingConnection.Target"/>.
+        /// </summary>
+        public ICommand? ConnectionCompletedCommand
+        {
+            get => (ICommand?)GetValue(ConnectionCompletedCommandProperty);
+            set => SetValue(ConnectionCompletedCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Invoked when the <see cref="Connector.Disconnect"/> event is raised. <br />
+        /// Can also be handled at the <see cref="Connector"/> level using the <see cref="Connector.DisconnectCommand"/> command. <br />
+        /// Parameter is the <see cref="Connector"/>'s <see cref="FrameworkElement.DataContext"/>.
+        /// </summary>
+        public ICommand? DisconnectConnectorCommand
+        {
+            get => (ICommand?)GetValue(DisconnectConnectorCommandProperty);
+            set => SetValue(DisconnectConnectorCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Invoked when the <see cref="BaseConnection.Disconnect"/> event is raised. <br />
+        /// Can also be handled at the <see cref="BaseConnection"/> level using the <see cref="BaseConnection.DisconnectCommand"/> command. <br />
+        /// Parameter is the <see cref="BaseConnection"/>'s <see cref="FrameworkElement.DataContext"/>.
+        /// </summary>
+        public ICommand? RemoveConnectionCommand
+        {
+            get => (ICommand?)GetValue(RemoveConnectionCommandProperty);
+            set => SetValue(RemoveConnectionCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Invoked when a drag operation starts for the <see cref="SelectedItems"/>.
+        /// </summary>
+        public ICommand? ItemsDragStartedCommand
+        {
+            get => (ICommand?)GetValue(ItemsDragStartedCommandProperty);
+            set => SetValue(ItemsDragStartedCommandProperty, value);
+        }
+
+        /// <summary>
+        /// Invoked when a drag operation is completed for the <see cref="SelectedItems"/>.
+        /// </summary>
+        public ICommand? ItemsDragCompletedCommand
+        {
+            get => (ICommand?)GetValue(ItemsDragCompletedCommandProperty);
+            set => SetValue(ItemsDragCompletedCommandProperty, value);
+        }
+
+        /// <summary>Invoked when a selection operation is started.</summary>
+        public ICommand? ItemsSelectStartedCommand
+        {
+            get => (ICommand?)GetValue(ItemsSelectStartedCommandProperty);
+            set => SetValue(ItemsSelectStartedCommandProperty, value);
+        }
+
+        /// <summary>Invoked when a selection operation is completed.</summary>
+        public ICommand? ItemsSelectCompletedCommand
+        {
+            get => (ICommand?)GetValue(ItemsSelectCompletedCommandProperty);
+            set => SetValue(ItemsSelectCompletedCommandProperty, value);
+        }
+
+        #endregion
     public NodifyEditor()
     {
 
-        
+        AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
+        AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnConnectionStarted));
+        AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
+
+        AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
         PointerReleased += OnPointerReleased;
         PointerWheelChanged+=OnPointerWheelChanged;
         PointerPressed += OnPointerPressed;
@@ -203,5 +297,48 @@ public class NodifyEditor : ItemsControl
         
         pointerWheelEventArgs.Handled = true;
     }
-    
+    #region Connector handling
+
+    private void OnConnectorDisconnected(object sender, ConnectorEventArgs e)
+    {
+        if (!e.Handled && (DisconnectConnectorCommand?.CanExecute(e.Connector) ?? false))
+        {
+            DisconnectConnectorCommand.Execute(e.Connector);
+            e.Handled = true;
+        }
+    }
+
+    private void OnConnectionStarted(object sender, PendingConnectionEventArgs e)
+    {
+        if (!e.Canceled && ConnectionStartedCommand != null)
+        {
+            e.Canceled = !ConnectionStartedCommand.CanExecute(e.SourceConnector);
+            if (!e.Canceled)
+            {
+                ConnectionStartedCommand.Execute(e.SourceConnector);
+            }
+        }
+    }
+
+    private void OnConnectionCompleted(object sender, PendingConnectionEventArgs e)
+    {
+        if (!e.Canceled)
+        {
+            (object SourceConnector, object? TargetConnector) result = (e.SourceConnector, e.TargetConnector);
+            if (ConnectionCompletedCommand?.CanExecute(result) ?? false)
+            {
+                ConnectionCompletedCommand.Execute(result);
+            }
+        }
+    }
+
+    private void OnRemoveConnection(object sender, ConnectionEventArgs e)
+    {
+        if (RemoveConnectionCommand?.CanExecute(e.Connection) ?? false)
+        {
+            RemoveConnectionCommand.Execute(e.Connection);
+        }
+    }
+
+    #endregion
 }
