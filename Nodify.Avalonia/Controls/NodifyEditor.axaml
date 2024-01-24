@@ -27,9 +27,9 @@
                     BorderThickness="{TemplateBinding BorderThickness}">
                     <Canvas Background="{StaticResource NodifyEditor.BackgroundBrush}" >
                         <ItemsPresenter Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}" ItemsPanel="{TemplateBinding ItemsPanel}" Name="ItemsPresenter" />
-                        <ContentPresenter Name="PendingConnection" Content="1" Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}"
+                        <ContentPresenter Name="PendingConnection" Content="1"
                                           ContentTemplate="{TemplateBinding PendingConnectionTemplate}" />
-                        <ItemsControl Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}"
+                        <ItemsControl 
                                       ItemsSource="{TemplateBinding Connections}"
                                       ItemTemplate="{TemplateBinding ConnectionTemplate}"
                                       IsTabStop="False">
@@ -41,7 +41,10 @@
                             </ItemsControl.Styles>
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <Canvas />
+                                    <Canvas
+                                        Width="{Binding $parent[Canvas].Bounds.Width}"
+                                        Height="{Binding $parent[Canvas].Bounds.Height}"
+                                        RenderTransform="{Binding $parent[controls:NodifyEditor].ViewTranslateTransform}"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>

@@ -63,70 +63,9 @@ public class NodifyEditor : ItemsControl
         get => (IEnumerable)GetValue(ConnectionsProperty);
         set => SetValue(ConnectionsProperty, value);
     }
-#if DEBUG
-    public ObservableCollection<NodeViewModelBase> Nodes { get; set; } =
-        new(){
-            new NodeViewModelBase()
-            {
-                Location = new Point(100, 100),
-                Title = "Node 1",
-                Input = new ObservableCollection<ConnectorViewModelBase>
-                {
-                    new ConnectorViewModelBase()
-                    {
-                        Title = "Input 1"
-                    },
-                    new ConnectorViewModelBase()
-                    {
-                        Title = "Input 2"
-                    }
-                },
-                Output = new ObservableCollection<ConnectorViewModelBase>
-                {
-                    new ConnectorViewModelBase()
-                    {
-                        Title = "Output 1"
-                    },
-                    new ConnectorViewModelBase()
-                    {
-                        Title = "Output 2"
-                    }
-                }
-            },
-            new NodeViewModelBase()
-            {
-                Title = "Node 2",
-                Input = new ObservableCollection<ConnectorViewModelBase>
-                {
-                    new ConnectorViewModelBase()
-                    {
-                        Title = "Input 1"
-                    },
-                    new ConnectorViewModelBase()
-                    {
-                        Title = "Input 2"
-                    }
-                },
-                Output = new ObservableCollection<ConnectorViewModelBase>
-                {
-                    new ConnectorViewModelBase()
-                    {
-                        Title = "Output 1"
-                    },
-                    new ConnectorViewModelBase()
-                    {
-                        Title = "Output 2"
-                    }
-                }
-            }
-        };
-#endif
     public NodifyEditor()
     {
-#if DEBUG
-        
-        this.ItemsSource = Nodes;
-#endif
+
         
         PointerReleased += OnPointerReleased;
         PointerWheelChanged+=OnPointerWheelChanged;

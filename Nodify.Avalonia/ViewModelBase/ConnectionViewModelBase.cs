@@ -1,7 +1,17 @@
-﻿namespace Nodify.Avalonia.ViewModelBase;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Nodify.Avalonia.Controls;
 
-public class ConnectionViewModelBase
+namespace Nodify.Avalonia.ViewModelBase;
+
+public partial class ConnectionViewModelBase: ObservableObject
 {
-    public ConnectorViewModelBase Source { get; set; }
-    public ConnectorViewModelBase Target { get; set; }
+    [ObservableProperty] public ConnectorViewModelBase source;
+    [ObservableProperty] public ConnectorViewModelBase target;
+    
+    public ConnectionViewModelBase(ConnectorViewModelBase source, ConnectorViewModelBase target)
+    {
+        Source = source;
+        Target = target;
+        
+    }
 }

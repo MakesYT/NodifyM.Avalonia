@@ -41,8 +41,11 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="controls:PendingConnection">
 
-                <Canvas x:DataType="Canvas">
+                <Canvas  Width="{Binding $parent[Canvas].Bounds.Width}" RenderTransform="{Binding $parent[controls:NodifyEditor].ViewTranslateTransform}"
+                         Height="{Binding $parent[Canvas].Bounds.Height}"
+                         x:DataType="Canvas">
                     <controls:Connection
+                       
                         Source="{Binding  RelativeSource={RelativeSource AncestorType=controls:PendingConnection},Path=SourceAnchor}"
                         Target="{Binding  RelativeSource={RelativeSource AncestorType=controls:PendingConnection},Path=TargetAnchor}"
                         Stroke="{TemplateBinding Stroke}"

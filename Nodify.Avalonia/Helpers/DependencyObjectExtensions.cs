@@ -1,5 +1,4 @@
-﻿
-
+﻿using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.VisualTree;
@@ -46,7 +45,15 @@ namespace Nodify.Avalonia.Helpers
 
             return null;
         }
-        
+        public static T? GetVisualAt<T>(this Control control,Point anchor)
+            where T : Control
+        {
+            var visualAt = control.GetVisualAt(anchor);
+            if (visualAt == null)
+                return null;
+            else
+                return ((Control)visualAt).GetParentOfType<T>();
+        }
         
     }
 }

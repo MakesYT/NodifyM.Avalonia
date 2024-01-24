@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
@@ -8,6 +9,7 @@ using Avalonia.Interactivity;
 using Avalonia.Styling;
 using Avalonia.VisualTree;
 using Nodify.Avalonia.Helpers;
+using Nodify.Avalonia.ViewModelBase;
 using Tmds.DBus.Protocol;
 
 namespace Nodify.Avalonia.Controls;
@@ -124,6 +126,33 @@ public class Connector : ContentControl
         //DefaultStyleKeyProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(typeof(Connector)));
         FocusableProperty.OverrideMetadata(typeof(Connector), new StyledPropertyMetadata<bool>(BoxValue.True));
     }
+    private void OnConnectorLoaded(object sender, RoutedEventArgs? e)
+        => TrySetAnchorUpdateEvents(true);
+
+    private void OnConnectorUnloaded(object sender, RoutedEventArgs e)
+        => TrySetAnchorUpdateEvents(false);
+    private void TrySetAnchorUpdateEvents(bool value)
+    {
+        if (Container != null && Editor != null)
+        {
+            // If events are not already hooked and we are asked to subscribe
+            if (value)
+            {
+                Container.LocationChanged += OnLocationChanged;
+                Container.SizeChanged += OnContainerSizeChanged;
+            }
+            // If events are already hooked and we are asked to unsubscribe
+            else if ( !value)
+            {
+                Container.LocationChanged -= OnLocationChanged;
+                Container.SizeChanged -= OnContainerSizeChanged;
+            }
+        }
+    }
+    private void OnContainerSizeChanged(object sender, SizeChangedEventArgs e)
+        => UpdateAnchor(Container!.Location);
+    private void OnLocationChanged(object sender, RoutedEventArgs e)
+        => UpdateAnchor(Container!.Location);
     public void UpdateAnchor()
     {
         if (Container != null)
@@ -131,8 +160,18 @@ public class Connector : ContentControl
             UpdateAnchor(Container.Location);
         }
     }
+    /// <summary>
+    /// Updates the <see cref="Anchor"/> and applies optimizations if needed based on <see cref="EnableOptimizations"/> flag
+    /// </summary>
+    /// <param name="location"></param>
+    
     protected void UpdateAnchor(Point location)
     {
+        if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime applicationLifetime)
+        {
+            var mainWindowDataContext = applicationLifetime.MainWindow.DataContext;
+               
+        }
         _lastUpdatedContainerPosition = location;
         if ( Container != null)
         {
@@ -140,6 +179,7 @@ public class Connector : ContentControl
             Point relativeLocation = Thumb.TranslatePoint(new Point((Thumb.Bounds.Width - containerMargin.Width)/2,
                 (Thumb.Bounds.Height -containerMargin.Height)/2), Container)!.Value;
             Anchor = new Point(location.X + relativeLocation.X, location.Y + relativeLocation.Y);
+            ((ConnectorViewModelBase)DataContext).Anchor = Anchor;
         }
     }
   protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -148,7 +188,8 @@ public class Connector : ContentControl
         Container = this.GetParentOfType<Node>();
         Editor =  this.GetParentOfType<NodifyEditor>();
         Thumb = this.GetChildOfType<Control>("PART_Connector");
-        
+        Loaded += OnConnectorLoaded;
+        Unloaded += OnConnectorUnloaded;
     }
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {

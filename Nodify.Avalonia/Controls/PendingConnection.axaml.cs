@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System.ComponentModel;
+using System.Diagnostics;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
@@ -170,6 +172,7 @@ public class PendingConnection : TemplatedControl
         internal static bool GetAllowOnlyConnectorsAttached(Control elem)
             => (bool)elem.GetValue(AllowOnlyConnectorsAttachedProperty);
         protected NodifyEditor? Editor { get; private set; }
+        private Control? _previousConnector;
         protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
         {
             base.OnApplyTemplate(e);
@@ -218,7 +221,7 @@ public class PendingConnection : TemplatedControl
                 {
                     // Look for a potential connector
                     Control? connector = GetPotentialConnector(Editor, AllowOnlyConnectors,TargetAnchor);
-
+                    Debug.WriteLine(connector);
                     // Update the connector's anchor and snap to it if snapping is enabled
                     if (EnableSnapping && connector is Connector target)
                     {
@@ -226,27 +229,27 @@ public class PendingConnection : TemplatedControl
                     }
 
                     // If it's not the same connector
-                    // if (connector != _previousConnector)
-                    // {
-                    //     if (_previousConnector != null)
-                    //     {
-                    //         SetIsOverElement(_previousConnector, false);
-                    //     }
-                    //
-                    //     // And we have a connector
-                    //     if (connector != null)
-                    //     {
-                    //         SetIsOverElement(connector, true);
-                    //     }
-                    //
-                    //     // Update the preview target if enabled
-                    //     if (EnablePreview)
-                    //     {
-                    //         PreviewTarget = connector?.DataContext;
-                    //     }
-                    //
-                    //     _previousConnector = connector;
-                    // }
+                    if (connector != _previousConnector)
+                    {
+                        if (_previousConnector != null)
+                        {
+                            //SetIsOverElement(_previousConnector, false);
+                        }
+                    
+                        // And we have a connector
+                        if (connector != null)
+                        {
+                            //SetIsOverElement(connector, true);
+                        }
+                    
+                        // Update the preview target if enabled
+                        if (EnablePreview)
+                        {
+                            PreviewTarget = connector?.DataContext;
+                        }
+                    
+                        _previousConnector = connector;
+                    }
                 }
             }
         }
@@ -258,11 +261,11 @@ public class PendingConnection : TemplatedControl
                 e.Handled = true;
                 IsVisible = false;
 
-                // if (_previousConnector != null)
-                // {
-                //     SetIsOverElement(_previousConnector, false);
-                //     _previousConnector = null;
-                // }
+                if (_previousConnector != null)
+                {
+                    //. SetIsOverElement(_previousConnector, false);
+                    _previousConnector = null;
+                }
 
                 if (!e.Canceled)
                 {
@@ -283,9 +286,13 @@ public class PendingConnection : TemplatedControl
         }
         internal static Control? GetPotentialConnector(NodifyEditor editor, bool allowOnlyConnectors,Point anchor)
         {
-            Connector? connector = (Connector)editor.ItemsPanelRoot.GetVisualAt(anchor,e => e is Connector&& e.IsVisible)!;
+            Connector? connector = editor.ItemsPanelRoot.GetVisualAt<Connector>(anchor);
+            
             if (connector != null && connector.Editor == editor)
-                return connector;
+            {
+                connector.UpdateAnchor();
+                return connector; 
+            }
 
             if (allowOnlyConnectors)
                 return null;

@@ -3,8 +3,27 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Nodify.Avalonia.Controls;assembly=Nodify.Avalonia"
+        xmlns:example="clr-namespace:Nodify.Avalonia.Example"
+        xmlns:viewModelBase="clr-namespace:Nodify.Avalonia.ViewModelBase;assembly=Nodify.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Nodify.Avalonia.Example.MainWindow"
+        x:DataType="example:MainWindowViewModel"
         Title="Nodify.Avalonia.Example">
-    <controls:NodifyEditor />
+    <controls:NodifyEditor ItemsSource="{Binding Nodes }" Connections="{Binding Connections}">
+        <controls:NodifyEditor.ConnectionTemplate>
+            <DataTemplate DataType="{x:Type viewModelBase:ConnectionViewModelBase}">
+                <Grid>
+                    
+                    <controls:Connection Source="{Binding Source.Anchor}" Focusable="True"
+                                       Target="{Binding Target.Anchor}">
+                        <controls:Connection.Stroke>
+                            <SolidColorBrush Color="Red"
+                                             Opacity="0.5" />
+                        </controls:Connection.Stroke>
+                    </controls:Connection>
+                </Grid>
+
+            </DataTemplate>
+        </controls:NodifyEditor.ConnectionTemplate>
+    </controls:NodifyEditor>
 </Window>
