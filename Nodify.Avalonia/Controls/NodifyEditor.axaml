@@ -26,6 +26,12 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
                     <Canvas Background="{StaticResource NodifyEditor.BackgroundBrush}" >
+                        <controls:LargeGridLine Width="{Binding $parent[controls:NodifyEditor].Bounds.Width}"
+                                                OffsetX="{TemplateBinding OffsetX}"
+                                                OffsetY="{TemplateBinding OffsetY}"
+                                                Zoom="{TemplateBinding Zoom}"
+                                                Height="{Binding $parent[controls:NodifyEditor].Bounds.Height}"
+                                                ZIndex="-2"/>
                         <ItemsPresenter Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}" ItemsPanel="{TemplateBinding ItemsPanel}" Name="ItemsPresenter" />
                         <ContentPresenter Name="PendingConnection" Content="{TemplateBinding PendingConnection}"
                                           ContentTemplate="{TemplateBinding PendingConnectionTemplate}" />
@@ -58,7 +64,7 @@
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
                 <Canvas x:Name="PART_ItemsHost" Background="{TemplateBinding Background}" Name="ZoomCanvas" >
-
+                    
                 </Canvas>
             </ItemsPanelTemplate>
         </Setter>
