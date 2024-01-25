@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using DynamicData.Binding;
 
 namespace Nodify.Avalonia.ViewModelBase;
 
@@ -10,6 +11,13 @@ public partial class NodifyEditorViewModelBase : ObservableObject
     private ObservableCollection<NodeViewModelBase> nodes = new();
     [ObservableProperty]
     private ObservableCollection<ConnectionViewModelBase> connections=new ();
+
+    public PendingConnectionViewModelBase PendingConnection { get; set; }
+
+    public NodifyEditorViewModelBase()
+    {
+        PendingConnection = new PendingConnectionViewModelBase(this);
+    }
     [RelayCommand]
     private void DisconnectConnector(ConnectorViewModelBase connector)
     {
@@ -34,8 +42,16 @@ public partial class NodifyEditorViewModelBase : ObservableObject
     }
     public void Connect(ConnectorViewModelBase source, ConnectorViewModelBase target)
     {
+        if (source.Flow == ConnectorViewModelBase.ConnectorFlow.Output)
+        {
+            Connections.Add(new ConnectionViewModelBase(source, target));
+        }else if (source.Flow == ConnectorViewModelBase.ConnectorFlow.Input)
+        {
+            Connections.Add(new ConnectionViewModelBase(target, source));
+        }
         
-        Connections.Add(new ConnectionViewModelBase(source, target));
+        source.IsConnected = true;
+        target.IsConnected = true;
     }
 
     

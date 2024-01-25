@@ -27,7 +27,7 @@
                     BorderThickness="{TemplateBinding BorderThickness}">
                     <Canvas Background="{StaticResource NodifyEditor.BackgroundBrush}" >
                         <ItemsPresenter Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}" ItemsPanel="{TemplateBinding ItemsPanel}" Name="ItemsPresenter" />
-                        <ContentPresenter Name="PendingConnection" Content="1"
+                        <ContentPresenter Name="PendingConnection" Content="{TemplateBinding PendingConnection}"
                                           ContentTemplate="{TemplateBinding PendingConnectionTemplate}" />
                         <ItemsControl 
                                       ItemsSource="{TemplateBinding Connections}"

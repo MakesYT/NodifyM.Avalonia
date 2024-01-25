@@ -39,7 +39,7 @@
                 Value="4 2" />
         <Setter Property="ConnectorTemplate"
                 Value="{StaticResource ConnectorThumbTemplate}" />
-        
+        <Setter Property="IsConnected" Value="{Binding IsConnected,Mode=TwoWay}"></Setter>
         <Setter Property="Header" Value="{Binding Title}"></Setter>
         <Setter Property="Template">
             <Setter.Value>
@@ -71,5 +71,8 @@
     </Style>
     <Style Selector="controls|NodeOutput:pointerover /template/ Border#Highlight">
         <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="controls|NodeOutput[IsConnected=True] /template/ TemplatedControl#PART_Connector">
+        <Setter Property="Background" Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
     </Style>
 </Styles>

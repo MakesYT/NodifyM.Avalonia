@@ -4,40 +4,35 @@ using Nodify.Avalonia.Controls;
 
 namespace Nodify.Avalonia.ViewModelBase;
 
-public partial class PendingConnectionViewModelBase : ObservableObject
+
+public partial class PendingConnectionViewModelBase(NodifyEditorViewModelBase editor) : ObservableObject
 {
-     private readonly NodifyEditorViewModelBase _editor;
-
+    private string[] _previewTargetNames = new string[] { "不能自己连接自己", "连接","丢弃连接" };
+    
     [ObservableProperty] private object? _previewTarget;
-    [ObservableProperty] private string _previewText;
-    [ObservableProperty] private ConnectorViewModelBase _source;
-
-    public PendingConnectionViewModelBase(NodifyEditorViewModelBase editor)
-    {
-        _editor = editor;
-    }
+    [ObservableProperty] private string? _previewText;
+    [ObservableProperty] private ConnectorViewModelBase? _source;
 
     partial void OnPreviewTargetChanged(object? value)
     {
-        var canConnect = value != null;
         switch (value)
         {
             case ConnectorViewModelBase con:
             {
                 if (con == Source)
                 {
-                    PreviewText = $"不能自己连接自己";
+                    PreviewText = _previewTargetNames[0];
                     break;
                 }
                 
                 
 
-                PreviewText = "连接";
+                PreviewText = _previewTargetNames[1];
 
                 break;
             }
             default:
-                PreviewText = $"丢弃连接";
+                PreviewText = _previewTargetNames[2];
                 break;
         }
     }
@@ -58,6 +53,6 @@ public partial class PendingConnectionViewModelBase : ObservableObject
             return;
         }
 
-        _editor.Connect(target, Source);
+        editor.Connect(Source, target);
     }
 }

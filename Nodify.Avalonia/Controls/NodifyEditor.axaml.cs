@@ -21,7 +21,13 @@ public class NodifyEditor : ItemsControl
     public static readonly AvaloniaProperty<IDataTemplate> ConnectionTemplateProperty = AvaloniaProperty.Register<NodifyEditor, IDataTemplate>(nameof(ConnectionTemplate));
     
     public static readonly AvaloniaProperty<IDataTemplate> PendingConnectionTemplateProperty = AvaloniaProperty.Register<NodifyEditor, IDataTemplate>(nameof(PendingConnectionTemplate));
+    public static readonly AvaloniaProperty<object> PendingConnectionProperty = AvaloniaProperty.Register<NodifyEditor, object>(nameof(PendingConnection));
     
+    public object PendingConnection
+    {
+        get => (object)GetValue(PendingConnectionProperty);
+        set => SetValue(PendingConnectionProperty, value);
+    }
     public DataTemplate ConnectionTemplate
     {
         get => (DataTemplate)GetValue(ConnectionTemplateProperty);
@@ -69,7 +75,7 @@ public class NodifyEditor : ItemsControl
 
         public static readonly AvaloniaProperty ConnectionCompletedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ConnectionCompletedCommand));
         public static readonly AvaloniaProperty ConnectionStartedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ConnectionStartedCommand));
-        public static readonly AvaloniaProperty DisconnectConnectorCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(DisconnectConnectorCommand));
+        public static readonly AvaloniaProperty<ICommand> DisconnectConnectorCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(DisconnectConnectorCommand));
         public static readonly AvaloniaProperty RemoveConnectionCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(RemoveConnectionCommand));
         public static readonly AvaloniaProperty ItemsDragStartedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ItemsDragStartedCommand));
         public static readonly AvaloniaProperty ItemsDragCompletedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ItemsDragCompletedCommand));

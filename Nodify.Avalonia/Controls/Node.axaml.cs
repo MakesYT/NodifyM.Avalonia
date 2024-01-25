@@ -47,7 +47,7 @@ public class Node : ContentControl
     protected internal static readonly AvaloniaProperty<bool> HasHeaderProperty =
         AvaloniaProperty.RegisterDirect<Node, bool>(nameof(HasHeader), o => o.HasHeader);
 
-    public static readonly AvaloniaProperty<IDataTemplate> OutputConnectorTemplateProperty =
+    public static readonly StyledProperty<IDataTemplate> OutputConnectorTemplateProperty =
         AvaloniaProperty.Register<Node, IDataTemplate>(nameof(OutputConnectorTemplate));
 
     public static readonly AvaloniaProperty<IEnumerable> InputProperty =
@@ -121,7 +121,7 @@ public class Node : ContentControl
     /// <summary>
     /// Gets or sets the template used to display the content of the control's footer.
     /// </summary>
-    public DataTemplate FooterTemplate
+    public IDataTemplate FooterTemplate
     {
         get => (DataTemplate)GetValue(FooterTemplateProperty);
         set => SetValue(FooterTemplateProperty, value);

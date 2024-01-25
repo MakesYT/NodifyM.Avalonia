@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -11,6 +12,7 @@ using Avalonia.VisualTree;
 using Nodify.Avalonia.Helpers;
 using Nodify.Avalonia.ViewModelBase;
 using Tmds.DBus.Protocol;
+using Key = Avalonia.Remote.Protocol.Input.Key;
 
 namespace Nodify.Avalonia.Controls;
 
@@ -62,7 +64,7 @@ public class Connector : ContentControl
 
        
     public static readonly StyledProperty<Point> AnchorProperty = AvaloniaProperty.Register<Connector, Point>(nameof(Anchor), BoxValue.Point);
-    public static readonly AvaloniaProperty<bool> IsConnectedProperty = AvaloniaProperty.Register<Connector, bool>(nameof(Anchor), BoxValue.False);
+    public static readonly StyledProperty<bool> IsConnectedProperty = AvaloniaProperty.Register<Connector, bool>(nameof(Anchor), BoxValue.False);
     public static readonly AvaloniaProperty<ICommand> DisconnectCommandProperty = AvaloniaProperty.Register<Connector, ICommand>(nameof(DisconnectCommand));
     public static readonly AvaloniaProperty<bool> IsPendingConnectionProperty = AvaloniaProperty.Register<Connector, bool>(nameof(IsPendingConnection), BoxValue.False);
     
@@ -195,12 +197,12 @@ public class Connector : ContentControl
     {
         base.OnPointerPressed(e);
         e.Handled = true;
-
-        if (IsConnected)
+        var currentPoint = e.GetCurrentPoint(this);
+        if (currentPoint.Properties.IsLeftButtonPressed&& e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
             OnDisconnect();
         }
-        else 
+        else if (currentPoint.Properties.IsLeftButtonPressed)
         {
             if (EnableStickyConnections && IsPendingConnection)
             {
@@ -229,25 +231,42 @@ public class Connector : ContentControl
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         base.OnPointerReleased(e);
+        Vector offset = e.GetPosition(Thumb)-_thumbCenter;
+        var point = new Point(Anchor.X + offset.X, Anchor.Y + offset.Y);
+        var currentPoint = e.GetCurrentPoint(this);
         e.Handled = EnableStickyConnections && IsPendingConnection;
-
-        if (!EnableStickyConnections)
+        if (!EnableStickyConnections&&e.InitialPressMouseButton.HasFlag( MouseButton.Left))
         {
-            OnConnectorDragCompleted(e.GetPosition(Editor));
+            OnConnectorDragCompleted(point);
             e.Handled = true;
         }
-        else if (AllowPendingConnectionCancellation && IsPendingConnection)
+        else if (AllowPendingConnectionCancellation && IsPendingConnection&&(currentPoint.Properties.IsRightButtonPressed))
         {
             // Cancel pending connection
-            OnConnectorDragCompleted(e.GetPosition(Editor),true);
+            OnConnectorDragCompleted(point,true);
            // ReleaseMouseCapture();
 
             // Don't show context menu
             e.Handled = true;
         }
     }
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+        if (AllowPendingConnectionCancellation && e.Key.HasFlag(global::Avalonia.Input.Key.Escape))
+        {
+            // Cancel pending connection
+            OnConnectorDragCompleted(cancel: true);
+        }
+    }
+    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+    {
+        base.OnPointerCaptureLost(e);
+        OnConnectorDragCompleted(cancel: true);
+    }
+
     protected virtual void OnDisconnect()
     {
+        
         if (IsConnected && !IsPendingConnection)
         {
             object? connector = DataContext;
@@ -300,11 +319,11 @@ public class Connector : ContentControl
         
     }
 
-    protected virtual void OnConnectorDragCompleted(Point point,bool cancel = false)
+    protected virtual void OnConnectorDragCompleted(Point? point=null,bool cancel = false)
     {
         if (IsPendingConnection)
         {
-            Control? elem = Editor != null ? PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor),point) : null;
+            Control? elem = (Editor != null&&point.HasValue) ? PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor),point.Value) : null;
 
             var args = new PendingConnectionEventArgs(DataContext)
             {
@@ -318,5 +337,12 @@ public class Connector : ContentControl
             IsPendingConnection = false;
             RaiseEvent(args);
         }
+    }
+
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        UpdateAnchor();
+        IsConnected= ((ConnectorViewModelBase)DataContext).IsConnected;
     }
 }

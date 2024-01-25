@@ -7,6 +7,11 @@ namespace Nodify.Avalonia.ViewModelBase;
 
 public partial class ConnectorViewModelBase : ObservableObject
 {
+    public enum ConnectorFlow
+    {
+        Input,
+        Output
+    }
     [ObservableProperty]
     private Point _anchor;
     
@@ -14,4 +19,5 @@ public partial class ConnectorViewModelBase : ObservableObject
     private string _title;
     [ObservableProperty]
     private bool _isConnected;
+    public ConnectorFlow Flow { get;  set; }
 }

@@ -19,6 +19,9 @@
                 Value="14" />
         <Setter Property="Height"
                 Value="14" />
+        <Setter Property="DisconnectCommand"
+                Value="{Binding $parent[controls:NodifyEditor].DisconnectConnectorCommand}"></Setter>
+        <Setter Property="IsConnected" Value="{Binding IsConnected,Mode=TwoWay}"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type controls:Connector}">
@@ -32,4 +35,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
 </Styles>

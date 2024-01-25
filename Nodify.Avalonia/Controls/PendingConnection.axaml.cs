@@ -12,7 +12,7 @@ using Nodify.Avalonia.Helpers;
 
 namespace Nodify.Avalonia.Controls;
 
-public class PendingConnection : TemplatedControl
+public class PendingConnection : ContentControl
 {
     #region Dependency Properties
     
@@ -177,7 +177,7 @@ public class PendingConnection : TemplatedControl
         {
             base.OnApplyTemplate(e);
             Editor = this.GetParentOfType<NodifyEditor>();
-            
+            IsVisible = false;
             if (Editor != null)
             {
                 Editor.AddHandler(Connector.PendingConnectionStartedEvent,new EventHandler<PendingConnectionEventArgs>(OnPendingConnectionStarted));
@@ -221,7 +221,6 @@ public class PendingConnection : TemplatedControl
                 {
                     // Look for a potential connector
                     Control? connector = GetPotentialConnector(Editor, AllowOnlyConnectors,TargetAnchor);
-                    Debug.WriteLine(connector);
                     // Update the connector's anchor and snap to it if snapping is enabled
                     if (EnableSnapping && connector is Connector target)
                     {
@@ -246,6 +245,7 @@ public class PendingConnection : TemplatedControl
                         if (EnablePreview)
                         {
                             PreviewTarget = connector?.DataContext;
+                           // Target = connector?.DataContext;
                         }
                     
                         _previousConnector = connector;
@@ -270,7 +270,6 @@ public class PendingConnection : TemplatedControl
                 if (!e.Canceled)
                 {
                     Target = e.TargetConnector;
-
                     // Invoke the CompletedCommand if event is not handled
                     if (CompletedCommand?.CanExecute(Target) ?? false)
                     {

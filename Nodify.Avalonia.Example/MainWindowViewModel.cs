@@ -13,11 +13,13 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
     {
         var input1 = new ConnectorViewModelBase()
         {
-            Title = "AS 1"
+            Title = "AS 1",
+            Flow = ConnectorViewModelBase.ConnectorFlow.Input
         };
         var output1 = new ConnectorViewModelBase()
         {
-            Title = "B 1"
+            Title = "B 1",
+            Flow = ConnectorViewModelBase.ConnectorFlow.Output
         };
         Connections.Add(new ConnectionViewModelBase(output1,input1));
         Nodes  =new(){
@@ -35,7 +37,8 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
                        
                         new ConnectorViewModelBase()
                         {
-                            Title = "Output 2"
+                            Title = "Output 2",
+                            Flow = ConnectorViewModelBase.ConnectorFlow.Output
                         }
                     }
                 },
@@ -46,10 +49,12 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
                     {
                         new ConnectorViewModelBase()
                         {
-                            Title = "Input 1"
+                            Title = "Input 1",
+                            Flow = ConnectorViewModelBase.ConnectorFlow.Input
                         },
                         new ConnectorViewModelBase()
                         {
+                            Flow = ConnectorViewModelBase.ConnectorFlow.Input,
                             Title = "Input 2"
                         }
                     },
@@ -58,15 +63,19 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
                         output1,
                         new ConnectorViewModelBase()
                         {
+                            Flow = ConnectorViewModelBase.ConnectorFlow.Output,
                             Title = "Output 1"
                         },
                         new ConnectorViewModelBase()
                         {
+                            Flow = ConnectorViewModelBase.ConnectorFlow.Output,
                             Title = "Output 2"
                         }
                     }
                 }
             };
+        output1.IsConnected = true;
+        input1.IsConnected = true;
     }
 
     

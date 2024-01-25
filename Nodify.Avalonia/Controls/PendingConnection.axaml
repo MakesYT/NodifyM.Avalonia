@@ -65,7 +65,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             CornerRadius="3"
                             Margin="15">
-                        <TextBlock Text="dsdsd"></TextBlock>
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
                     </Border>
                 </Canvas>
             </ControlTemplate>

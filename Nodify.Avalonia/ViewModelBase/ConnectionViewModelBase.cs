@@ -12,6 +12,5 @@ public partial class ConnectionViewModelBase: ObservableObject
     {
         Source = source;
         Target = target;
-        
     }
 }
