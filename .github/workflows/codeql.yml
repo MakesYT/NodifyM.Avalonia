@@ -15,7 +15,7 @@ on:
   push:
     branches: [ "master" ]
     paths:
-      - Nodify.Avalonia/**
+      - NodifyM.Avalonia/**
   pull_request:
     branches: [ "master" ]
   schedule:
