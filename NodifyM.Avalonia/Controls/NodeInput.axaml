@@ -1,0 +1,79 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModelBase="clr-namespace:NodifyM.Avalonia.ViewModelBase"
+        xmlns:viewModelBase1="clr-namespace:NodifyM.Avalonia.ViewModelBase"
+        xmlns:controls="clr-namespace:NodifyM.Avalonia.Controls"
+        x:DataType="viewModelBase1:ConnectorViewModelBase">
+    <Design.PreviewWith>
+        <controls:NodeInput />
+    </Design.PreviewWith>
+<Styles.Resources>
+    <ControlTemplate x:Key="ConnectorThumbTemplate"
+                     TargetType="TemplatedControl">
+        <Ellipse Width="14"
+                 Height="14"
+                 Stroke="{TemplateBinding BorderBrush}"
+                 Fill="{TemplateBinding Background}"
+                 StrokeThickness="2" />
+    </ControlTemplate>
+    <LinearGradientBrush x:Key="FadeOpacityMask"
+                         StartPoint="0%,0%"
+                         EndPoint="100%,0%">
+        <GradientStop Color="#22FFFFFF"
+                      Offset="0" />
+        <GradientStop Color="#88FFFFFF"
+                      Offset="0.3" />
+        <GradientStop Color="#88FFFFFF"
+                      Offset="0.7" />
+        <GradientStop Color="#22FFFFFF"
+                      Offset="1" />
+    </LinearGradientBrush>
+</Styles.Resources>
+    <Style Selector="controls|NodeInput">
+        <Setter Property="BorderBrush"
+                Value="{StaticResource NodeInput.BorderBrush}" />
+        <Setter Property="Background"
+                Value="{StaticResource NodeInput.BackgroundBrush}" />
+        <Setter Property="Foreground"
+                Value="{StaticResource NodeInput.ForegroundBrush}" />
+        <Setter Property="Padding"
+                Value="4 2" />
+        <Setter Property="ConnectorTemplate"
+                Value="{StaticResource ConnectorThumbTemplate}" />
+        <Setter Property="IsConnected" Value="{Binding IsConnected,Mode=TwoWay}"></Setter>
+        <Setter Property="Header" Value="{Binding Title}"></Setter>
+        <!-- Set Defaults -->
+        <Setter Property="Template">
+            <ControlTemplate TargetType="controls:NodeInput">
+                
+                <Grid Background="{TemplateBinding Background}">
+                    <Border IsVisible="False"
+                            x:Name="Highlight"
+                            OpacityMask="{StaticResource FadeOpacityMask}"
+                            Background="{TemplateBinding BorderBrush}" />
+
+                    <StackPanel Orientation="Horizontal"
+                                Margin="{TemplateBinding Padding}">
+                        <TemplatedControl x:Name="PART_Connector"
+                                          Focusable="False"
+                                          Margin="0 0 5 0"
+                                          VerticalAlignment="Center"
+                                          Background="Transparent"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          Template="{TemplateBinding ConnectorTemplate}" />
+
+                        <ContentPresenter Content="{TemplateBinding Header}" />
+                    </StackPanel>
+                </Grid>
+                            
+            </ControlTemplate>
+            
+        </Setter>
+    </Style>
+    <Style Selector="controls|NodeInput:pointerover /template/ Border#Highlight">
+        <Setter Property="IsVisible" Value="True" />
+    </Style>
+    <Style Selector="controls|NodeInput[IsConnected=True] /template/ TemplatedControl#PART_Connector">
+        <Setter Property="Background" Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
+    </Style>
+</Styles>

@@ -1,0 +1,12 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:NodifyM.Avalonia.Controls">
+    <Design.PreviewWith>
+        <controls:BaseConnection />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|BaseConnection">
+        <!-- Set Defaults -->
+       
+    </Style>
+</Styles>

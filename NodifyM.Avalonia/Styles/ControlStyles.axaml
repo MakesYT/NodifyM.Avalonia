@@ -1,0 +1,30 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://NodifyM.Avalonia/ResourceDictionaries/Light.axaml" />
+                <ResourceInclude Source="avares://NodifyM.Avalonia/ResourceDictionaries/Nodify.axaml" />
+                <ResourceInclude Source="avares://NodifyM.Avalonia/ResourceDictionaries/Brushes.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+
+    <!-- Add Styles Here -->
+    <StyleInclude Source="../Controls/Node.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/NodifyEditor.axaml"></StyleInclude>
+   
+    <StyleInclude Source="../Controls/Connector.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/NodeInput.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/NodeOutput.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/Connection.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/LineConnection.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/PendingConnection.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/BaseConnection.axaml"></StyleInclude>
+   
+</Styles>
