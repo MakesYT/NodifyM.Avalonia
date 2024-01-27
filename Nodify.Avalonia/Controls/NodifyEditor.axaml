@@ -45,8 +45,9 @@
                                 </Setter>
                             </Style>
                         </Canvas.Resources>
+                        
+                        <ItemsPresenter Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}" ItemsPanel="{TemplateBinding ItemsPanel}"  />
                         <ContentPresenter ZIndex="-2" ContentTemplate="{TemplateBinding GridLineTemplate}"/>
-                        <ItemsPresenter Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}" ItemsPanel="{TemplateBinding ItemsPanel}" Name="ItemsPresenter" />
                         <ContentPresenter Name="PendingConnection" Content="{TemplateBinding PendingConnection}"
                                           ContentTemplate="{TemplateBinding PendingConnectionTemplate}" />
                         <ItemsControl 
@@ -96,7 +97,7 @@
         </Setter>
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
-                <Canvas x:Name="PART_ItemsHost" Background="{TemplateBinding Background}" Name="ZoomCanvas" >
+                <Canvas x:Name="PART_ItemsHost" Background="{TemplateBinding Background}" Name="NodeItemsPresenter" >
                     
                 </Canvas>
             </ItemsPanelTemplate>

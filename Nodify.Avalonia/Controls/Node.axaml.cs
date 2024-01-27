@@ -211,15 +211,15 @@ public class Node : ContentControl
 
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
     {
-        this.GetVisualParent().ZIndex = 2;
 
         var visualParent = this.GetVisualParent();
         var parent = visualParent.GetVisualParent().GetVisualChildren();
         foreach (var visual in parent)
         {
+            visual.ZIndex = 0;
             ((Node)visual.GetVisualChildren().First()).IsSelected = false;
         }
-
+        visualParent.ZIndex = 1;
         this.IsSelected = true;
         if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
         // 启动拖动
@@ -236,14 +236,8 @@ public class Node : ContentControl
 
     private void OnPointerReleased(object sender, PointerReleasedEventArgs e)
     {
-        var visualParent = this.GetVisualParent();
-        var parent = visualParent.GetVisualParent().GetVisualChildren();
-        foreach (var visual in parent)
-        {
-            visual.ZIndex = 0;
-        }
 
-        visualParent.ZIndex = 1;
+        
         if (!isDragging) return;
         // 停止拖动
         isDragging = false;

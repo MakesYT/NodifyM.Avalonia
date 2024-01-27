@@ -101,7 +101,7 @@
             </ControlTemplate>
         </Setter>
     </Style>
-    <Style Selector="controls|Node:pointerover">
+    <Style Selector="controls|Node[IsSelected=False]:pointerover">
         <Setter Property="BorderBrush" Value="LightBlue"></Setter>
         <Setter Property="BorderThickness" Value="2"></Setter>
     </Style>

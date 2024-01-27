@@ -27,17 +27,17 @@ namespace Nodify.Avalonia.Helpers
         public static T? GetChildOfType<T>(this Control control,string name)
             where T : Control
         {
-            if (control.Name == name)
+            if (control.Name == name&& control is T)
                 return (T)control;
 
             foreach (var child in control.GetVisualChildren())
             {
                 var foundChild = child as Control;
-                if (foundChild != null && foundChild.Name == name)
+                if (foundChild != null && foundChild.Name == name&& foundChild is T)
                     return (T)foundChild;
                 else
                 {
-                    var result = (T)(foundChild).GetChildOfType<Control>(name);
+                    var result = (T)((foundChild).GetChildOfType<Control>(name));
                     if (result != null)
                         return result;
                 }

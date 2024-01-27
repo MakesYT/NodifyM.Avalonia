@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
 using Avalonia.Styling;
@@ -539,19 +540,18 @@ public class NodifyEditor : SelectingItemsControl
     
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        foreach (var visualChild in this.GetVisualChildren())
+        var visual = ((Control)sender).GetLogicalChildren();
+        foreach (var visualChild in visual)
         {
-            if (visualChild.GetVisualChildren().First() is Node n)
+            
+            if (visualChild.GetLogicalChildren().First() is Node n)
             {
                 n.IsSelected = false;
             }
         }
         if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
-        // 启动拖动
         isDragging = true;
-        // 记录当前坐标
         lastMousePosition = e.GetPosition(this);
-        // Debug.WriteLine($"记录当前坐标X:{lastMousePosition.X} Y:{lastMousePosition.Y}");
         _startOffsetX = OffsetX;
         _startOffsetY = OffsetY;
         e.Handled = true;
