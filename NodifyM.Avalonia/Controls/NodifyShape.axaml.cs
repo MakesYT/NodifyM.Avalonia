@@ -197,7 +197,9 @@ namespace NodifyM.Avalonia.Controls
       {
         if (change.Property == (AvaloniaProperty) NodifyShape.StrokeProperty || change.Property == (AvaloniaProperty) NodifyShape.StrokeThicknessProperty)
           this.InvalidateMeasure();
-        object?[]? parameters = [this._strokePen, this.Stroke, this.StrokeThickness, (IList<double>) this.StrokeDashArray, this.StrokeDashOffset, this.StrokeLineCap, this.StrokeJoin,10.0];
+        object?[]? parameters =
+        {
+          this._strokePen, this.Stroke, this.StrokeThickness, (IList<double>) this.StrokeDashArray, this.StrokeDashOffset, this.StrokeLineCap, this.StrokeJoin,10.0};
 
 
         var methodInfo = typeof(Pen).GetMethod("TryModifyOrCreate", BindingFlags.NonPublic|BindingFlags.Static);

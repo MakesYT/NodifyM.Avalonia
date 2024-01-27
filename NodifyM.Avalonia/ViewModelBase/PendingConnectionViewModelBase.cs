@@ -4,13 +4,20 @@ using CommunityToolkit.Mvvm.Input;
 namespace NodifyM.Avalonia.ViewModelBase;
 
 
-public partial class PendingConnectionViewModelBase(NodifyEditorViewModelBase editor) : ObservableObject
+public partial class PendingConnectionViewModelBase : ObservableObject
 {
     private string[] _previewTargetNames = new string[] { "不能自己连接自己", "连接","丢弃连接" };
     
     [ObservableProperty] private object? _previewTarget;
     [ObservableProperty] private string? _previewText;
     [ObservableProperty] private ConnectorViewModelBase? _source;
+    private readonly NodifyEditorViewModelBase _editor;
+
+    /// <inheritdoc/>
+    public PendingConnectionViewModelBase(NodifyEditorViewModelBase editor)
+    {
+        _editor = editor;
+    }
 
     partial void OnPreviewTargetChanged(object? value)
     {
@@ -52,6 +59,6 @@ public partial class PendingConnectionViewModelBase(NodifyEditorViewModelBase ed
             return;
         }
 
-        editor.Connect(Source, target);
+        _editor.Connect(Source, target);
     }
 }
