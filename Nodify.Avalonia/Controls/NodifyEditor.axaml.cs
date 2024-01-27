@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -8,19 +7,15 @@ using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
-using Avalonia.Media.Transformation;
+using Avalonia.Styling;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Nodify.Avalonia.Helpers;
-using Nodify.Avalonia.ViewModelBase;
 
 namespace Nodify.Avalonia.Controls;
 
-public class NodifyEditor : ItemsControl
+public class NodifyEditor : SelectingItemsControl
 {
-    public static readonly AvaloniaProperty<IDataTemplate> ConnectionTemplateProperty = AvaloniaProperty.Register<NodifyEditor, IDataTemplate>(nameof(ConnectionTemplate));
-    
-    public static readonly AvaloniaProperty<IDataTemplate> PendingConnectionTemplateProperty = AvaloniaProperty.Register<NodifyEditor, IDataTemplate>(nameof(PendingConnectionTemplate));
     public static readonly AvaloniaProperty<object> PendingConnectionProperty = AvaloniaProperty.Register<NodifyEditor, object>(nameof(PendingConnection));
     
     public object PendingConnection
@@ -28,17 +23,7 @@ public class NodifyEditor : ItemsControl
         get => (object)GetValue(PendingConnectionProperty);
         set => SetValue(PendingConnectionProperty, value);
     }
-    public DataTemplate ConnectionTemplate
-    {
-        get => (DataTemplate)GetValue(ConnectionTemplateProperty);
-        set => SetValue(ConnectionTemplateProperty, value);
-    }
-
-    public DataTemplate PendingConnectionTemplate
-    {
-        get => (DataTemplate)GetValue(PendingConnectionTemplateProperty);
-        set => SetValue(PendingConnectionTemplateProperty, value);
-    }
+    
     public static readonly AvaloniaProperty<double> ZoomProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(Zoom),1d);
     public static readonly AvaloniaProperty<double> OffsetXProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(OffsetX),1d);
     public static readonly AvaloniaProperty<double> OffsetYProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(OffsetY),1d);
@@ -70,7 +55,337 @@ public class NodifyEditor : ItemsControl
         get => (IEnumerable)GetValue(ConnectionsProperty);
         set => SetValue(ConnectionsProperty, value);
     }
+     #region Cosmetic Dependency Properties
+
+        public static readonly AvaloniaProperty BringIntoViewSpeedProperty = AvaloniaProperty.Register<NodifyEditor,double>(nameof(BringIntoViewSpeed), BoxValue.Double1000);
+        public static readonly AvaloniaProperty BringIntoViewMaxDurationProperty = AvaloniaProperty.Register<NodifyEditor,double>(nameof(BringIntoViewMaxDuration), BoxValue.Double1);
+        public static readonly AvaloniaProperty DisplayConnectionsOnTopProperty = AvaloniaProperty.Register<NodifyEditor,bool>(nameof(DisplayConnectionsOnTop), BoxValue.False);
+        public static readonly AvaloniaProperty DisableAutoPanningProperty = AvaloniaProperty.Register<NodifyEditor,bool>(nameof(DisableAutoPanning), BoxValue.False);
+        public static readonly AvaloniaProperty AutoPanSpeedProperty = AvaloniaProperty.Register<NodifyEditor,double>(nameof(AutoPanSpeed), 15d);
+        public static readonly AvaloniaProperty AutoPanEdgeDistanceProperty = AvaloniaProperty.Register<NodifyEditor,double>(nameof(AutoPanEdgeDistance), (15d));
+        public static readonly StyledProperty<IDataTemplate> ConnectionTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(ConnectionTemplate));
+        public static readonly StyledProperty<IDataTemplate> DecoratorTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(DecoratorTemplate));
+        public static readonly StyledProperty<IDataTemplate> PendingConnectionTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(PendingConnectionTemplate));
+        public static readonly StyledProperty<ControlTheme> SelectionRectangleThemeProperty = AvaloniaProperty.Register<NodifyEditor,ControlTheme>(nameof(SelectionRectangleTheme));
+        public static readonly AvaloniaProperty DecoratorContainerStyleProperty = AvaloniaProperty.Register<NodifyEditor,Style>(nameof(DecoratorContainerStyle));
+
+        private static void OnDisableAutoPanningChanged(NodifyEditor d, AvaloniaPropertyChangedEventArgs e)
+            => ((NodifyEditor)d).OnDisableAutoPanningChanged((bool)e.NewValue);
+
+        /// <summary>
+        /// Gets or sets the maximum animation duration in seconds for bringing a location into view.
+        /// </summary>
+        public double BringIntoViewMaxDuration
+        {
+            get => (double)GetValue(BringIntoViewMaxDurationProperty);
+            set => SetValue(BringIntoViewMaxDurationProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the animation speed in pixels per second for bringing a location into view.
+        /// </summary>
+        /// <remarks>Total animation duration is calculated based on distance and clamped between 0.1 and <see cref="BringIntoViewMaxDuration"/>.</remarks>
+        public double BringIntoViewSpeed
+        {
+            get => (double)GetValue(BringIntoViewSpeedProperty);
+            set => SetValue(BringIntoViewSpeedProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether to display connections on top of <see cref="ItemContainer"/>s or not.
+        /// </summary>
+        public bool DisplayConnectionsOnTop
+        {
+            get => (bool)GetValue(DisplayConnectionsOnTopProperty);
+            set => SetValue(DisplayConnectionsOnTopProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether to disable the auto panning when selecting or dragging near the edge of the editor configured by <see cref="AutoPanEdgeDistance"/>.
+        /// </summary>
+        public bool DisableAutoPanning
+        {
+            get => (bool)GetValue(DisableAutoPanningProperty);
+            set => SetValue(DisableAutoPanningProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the speed used when auto-panning scaled by <see cref="AutoPanningTickRate"/>
+        /// </summary>
+        public double AutoPanSpeed
+        {
+            get => (double)GetValue(AutoPanSpeedProperty);
+            set => SetValue(AutoPanSpeedProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum distance in pixels from the edge of the editor that will trigger auto-panning.
+        /// </summary>
+        public double AutoPanEdgeDistance
+        {
+            get => (double)GetValue(AutoPanEdgeDistanceProperty);
+            set => SetValue(AutoPanEdgeDistanceProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="DataTemplate"/> to use when generating a new <see cref="BaseConnection"/>.
+        /// </summary>
+        public DataTemplate ConnectionTemplate
+        {
+            get => (DataTemplate)GetValue(ConnectionTemplateProperty);
+            set => SetValue(ConnectionTemplateProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="DataTemplate"/> to use when generating a new <see cref="DecoratorContainer"/>.
+        /// </summary>
+        public DataTemplate DecoratorTemplate
+        {
+            get => (DataTemplate)GetValue(DecoratorTemplateProperty);
+            set => SetValue(DecoratorTemplateProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="DataTemplate"/> to use for the <see cref="PendingConnection"/>.
+        /// </summary>
+        public DataTemplate PendingConnectionTemplate
+        {
+            get => (DataTemplate)GetValue(PendingConnectionTemplateProperty);
+            set => SetValue(PendingConnectionTemplateProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style to use for the selection rectangle.
+        /// </summary>
+        public ControlTheme SelectionRectangleTheme
+        {
+            get => (ControlTheme)GetValue(SelectionRectangleThemeProperty);
+            set => SetValue(SelectionRectangleThemeProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the style to use for the <see cref="DecoratorContainer"/>.
+        /// </summary>
+        public Style DecoratorContainerStyle
+        {
+            get => (Style)GetValue(DecoratorContainerStyleProperty);
+            set => SetValue(DecoratorContainerStyleProperty, value);
+        }
+
+        #endregion
+        #region Auto panning
+
+        private void HandleAutoPanning(object? sender, EventArgs e)
+        {
+            if (!IsPanning)
+            {
+                /*Point mousePosition = Mouse.GetPosition(this);
+                double edgeDistance = AutoPanEdgeDistance;
+                double autoPanSpeed = Math.Min(AutoPanSpeed, AutoPanSpeed * AutoPanningTickRate) / (ViewportZoom * 2);
+                double x = ViewportLocation.X;
+                double y = ViewportLocation.Y;
+
+                if (mousePosition.X <= edgeDistance)
+                {
+                    x -= autoPanSpeed;
+                }
+                else if (mousePosition.X >= ActualWidth - edgeDistance)
+                {
+                    x += autoPanSpeed;
+                }
+
+                if (mousePosition.Y <= edgeDistance)
+                {
+                    y -= autoPanSpeed;
+                }
+                else if (mousePosition.Y >= ActualHeight - edgeDistance)
+                {
+                    y += autoPanSpeed;
+                }
+
+                ViewportLocation = new Point(x, y);
+                MouseLocation = Mouse.GetPosition(ItemsHost);
+
+                State.HandleAutoPanning(new MouseEventArgs(Mouse.PrimaryDevice, 0));*/
+            }
+        }
+
+        /// <summary>
+        /// Called when the <see cref="DisableAutoPanning"/> changes.
+        /// </summary>
+        /// <param name="shouldDisable">Whether to enable or disable auto panning.</param>
+        protected virtual void OnDisableAutoPanningChanged(bool shouldDisable)
+        {
+            if (shouldDisable)
+            {
+                _autoPanningTimer?.Stop();
+            }
+            else if (_autoPanningTimer == null)
+            {
+                _autoPanningTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(AutoPanningTickRate),
+                    DispatcherPriority.Background, HandleAutoPanning);
+            }
+            else
+            {
+                _autoPanningTimer.Interval = TimeSpan.FromMilliseconds(AutoPanningTickRate);
+                _autoPanningTimer.Start();
+            }
+        }
+
+        #endregion
+        #region Fields
+
+        /// <summary>
+        /// Gets or sets the maximum number of pixels allowed to move the mouse before cancelling the mouse event.
+        /// Useful for <see cref="ContextMenu"/>s to appear if mouse only moved a bit or not at all.
+        /// </summary>
+        public static double HandleRightClickAfterPanningThreshold { get; set; } = 12d;
+
+        /// <summary>
+        /// Correct <see cref="ItemContainer"/>'s position after moving if starting position is not snapped to grid.
+        /// </summary>
+        public static bool EnableSnappingCorrection { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets how often the new <see cref="ViewportLocation"/> is calculated in milliseconds when <see cref="DisableAutoPanning"/> is false.
+        /// </summary>
+        public static double AutoPanningTickRate { get; set; } = 1;
+
+        /// <summary>
+        /// Gets or sets if <see cref="NodifyEditor"/>s should enable optimizations based on <see cref="OptimizeRenderingMinimumContainers"/> and <see cref="OptimizeRenderingZoomOutPercent"/>.
+        /// </summary>
+        public static bool EnableRenderingContainersOptimizations { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets the minimum number of <see cref="ItemContainer"/>s needed to trigger optimizations when reaching the <see cref="OptimizeRenderingZoomOutPercent"/>.
+        /// </summary>
+        public static uint OptimizeRenderingMinimumContainers { get; set; } = 700;
+
+        /// <summary>
+        /// Gets or sets the minimum zoom out percent needed to start optimizing the rendering for <see cref="ItemContainer"/>s.
+        /// Value is between 0 and 1.
+        /// </summary>
+        public static double OptimizeRenderingZoomOutPercent { get; set; } = 0.3;
+
+        /// <summary>
+        /// Gets or sets the margin to add in all directions to the <see cref="ItemsExtent"/> or area parameter when using <see cref="FitToScreen(Rect?)"/>.
+        /// </summary>
+        public static double FitToScreenExtentMargin { get; set; } = 30;
+
+        /// <summary>
+        /// Gets or sets if the current position of containers that are being dragged should not be committed until the end of the dragging operation.
+        /// </summary>
+        public static bool EnableDraggingContainersOptimizations { get; set; } = true;
+
+        /// <summary>
+        /// Tells if the <see cref="NodifyEditor"/> is doing operations on multiple items at once.
+        /// </summary>
+        public bool IsBulkUpdatingItems { get; protected set; }
+
+        /// <summary>
+        /// Gets the panel that holds all the <see cref="ItemContainer"/>s.
+        /// </summary>
+        protected internal Panel ItemsHost { get; private set; }
+
+       
+        private DispatcherTimer? _autoPanningTimer;
+
+        /// <summary>
+        /// Gets a list of <see cref="ItemContainer"/>s that are selected.
+        /// </summary>
+        /// <remarks>Cache the result before using it to avoid extra allocations.</remarks>
+        protected internal IReadOnlyList<Node> SelectedContainers
+        {
+            get
+            {
+                IList selectedItems = base.SelectedItems;
+                var selectedContainers = new List<Node>(selectedItems.Count);
+
+                for (var i = 0; i < selectedItems.Count; i++)
+                {
+                    selectedContainers.Add((Node)selectedItems[i]);
+                }
+
+                return selectedContainers;
+            }
+        }
+
+        #endregion
+     #region Readonly Dependency Properties
+     public static readonly DirectProperty<NodifyEditor, Rect> SelectedAreaProperty = AvaloniaProperty.RegisterDirect<NodifyEditor,Rect>(nameof (SelectedArea), o => o.SelectedArea);
+     public static readonly DirectProperty<NodifyEditor, bool> IsSelectingProperty = AvaloniaProperty.RegisterDirect<NodifyEditor,bool>(nameof (IsSelecting), o => o.IsSelecting); 
+     public static readonly DirectProperty<NodifyEditor, bool> IsPanningProperty = AvaloniaProperty.RegisterDirect<NodifyEditor,bool>(nameof (IsPanning), o => o.IsPanning); 
+     public static readonly DirectProperty<NodifyEditor, Point> MouseLocationProperty = AvaloniaProperty.RegisterDirect<NodifyEditor,Point>(nameof (MouseLocation), o => o.MouseLocation); 
+       
     
+
+     private void OnIsSelectingChanged(bool value)
+     {
+         if (value)
+             this.OnItemsSelectStarted();
+         else
+             this.OnItemSelectCompleted();
+     }
+
+        private void OnItemSelectCompleted()
+        {
+            if (ItemsSelectCompletedCommand?.CanExecute(null) ?? false)
+                ItemsSelectCompletedCommand.Execute(null);
+        }
+
+        private void OnItemsSelectStarted()
+        {
+            if (ItemsSelectStartedCommand?.CanExecute(null) ?? false)
+                ItemsSelectStartedCommand.Execute(null);
+        }
+
+        
+        private bool _isSelecting;
+        private Rect _selectedArea;
+        private Point _mouseLocation;
+        private bool _isPanning;
+        /// <summary>
+        /// Gets the currently selected area while <see cref="IsSelecting"/> is true.
+        /// </summary>
+        public Rect SelectedArea
+        {
+            get => this._selectedArea;
+            internal set
+            {
+                this.SetAndRaise<Rect>((DirectPropertyBase<Rect>) NodifyEditor.SelectedAreaProperty, ref this._selectedArea, value);
+            }
+        }
+
+        public bool IsSelecting
+        {
+            get => this._isSelecting;
+            internal set
+            {
+                if (!this.SetAndRaise<bool>((DirectPropertyBase<bool>) NodifyEditor.IsSelectingProperty, ref this._isSelecting, value))
+                    return;
+                this.OnIsSelectingChanged(value);
+            }
+        }
+
+        public bool IsPanning
+        {
+            get => this._isPanning;
+            protected internal set
+            {
+                this.SetAndRaise<bool>((DirectPropertyBase<bool>) NodifyEditor.IsPanningProperty, ref this._isPanning, value);
+            }
+        }
+
+        public Point MouseLocation
+        {
+            get => this._mouseLocation;
+            protected set
+            {
+                this.SetAndRaise<Point>((DirectPropertyBase<Point>) NodifyEditor.MouseLocationProperty, ref this._mouseLocation, value);
+            }
+        }
+
+        #endregion
      #region Command Dependency Properties
 
         public static readonly AvaloniaProperty ConnectionCompletedCommandProperty = AvaloniaProperty.Register<NodifyEditor,ICommand>(nameof(ConnectionCompletedCommand));
@@ -165,22 +480,23 @@ public class NodifyEditor : ItemsControl
         AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
         AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnConnectionStarted));
         AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
-
+        
         AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
         PointerReleased += OnPointerReleased;
         PointerWheelChanged+=OnPointerWheelChanged;
         PointerPressed += OnPointerPressed;
         PointerMoved+=OnPointerMoved;
+        DisableAutoPanningProperty.Changed.AddClassHandler<NodifyEditor>(OnDisableAutoPanningChanged);
         var renderTransform = new TransformGroup();
         var scaleTransform = new ScaleTransform(Zoom, Zoom);
         ScaleTransform = scaleTransform;
         renderTransform.Children.Add(scaleTransform);
         RenderTransform = renderTransform;
-        OffsetXProperty.Changed.Subscribe((x) =>
+        OffsetXProperty.Changed.Subscribe(x =>
         {
             ViewTranslateTransform.X = x.NewValue.Value;
         });
-        OffsetYProperty.Changed.Subscribe((x) =>
+        OffsetYProperty.Changed.Subscribe(x =>
         {
             ViewTranslateTransform.Y = x.NewValue.Value;
         });
@@ -191,7 +507,8 @@ public class NodifyEditor : ItemsControl
         base.OnApplyTemplate(e);
         ((Control)Parent).SizeChanged+=(OnSizeChanged);
         var visual = this.GetVisualChildren().First().GetVisualChildren().First().GetVisualChildren().First();
-       // ItemsHost =(Panel)this.ItemsPanelRoot;
+        SelectedArea = new Rect();
+        // ItemsHost =(Panel)this.ItemsPanelRoot;
 
     }
 
@@ -206,7 +523,7 @@ public class NodifyEditor : ItemsControl
     /// <summary>
     /// 标记是否先启动了拖动
     /// </summary>
-    private bool isDragging = false;
+    private bool isDragging;
     
     
     private double _startOffsetX;
@@ -232,7 +549,6 @@ public class NodifyEditor : ItemsControl
         _startOffsetX = OffsetX;
         _startOffsetY = OffsetY;
         e.Handled = true;
-        // 启动计时
     }
 
     private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)

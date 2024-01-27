@@ -3,7 +3,8 @@
         xmlns:controls="using:Nodify.Avalonia.Controls"
         xmlns:viewModelBase="clr-namespace:Nodify.Avalonia.ViewModelBase"
         xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls"
-        xmlns:converters1="clr-namespace:Nodify.Avalonia.Converters">
+        xmlns:converters1="clr-namespace:Nodify.Avalonia.Converters"
+        xmlns:nodify="clr-namespace:Nodify">
     <Design.PreviewWith>
         <controls:NodifyEditor >
 
@@ -12,9 +13,8 @@
     </Design.PreviewWith>
 
     <Style Selector="controls|NodifyEditor">
-
-        <!-- Set Defaults -->
         
+        <!-- Set Defaults -->
         <Setter Property="ConnectionTemplate"
                 Value="{StaticResource ConnectionTemplate}" />
         <Setter Property="PendingConnectionTemplate"
@@ -26,6 +26,23 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
                     <Canvas Background="{StaticResource NodifyEditor.BackgroundBrush}" >
+                        <Canvas.Resources>
+                            <nodify:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
+                            <nodify:UnscaleDoubleConverter x:Key="UnscaleDoubleConverter" />
+                            <Style x:Key="SelectionRectangleStyle"
+                                   Selector="Rectangle">
+                                <Setter Property="Stroke"
+                                        Value="DodgerBlue" />
+                                <Setter Property="StrokeThickness"
+                                        Value="1" />
+                                <Setter Property="Fill">
+                                    <Setter.Value>
+                                        <SolidColorBrush Opacity="0.1"
+                                                         Color="DodgerBlue" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Canvas.Resources>
                         <controls:LargeGridLine Width="{Binding $parent[controls:NodifyEditor].Bounds.Width}"
                                                 OffsetX="{TemplateBinding OffsetX}"
                                                 OffsetY="{TemplateBinding OffsetY}"
@@ -41,7 +58,7 @@
                                       IsTabStop="False">
                             <ItemsControl.Styles>
                                 <Style Selector="ItemsControl">
-                                    <Setter Property="Panel.ZIndex"
+                                    <Setter Property="ZIndex"
                                             Value="-1" />
                                 </Style>
                             </ItemsControl.Styles>
@@ -54,6 +71,25 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
+                        <Rectangle Theme="{TemplateBinding SelectionRectangleTheme}"
+                                   RenderTransform="{Binding ViewTranslateTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}"
+                                   Canvas.Top="{Binding SelectedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                                   Canvas.Left="{Binding SelectedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
+                                   IsVisible="{TemplateBinding IsSelecting}">
+                            
+                            <Rectangle.Width>
+                                <MultiBinding Converter="{StaticResource UnscaleDoubleConverter}">
+                                    <Binding Path="SelectedArea.Width" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <Binding Path="Zoom" RelativeSource="{RelativeSource TemplatedParent}" />
+                                </MultiBinding>
+                            </Rectangle.Width>
+                            <Rectangle.Height>
+                                <MultiBinding Converter="{StaticResource UnscaleDoubleConverter}">
+                                    <Binding Path="SelectedArea.Height" RelativeSource="{RelativeSource TemplatedParent}" />
+                                    <Binding Path="Zoom" RelativeSource="{RelativeSource TemplatedParent}" />
+                                </MultiBinding>
+                            </Rectangle.Height>
+                        </Rectangle>
                     </Canvas>
                     
 
