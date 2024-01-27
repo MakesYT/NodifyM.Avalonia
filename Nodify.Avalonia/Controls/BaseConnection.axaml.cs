@@ -317,7 +317,6 @@ public class BaseConnection : Shape
                 (Vector sourceOffset, Vector targetOffset) = GetOffset();
                 Point source = Source + sourceOffset;
                 Point target = Target + targetOffset;
-                Debug.WriteLine( "source: " + source + ", target: " + target);
                 var (arrowStart, arrowEnd) = DrawLineGeometry(context, source, target);
 
                 if (ArrowSize.Width != 0d && ArrowSize.Height != 0d)

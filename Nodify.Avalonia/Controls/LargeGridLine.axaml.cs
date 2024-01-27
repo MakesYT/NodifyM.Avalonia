@@ -12,6 +12,24 @@ public class LargeGridLine : TemplatedControl
     public static readonly AvaloniaProperty<double> OffsetXProperty=AvaloniaProperty.Register<LargeGridLine,double>(nameof(OffsetX));
     public static readonly AvaloniaProperty<double> OffsetYProperty=AvaloniaProperty.Register<LargeGridLine,double>(nameof(OffsetY));
     public static readonly AvaloniaProperty<double> ZoomProperty=AvaloniaProperty.Register<LargeGridLine,double>(nameof(Zoom));
+    public static readonly AvaloniaProperty<IBrush> BrushProperty = AvaloniaProperty.Register<LargeGridLine, IBrush>(nameof(Brush),Brushes.Gainsboro);
+    public static readonly AvaloniaProperty<double> ThicknessProperty = AvaloniaProperty.Register<LargeGridLine, double>(nameof(Thickness),0.5);
+    public static readonly AvaloniaProperty<double> SpacingProperty = AvaloniaProperty.Register<LargeGridLine, double>(nameof(Spacing), 20);
+    public double Spacing
+    {
+        get { return (double)GetValue(SpacingProperty); }
+        set { SetValue(SpacingProperty, value); }
+    }
+    public IBrush Brush
+    {
+        get { return (IBrush)GetValue(BrushProperty); }
+        set { SetValue(BrushProperty, value); }
+    }
+    public double Thickness
+    {
+        get { return (double)GetValue(ThicknessProperty); }
+        set { SetValue(ThicknessProperty, value); }
+    }
     
     public double OffsetX
     {
@@ -45,19 +63,19 @@ public class LargeGridLine : TemplatedControl
     public override void Render(DrawingContext context)
     {
         base.Render(context);
-        var pen = new Pen(Brushes.LightGray, 0.5);
-        double step = 20;
+        var pen = new Pen(Brush, Thickness);
+        double step = Spacing;
         // Draw horizontal lines
         var offsetY = Math.Abs(OffsetY/Zoom);
         var offsetX = Math.Abs(OffsetX/Zoom);
-        for (double y = OffsetY%20; y < this.Bounds.Height; y += step)
+        for (double y = OffsetY%step; y < this.Bounds.Height; y += step)
         {
             context.DrawLine(pen, new Point(-offsetX, y), new Point(this.Bounds.Width, y));
         }
 
         // Draw vertical lines
         
-        for (double x = OffsetX%20; x < this.Bounds.Width; x += step)
+        for (double x = OffsetX%step; x < this.Bounds.Width; x += step)
         {
             context.DrawLine(pen, new Point(x, -offsetY), new Point(x, this.Bounds.Height));
         }

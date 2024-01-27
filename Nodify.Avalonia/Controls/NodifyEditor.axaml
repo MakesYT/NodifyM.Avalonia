@@ -19,6 +19,8 @@
                 Value="{StaticResource ConnectionTemplate}" />
         <Setter Property="PendingConnectionTemplate"
                 Value="{StaticResource PendingConnectionTemplate}" />
+        <Setter Property="GridLineTemplate" 
+                Value="{StaticResource GridLineTemplate}"></Setter>
         <Setter Property="Template">
             <ControlTemplate>
 
@@ -43,12 +45,7 @@
                                 </Setter>
                             </Style>
                         </Canvas.Resources>
-                        <controls:LargeGridLine Width="{Binding $parent[controls:NodifyEditor].Bounds.Width}"
-                                                OffsetX="{TemplateBinding OffsetX}"
-                                                OffsetY="{TemplateBinding OffsetY}"
-                                                Zoom="{TemplateBinding Zoom}"
-                                                Height="{Binding $parent[controls:NodifyEditor].Bounds.Height}"
-                                                ZIndex="-2"/>
+                        <ContentPresenter ZIndex="-2" ContentTemplate="{TemplateBinding GridLineTemplate}"/>
                         <ItemsPresenter Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}" ItemsPanel="{TemplateBinding ItemsPanel}" Name="ItemsPresenter" />
                         <ContentPresenter Name="PendingConnection" Content="{TemplateBinding PendingConnection}"
                                           ContentTemplate="{TemplateBinding PendingConnectionTemplate}" />

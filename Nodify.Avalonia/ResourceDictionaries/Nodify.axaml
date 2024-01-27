@@ -18,4 +18,12 @@
         <controls:PendingConnection IsTabStop="False" />
     </DataTemplate>
     
+    <DataTemplate x:Key="GridLineTemplate">
+        <controls:LargeGridLine Width="{Binding $parent[controls:NodifyEditor].Bounds.Width}"
+                                OffsetX="{Binding $parent[controls:NodifyEditor].OffsetX}"
+                                OffsetY="{Binding $parent[controls:NodifyEditor].OffsetY}"
+                                Zoom="{Binding $parent[controls:NodifyEditor].Zoom}"
+                                Height="{Binding $parent[controls:NodifyEditor].Bounds.Height}"
+                                ZIndex="-2"/>
+    </DataTemplate>
 </ResourceDictionary>

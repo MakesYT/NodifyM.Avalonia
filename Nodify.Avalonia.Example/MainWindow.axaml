@@ -22,11 +22,22 @@
             <controls:NodifyEditor.Resources>
                 <converters:FlowToDirectionConverter x:Key="FlowToDirectionConverter" />
             </controls:NodifyEditor.Resources>
+            <controls:NodifyEditor.GridLineTemplate>
+                <DataTemplate>
+                    <controls:LargeGridLine Width="{Binding $parent[controls:NodifyEditor].Bounds.Width}"
+                                            OffsetX="{Binding $parent[controls:NodifyEditor].OffsetX}"
+                                            OffsetY="{Binding $parent[controls:NodifyEditor].OffsetY}"
+                                            Zoom="{Binding $parent[controls:NodifyEditor].Zoom}"
+                                            Height="{Binding $parent[controls:NodifyEditor].Bounds.Height}"
+                                            Spacing="30"
+                                            Thickness="0.5"
+                                            Brush="LightGray"
+                                            ZIndex="-2"/>
+                </DataTemplate>
+            </controls:NodifyEditor.GridLineTemplate>
             <controls:NodifyEditor.ConnectionTemplate>
                 <DataTemplate DataType="{x:Type viewModelBase:ConnectionViewModelBase}">
                     <Grid>
-
-
                         <controls:Connection
                             Direction="{Binding Source.Flow,Converter={StaticResource FlowToDirectionConverter}}"
                             Source="{Binding Source.Anchor}" Focusable="True"

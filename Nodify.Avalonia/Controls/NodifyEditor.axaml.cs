@@ -66,6 +66,7 @@ public class NodifyEditor : SelectingItemsControl
         public static readonly StyledProperty<IDataTemplate> ConnectionTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(ConnectionTemplate));
         public static readonly StyledProperty<IDataTemplate> DecoratorTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(DecoratorTemplate));
         public static readonly StyledProperty<IDataTemplate> PendingConnectionTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(PendingConnectionTemplate));
+        public static readonly StyledProperty<IDataTemplate> GridLineTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(GridLineTemplate));
         public static readonly StyledProperty<ControlTheme> SelectionRectangleThemeProperty = AvaloniaProperty.Register<NodifyEditor,ControlTheme>(nameof(SelectionRectangleTheme));
         public static readonly AvaloniaProperty DecoratorContainerStyleProperty = AvaloniaProperty.Register<NodifyEditor,Style>(nameof(DecoratorContainerStyle));
 
@@ -152,6 +153,11 @@ public class NodifyEditor : SelectingItemsControl
         {
             get => (DataTemplate)GetValue(PendingConnectionTemplateProperty);
             set => SetValue(PendingConnectionTemplateProperty, value);
+        }
+        public DataTemplate GridLineTemplate
+        {
+            get => (DataTemplate)GetValue(GridLineTemplateProperty);
+            set => SetValue(GridLineTemplateProperty, value);
         }
 
         /// <summary>
