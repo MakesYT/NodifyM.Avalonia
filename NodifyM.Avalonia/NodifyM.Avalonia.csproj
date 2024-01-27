@@ -8,15 +8,15 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageProjectUrl>https://github.com/MakesYT/NodifyM.Avalonia</PackageProjectUrl>
         <LangVersion>10</LangVersion>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <VersionPrefix>1</VersionPrefix>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Avalonia.Desktop" Version="11.0.7" />
-      <PackageReference Include="Avalonia.Diagnostics" Version="11.0.7" />
-      <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.7" />
-      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+      <PackageReference Include="Avalonia.Desktop" Version="11.0.4" />
+      <PackageReference Include="Avalonia.Diagnostics" Version="11.0.4" />
+      <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.4" />
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
     </ItemGroup>
     <PropertyGroup>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
