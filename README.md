@@ -2,7 +2,7 @@
 A collection of controls for node based editors designed for MVVM.
 ## 关于
 This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on the Avalonia platform and is not a 1:1 replica of Nodify, but they have many similarities.
-![image](https://github.com/MakesYT/Nodify.Avalonia/assets/42534870/ad06f2f5-86d0-4ba8-aac0-187f7d886cb7)
+![image](https://private-user-images.githubusercontent.com/42534870/299652403-ad06f2f5-86d0-4ba8-aac0-187f7d886cb7.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDYzNTM3MzYsIm5iZiI6MTcwNjM1MzQzNiwicGF0aCI6Ii80MjUzNDg3MC8yOTk2NTI0MDMtYWQwNmYyZjUtODZkMC00YmE4LWFhYzAtMTg3ZjdkODg2Y2I3LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDAxMjclMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwMTI3VDExMDM1NlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWZiOTZmNjgzNWJhZWFhODhjZjJiYjA1MzRhY2Y0MmZhZmI0MGUxODZlMDFjZDg2ZTM4ZGJmNDZkYzE3ZTMyMWQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.qpf5q_qfaW2R7Vu14Lp7JslnWqvEbVYBaxp8MpoURWU)
 
 ## Notice
 This project is still in its early stages and lacks many events compared to **Nodify**, but it is already available
