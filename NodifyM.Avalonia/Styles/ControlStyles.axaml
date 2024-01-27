@@ -26,5 +26,6 @@
     <StyleInclude Source="../Controls/LineConnection.axaml"></StyleInclude>
     <StyleInclude Source="../Controls/PendingConnection.axaml"></StyleInclude>
     <StyleInclude Source="../Controls/BaseConnection.axaml"></StyleInclude>
+    <StyleInclude Source="../Controls/KnotNode.axaml"></StyleInclude>
    
 </Styles>

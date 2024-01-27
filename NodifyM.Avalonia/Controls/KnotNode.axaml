@@ -1,0 +1,41 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:NodifyM.Avalonia.Controls">
+    <Design.PreviewWith>
+        <controls:KnotNode />
+    </Design.PreviewWith>
+<Styles.Resources>
+    <DataTemplate x:Key="DefaultConnectorTemplate">
+        <controls:Connector Focusable="False"
+                         Cursor="Arrow" />
+    </DataTemplate>
+</Styles.Resources>
+    <Style Selector="controls|KnotNode">
+        <!-- Set Defaults -->
+        <Setter Property="Background"
+                Value="Transparent" />
+        <Setter Property="Foreground"
+                Value="DodgerBlue" />
+        <Setter Property="BorderBrush"
+                Value="Transparent" />
+        <Setter Property="Padding"
+                Value="15 5" />
+        <Setter Property="Cursor"
+                Value="SizeAll" />
+        <Setter Property="ContentTemplate"
+                Value="{StaticResource DefaultConnectorTemplate}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:KnotNode}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            CornerRadius="3">
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</Styles>
