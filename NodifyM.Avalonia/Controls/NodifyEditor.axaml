@@ -29,21 +29,6 @@
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
                     <Canvas Background="{StaticResource NodifyEditor.BackgroundBrush}" >
-                        <Canvas.Resources>
-                            <converters1:UnscaleTransformConverter x:Key="UnscaleTransformConverter" />
-                            <converters1:UnscaleDoubleConverter x:Key="UnscaleDoubleConverter" />
-                            <Style x:Key="SelectionRectangleStyle"
-                                   Selector="Rectangle">
-                                <Setter Property="Stroke"
-                                        Value="{StaticResource NodifyEditor.SelectionRectangleStrokeBrush}" />
-                                <Setter Property="StrokeThickness"
-                                        Value="1" />
-                                <Setter Property="Fill" Value="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}">
-                                    
-                                </Setter>
-                            </Style>
-                        </Canvas.Resources>
-                        
                         <ItemsPresenter Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}" ItemsPanel="{TemplateBinding ItemsPanel}"  />
                         <ContentPresenter ZIndex="-2" ContentTemplate="{TemplateBinding GridLineTemplate}"/>
                         <ContentPresenter Name="PendingConnection" Content="{TemplateBinding PendingConnection}"
@@ -63,29 +48,10 @@
                                     <Canvas
                                         Width="{Binding $parent[Canvas].Bounds.Width}"
                                         Height="{Binding $parent[Canvas].Bounds.Height}"
-                                        RenderTransform="{Binding $parent[controls:NodifyEditor].ViewTranslateTransform}"/>
+                                        RenderTransform="{TemplateBinding ViewTranslateTransform}"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
-                        <Rectangle Theme="{TemplateBinding SelectionRectangleTheme}"
-                                   RenderTransform="{Binding ViewTranslateTransform, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UnscaleTransformConverter}}"
-                                   Canvas.Top="{Binding SelectedArea.Y, RelativeSource={RelativeSource TemplatedParent}}"
-                                   Canvas.Left="{Binding SelectedArea.X, RelativeSource={RelativeSource TemplatedParent}}"
-                                   IsVisible="{TemplateBinding IsSelecting}">
-                            
-                            <Rectangle.Width>
-                                <MultiBinding Converter="{StaticResource UnscaleDoubleConverter}">
-                                    <Binding Path="SelectedArea.Width" RelativeSource="{RelativeSource TemplatedParent}" />
-                                    <Binding Path="Zoom" RelativeSource="{RelativeSource TemplatedParent}" />
-                                </MultiBinding>
-                            </Rectangle.Width>
-                            <Rectangle.Height>
-                                <MultiBinding Converter="{StaticResource UnscaleDoubleConverter}">
-                                    <Binding Path="SelectedArea.Height" RelativeSource="{RelativeSource TemplatedParent}" />
-                                    <Binding Path="Zoom" RelativeSource="{RelativeSource TemplatedParent}" />
-                                </MultiBinding>
-                            </Rectangle.Height>
-                        </Rectangle>
                     </Canvas>
                     
 
