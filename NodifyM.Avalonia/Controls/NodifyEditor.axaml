@@ -35,14 +35,11 @@
                             <Style x:Key="SelectionRectangleStyle"
                                    Selector="Rectangle">
                                 <Setter Property="Stroke"
-                                        Value="DodgerBlue" />
+                                        Value="{StaticResource NodifyEditor.SelectionRectangleStrokeBrush}" />
                                 <Setter Property="StrokeThickness"
                                         Value="1" />
-                                <Setter Property="Fill">
-                                    <Setter.Value>
-                                        <SolidColorBrush Opacity="0.1"
-                                                         Color="DodgerBlue" />
-                                    </Setter.Value>
+                                <Setter Property="Fill" Value="{StaticResource NodifyEditor.SelectionRectangleBackgroundBrush}">
+                                    
                                 </Setter>
                             </Style>
                         </Canvas.Resources>

@@ -13,11 +13,11 @@
     <Style Selector="controls|KnotNode">
         <!-- Set Defaults -->
         <Setter Property="Background"
-                Value="Transparent" />
+                Value="{StaticResource KnotNode.BackgroundBrush}" />
         <Setter Property="Foreground"
-                Value="DodgerBlue" />
+                Value="{StaticResource KnotNode.ForegroundBrush}" />
         <Setter Property="BorderBrush"
-                Value="Transparent" />
+                Value="{StaticResource KnotNode.BorderBrush}" />
         <Setter Property="Padding"
                 Value="15 5" />
         <Setter Property="Cursor"

@@ -10,9 +10,9 @@
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
-                Value="DodgerBlue" />
+                Value="{StaticResource Connection.StrokeBrush}" />
         <Setter Property="Fill"
-                Value="DodgerBlue" />
+                Value="{StaticResource Connection.StrokeBrush}" />
         <Setter Property="Spacing"
                 Value="20" />
     </Style>
@@ -21,11 +21,21 @@
         <Setter Property="StrokeThickness"
                 Value="3" />
         <Setter Property="Stroke"
-                Value="DodgerBlue" />
+                Value="{StaticResource LineConnection.StrokeBrush}" />
         <Setter Property="Fill"
-                Value="DodgerBlue" />
+                Value="{StaticResource LineConnection.StrokeBrush}" />
         <Setter Property="Spacing"
                 Value="30" />
     </Style>
-
+    <Style Selector="controls|CircuitConnection">
+        <!-- Set Defaults -->
+        <Setter Property="StrokeThickness"
+                Value="3" />
+        <Setter Property="Stroke"
+                Value="{StaticResource CircuitConnection.StrokeBrush}" />
+        <Setter Property="Fill"
+                Value="{StaticResource CircuitConnection.StrokeBrush}" />
+        <Setter Property="Spacing"
+                Value="30" />
+    </Style>
 </Styles>

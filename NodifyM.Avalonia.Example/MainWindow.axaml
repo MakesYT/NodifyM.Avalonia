@@ -38,15 +38,15 @@
             <controls:NodifyEditor.ConnectionTemplate>
                 <DataTemplate DataType="{x:Type viewModelBase:ConnectionViewModelBase}">
                     <Grid>
-                        <controls:Connection
+                        <controls:CircuitConnection
                             Direction="{Binding Source.Flow,Converter={StaticResource FlowToDirectionConverter}}"
                             Source="{Binding Source.Anchor}" Focusable="True"
                             Target="{Binding Target.Anchor}">
-                            <controls:Connection.Stroke>
+                            <controls:CircuitConnection.Stroke>
                                 <SolidColorBrush Color="Red"
                                                  Opacity="0.5" />
-                            </controls:Connection.Stroke>
-                        </controls:Connection>
+                            </controls:CircuitConnection.Stroke>
+                        </controls:CircuitConnection>
                     </Grid>
 
                 </DataTemplate>

@@ -1,13 +1,11 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
    
-
     <!--NODIFY EDITOR-->
 
     <Color x:Key="NodifyEditor.BackgroundColor">White</Color>
     <Color x:Key="NodifyEditor.ForegroundColor">Black</Color>
-    <Color x:Key="NodifyEditor.SelectionRectangleColor">DodgerBlue</Color>
+    <Color x:Key="NodifyEditor.SelectionRectangleColor"></Color>
 
     <!--ITEM CONTAINER-->
 

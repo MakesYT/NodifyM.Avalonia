@@ -18,13 +18,13 @@
         <Setter Property="IsHitTestVisible"
                 Value="False" />
         <Setter Property="Background"
-                Value="#121212" />
+                Value="{StaticResource PendingConnection.BackgroundBrush}" />
         <Setter Property="Foreground"
-                Value="White" />
+                Value="{StaticResource PendingConnection.ForegroundBrush}" />
         <Setter Property="Stroke"
-                Value="DodgerBlue" />
+                Value="{StaticResource PendingConnection.StrokeBrush}" />
         <Setter Property="BorderBrush"
-                Value="Black" />
+                Value="{StaticResource PendingConnection.BorderBrush}" />
         <Setter Property="EnablePreview"
                 Value="True" />
         <Setter Property="StrokeThickness"

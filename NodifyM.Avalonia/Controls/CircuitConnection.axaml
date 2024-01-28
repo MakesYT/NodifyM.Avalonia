@@ -1,0 +1,11 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:NodifyM.Avalonia.Controls">
+    <Design.PreviewWith>
+        <controls:CircuitConnection />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|CircuitConnection">
+      
+    </Style>
+</Styles>

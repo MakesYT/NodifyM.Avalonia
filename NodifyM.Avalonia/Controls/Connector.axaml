@@ -11,11 +11,11 @@
     <Style Selector="controls|Connector">
         <!-- Set Defaults -->
         <Setter Property="BorderBrush"
-                Value="DodgerBlue" />
+                Value="{StaticResource Connector.BorderBrush}" />
         <Setter Property="Foreground"
-                Value="White" />
+                Value="{StaticResource Connector.ForegroundBrush}" />
         <Setter Property="Background"
-                Value="Transparent" />
+                Value="{StaticResource Connector.BackgroundBrush}" />
         <Setter Property="Width"
                 Value="14" />
         <Setter Property="Height"
