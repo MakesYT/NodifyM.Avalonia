@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using Avalonia;
 using NodifyM.Avalonia.ViewModelBase;
 
@@ -74,5 +75,13 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
         input1.IsConnected = true;
     }
 
-    
+    public override void Connect(ConnectorViewModelBase source, ConnectorViewModelBase target)
+    {
+        base.Connect(source, target);
+    }
+
+    public override void DisconnectConnector(ConnectorViewModelBase connector)
+    {
+        base.DisconnectConnector(connector);
+    }
 }

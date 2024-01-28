@@ -5,7 +5,7 @@
 
     <Color x:Key="NodifyEditor.BackgroundColor">White</Color>
     <Color x:Key="NodifyEditor.ForegroundColor">Black</Color>
-    <Color x:Key="NodifyEditor.SelectionRectangleColor"></Color>
+    <Color x:Key="NodifyEditor.SelectionRectangleColor">#1e90ff</Color>
 
     <!--ITEM CONTAINER-->
 

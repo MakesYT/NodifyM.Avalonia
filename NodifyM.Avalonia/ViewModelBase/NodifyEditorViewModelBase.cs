@@ -18,7 +18,7 @@ public partial class NodifyEditorViewModelBase : ObservableObject
         PendingConnection = new PendingConnectionViewModelBase(this);
     }
     [RelayCommand]
-    private void DisconnectConnector(ConnectorViewModelBase connector)
+    public virtual void DisconnectConnector(ConnectorViewModelBase connector)
     {
         var connections = Enumerable.Where<ConnectionViewModelBase>(Connections, e => e.Source == connector || e.Target == connector).ToList();
         for (var i = connections.Count - 1; i >= 0; i--)
@@ -39,7 +39,7 @@ public partial class NodifyEditorViewModelBase : ObservableObject
         }
         
     }
-    public void Connect(ConnectorViewModelBase source, ConnectorViewModelBase target)
+    public virtual void Connect(ConnectorViewModelBase source, ConnectorViewModelBase target)
     {
         if (source.Flow == ConnectorViewModelBase.ConnectorFlow.Output)
         {
