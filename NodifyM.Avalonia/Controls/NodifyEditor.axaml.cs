@@ -347,12 +347,29 @@ public class NodifyEditor : SelectingItemsControl
 
     #endregion
 
+
+    #region AlignNode
+
+    public static readonly AvaloniaProperty<int> AlignmentRangeProperty = AvaloniaProperty.Register<NodifyEditor, int>(nameof(AlignmentRange),10);
+    public static readonly AvaloniaProperty<bool> AllowAlignProperty = AvaloniaProperty.Register<NodifyEditor, bool>(nameof(AllowAlign),BoxValue.True);
+    public int AlignmentRange
+    {
+        get => (int)GetValue(AlignmentRangeProperty);
+        set => SetValue(AlignmentRangeProperty, value);
+    }
+    public bool AllowAlign
+    {
+        get => (bool)GetValue(AllowAlignProperty);
+        set => SetValue(AllowAlignProperty, value);
+    }
     public Point TryAlignNode(BaseNode control,Point point)
     {
+        if (!AllowAlign) return point;
         double x = (int)point.X;
         double y = (int)point.Y;
-        double nowIntervalX = 10;
-        double nowIntervalY = 10;
+        double nowIntervalX = AlignmentRange;
+        double nowIntervalY = AlignmentRange;
+
         foreach (var child in ItemsPanelRoot.Children)
         {
             var node = (BaseNode)child.GetVisualChildren().First();
@@ -361,65 +378,68 @@ public class NodifyEditor : SelectingItemsControl
                 continue;
             }
 
+            // 合并两个区域的代码
+            var regionX = node.Location.X;
+            var regionY = node.Location.Y;
+            var controlWidth = control.Bounds.Width;
+            var controlHeight = control.Bounds.Height;
 
-            #region LT
-
-            var intervalX = Math.Abs(node.Location.X - x);
-            if (intervalX < 10&&nowIntervalX>intervalX)
+            // 计算左上角区域的边界
+            var intervalX = Math.Abs(regionX - x);
+            if (intervalX < nowIntervalX)
             {
-                x = node.Location.X;
+                x = regionX;
                 nowIntervalX = intervalX;
             }
-            var intervalX2 = Math.Abs(node.Location.X+node.Bounds.Width - x);
-            if (intervalX2 < 10&&nowIntervalX>intervalX2)
+            var intervalX2 = Math.Abs(regionX + node.Bounds.Width - x);
+            if (intervalX2 < nowIntervalX)
             {
-                x = node.Location.X+node.Bounds.Width;
+                x = regionX + node.Bounds.Width;
                 nowIntervalX = intervalX2;
             }
-            var intervalY = Math.Abs(node.Location.Y - y);
-            if (intervalY < 10&&nowIntervalY>intervalY)
+            var intervalY = Math.Abs(regionY - y);
+            if (intervalY < nowIntervalY)
             {
-                y = node.Location.Y;
+                y = regionY;
                 nowIntervalY = intervalY;
             }
-            var intervalY2 = Math.Abs(node.Location.Y+node.Bounds.Height - y);
-            if (intervalY2 < 10&&nowIntervalY>intervalY2)
+            var intervalY2 = Math.Abs(regionY + node.Bounds.Height - y);
+            if (intervalY2 < nowIntervalY)
             {
-                y = node.Location.Y+node.Bounds.Height;
+                y = regionY + node.Bounds.Height;
                 nowIntervalY = intervalY2;
             }
 
-            #endregion
-            #region RB
-
-            var intervalX3 = Math.Abs(node.Location.X-control.Bounds.Width - x);
-            if (intervalX3 < 10&&nowIntervalX>intervalX3)
+            // 计算右下角区域的边界
+            var intervalX3 = Math.Abs(regionX - controlWidth - x);
+            if (intervalX3 < nowIntervalX)
             {
-                x = node.Location.X-control.Bounds.Width;
+                x = regionX - controlWidth;
                 nowIntervalX = intervalX3;
             }
-            var intervalX4 = Math.Abs(node.Location.X-control.Bounds.Width+node.Bounds.Width - x);
-            if (intervalX4 < 10&&nowIntervalX>intervalX4)
+            var intervalX4 = Math.Abs(regionX - controlWidth + node.Bounds.Width - x);
+            if (intervalX4 < nowIntervalX)
             {
-                x = node.Location.X-control.Bounds.Width+node.Bounds.Width;
+                x = regionX - controlWidth + node.Bounds.Width;
                 nowIntervalX = intervalX4;
             }
-            var intervalY3 = Math.Abs(node.Location.Y-control.Bounds.Height - y);
-            if (intervalY3 < 10&&nowIntervalY>intervalY3)
+            var intervalY3 = Math.Abs(regionY - controlHeight - y);
+            if (intervalY3 < nowIntervalY)
             {
-                y = node.Location.Y-control.Bounds.Height;
+                y = regionY - controlHeight;
                 nowIntervalY = intervalY3;
             }
-            var intervalY4 = Math.Abs(node.Location.Y-control.Bounds.Height+node.Bounds.Height - y);
-            if (intervalY4 < 10&&nowIntervalY>intervalY4)
+            var intervalY4 = Math.Abs(regionY - controlHeight + node.Bounds.Height - y);
+            if (intervalY4 < nowIntervalY)
             {
-                y = node.Location.Y-control.Bounds.Height+node.Bounds.Height;
+                y = regionY - controlHeight + node.Bounds.Height;
                 nowIntervalY = intervalY4;
             }
-
-            #endregion
         }
-        Debug.WriteLine($"First {point},To {x},{y}");
-        return new Point(x,y);
+
+        return new Point(x, y);
+
     }
+
+    #endregion
 }
