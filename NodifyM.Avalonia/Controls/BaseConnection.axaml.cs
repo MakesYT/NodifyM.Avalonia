@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
@@ -514,13 +515,18 @@ public class BaseConnection : Shape
         }
     }
 
+    private long _timeSpan;
+    const long NSPerSecond = 10000000;
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        base.OnPointerPressed(e);
+        bool isDoubleClick = DateTimeOffset.Now.Ticks-_timeSpan<NSPerSecond*0.4;
+        _timeSpan = DateTimeOffset.Now.Ticks;
+        var currentPoint = e.GetCurrentPoint(this);
+        Point splitLocation = e.GetPosition(this);
         Focus();
-        if ((SplitCommand?.CanExecute(this) ?? false))
+        if (currentPoint.Properties.IsLeftButtonPressed&&isDoubleClick&&(SplitCommand?.CanExecute(splitLocation) ?? false))
         {
-            Point splitLocation = e.GetPosition(this);
+            
             object? connection = DataContext;
             var args = new ConnectionEventArgs(connection)
             {
@@ -539,9 +545,8 @@ public class BaseConnection : Shape
 
             e.Handled = true;
         }
-        else if (DisconnectCommand?.CanExecute(this) ?? false)
+        else if (currentPoint.Properties.IsLeftButtonPressed&& e.KeyModifiers.HasFlag(KeyModifiers.Alt)&&(DisconnectCommand?.CanExecute(this.DataContext) ?? false))
         {
-            Point splitLocation = e.GetPosition(this);
             object? connection = DataContext;
             var args = new ConnectionEventArgs(connection)
             {
@@ -553,9 +558,9 @@ public class BaseConnection : Shape
             RaiseEvent(args);
 
             // Raise DisconnectCommand if DisconnectEvent is not handled
-            if (!args.Handled && (DisconnectCommand?.CanExecute(splitLocation) ?? false))
+            if (!args.Handled && (DisconnectCommand?.CanExecute(DataContext) ?? false))
             {
-                DisconnectCommand.Execute(splitLocation);
+                DisconnectCommand.Execute(DataContext);
             }
 
             e.Handled = true;

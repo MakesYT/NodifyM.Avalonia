@@ -39,14 +39,34 @@ public partial class NodifyEditorViewModelBase : ObservableObject
         }
         
     }
+    
     public virtual void Connect(ConnectorViewModelBase source, ConnectorViewModelBase target)
     {
-        if (source.Flow == ConnectorViewModelBase.ConnectorFlow.Output)
+        switch (source.Flow)
         {
-            Connections.Add(new ConnectionViewModelBase(source, target));
-        }else if (source.Flow == ConnectorViewModelBase.ConnectorFlow.Input)
-        {
-            Connections.Add(new ConnectionViewModelBase(target, source));
+            case ConnectorViewModelBase.ConnectorFlow.Output:
+                Connections.Add(new ConnectionViewModelBase(this,source, target));
+                break;
+            case ConnectorViewModelBase.ConnectorFlow.Input:
+                Connections.Add(new ConnectionViewModelBase(this,target, source));
+                break;
+            default:
+            {
+                switch (target.Flow)
+                {
+                    case ConnectorViewModelBase.ConnectorFlow.Input:
+                        Connections.Add(new ConnectionViewModelBase(this,source, target));
+                        break;
+                    case ConnectorViewModelBase.ConnectorFlow.Output:
+                        Connections.Add(new ConnectionViewModelBase(this,target, source));
+                        break;
+                    default:
+                        Connections.Add(new ConnectionViewModelBase(this,source, target));
+                        break;
+                }
+
+                break;
+            }
         }
         
         source.IsConnected = true;

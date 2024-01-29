@@ -182,10 +182,6 @@ public class Connector : ContentControl
         
         Editor =  this.GetParentOfType<NodifyEditor>();
         Thumb = this.GetChildOfType<Control>("PART_Connector");
-        if (Thumb is null)
-        {
-            
-        }
         Loaded += OnConnectorLoaded;
         Unloaded += OnConnectorUnloaded;
     }

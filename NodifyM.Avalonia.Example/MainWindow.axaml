@@ -61,6 +61,8 @@
                 <DataTemplate DataType="{x:Type viewModelBase:ConnectionViewModelBase}">
                     <Grid>
                         <controls:Connection
+                            SplitCommand="{Binding SplitConnectionCommand}"
+                            DisconnectCommand="{Binding DisconnectConnectionCommand}"
                             Direction="{Binding .,Converter={StaticResource FlowToDirectionConverter}}"
                             Source="{Binding Source.Anchor}" Focusable="True"
                             Target="{Binding Target.Anchor}">
