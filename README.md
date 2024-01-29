@@ -30,3 +30,12 @@ This project is still in its early stages and lacks many events compared to **No
 ## Example
 #### please see the [NodifyM.Avalonia.Example](https://github.com/MakesYT/NodifyM.Avalonia/tree/master/NodifyM.Avalonia.Example)
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
+
+## Changelog
+### 1.0.3
+ - Added the connection SplitConnection and DisconnectConnection commands
+ - Add CircuitConnection
+ - Fixed default control color to dictionary color
+ - Support to override the Connect and Disconnect from NodifyEditorViewModelBase method
+ - Fix KnotNode Show
+ - Remove some useless attributes
