@@ -81,8 +81,8 @@
     </Style>
     <Style Selector="controls|NodifyEditor > ContentPresenter">
 
-        <Setter Property="Canvas.Left" x:DataType="viewModelBase1:NodeViewModelBase" Value="{Binding Location.X }" />
-        <Setter Property="Canvas.Top" x:DataType="viewModelBase1:NodeViewModelBase" Value="{Binding Location.Y }" />
+        <Setter Property="Canvas.Left"  Value="{ReflectionBinding Location.X }" />
+        <Setter Property="Canvas.Top" Value="{ReflectionBinding Location.Y }" />
 
     </Style>
 

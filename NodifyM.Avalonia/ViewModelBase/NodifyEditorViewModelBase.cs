@@ -7,7 +7,7 @@ namespace NodifyM.Avalonia.ViewModelBase;
 public partial class NodifyEditorViewModelBase : ObservableObject
 {
     [ObservableProperty]
-    private ObservableCollection<NodeViewModelBase> nodes = new();
+    private ObservableCollection<object?> nodes = new();
     [ObservableProperty]
     private ObservableCollection<ConnectionViewModelBase> connections=new ();
 

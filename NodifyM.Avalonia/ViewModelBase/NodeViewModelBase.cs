@@ -4,9 +4,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace NodifyM.Avalonia.ViewModelBase;
 
-public partial class NodeViewModelBase : ObservableObject
+public partial class NodeViewModelBase : BaseNodeViewModel
 {
-    [ObservableProperty] private Point _location;
 
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _footer;

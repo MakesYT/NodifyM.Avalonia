@@ -1,6 +1,7 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="using:NodifyM.Avalonia.Controls">
+        xmlns:controls="using:NodifyM.Avalonia.Controls"
+        xmlns:viewModelBase="clr-namespace:NodifyM.Avalonia.ViewModelBase">
     <Design.PreviewWith>
         <controls:KnotNode />
     </Design.PreviewWith>
@@ -22,6 +23,8 @@
                 Value="15 5" />
         <Setter Property="Cursor"
                 Value="SizeAll" />
+        <Setter Property="Location" x:DataType="viewModelBase:KnotNodeViewModel"
+                Value="{Binding Location}" />
         <Setter Property="ContentTemplate"
                 Value="{StaticResource DefaultConnectorTemplate}" />
         <Setter Property="Template">
@@ -32,7 +35,8 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
                             CornerRadius="3">
-                        <ContentPresenter />
+                        <ContentPresenter x:Name="PART_Connector" x:DataType="viewModelBase:KnotNodeViewModel" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                          DataContext="{ReflectionBinding Path=Connector}"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

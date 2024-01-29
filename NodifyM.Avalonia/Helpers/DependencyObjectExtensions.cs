@@ -6,39 +6,49 @@ namespace NodifyM.Avalonia.Helpers
 {
     internal static class DependencyObjectExtensions
     {
-        public static T? GetParentOfType<T>(this Control child)
+        public static T? GetParentOfType<T>(this Control child,string? name=null)
             where T : Control
         {
             Visual? current = child;
-
-            do
+            
+            while (true)
             {
+                
+            
                 current = current.GetVisualParent();
                 if (current == default)
                 {
                     return default;
                 }
 
-            } while (current is not T);
+                if (current is T control)
+                {
+                    if (name!=null&&control.Name!=name)
+                    {
+                        continue;
+                    }
+                    return control;
+                }
+            } 
 
-            return (T)current;
+            
         }
-        public static T? GetChildOfType<T>(this Control control,string name)
+        public static T? GetChildOfType<T>(this Control control,string? name=null)
             where T : Control
         {
-            if (control.Name == name&& control is T)
-                return (T)control;
+            if ((name ==null||control.Name == name)&& control is T control1)
+                return control1;
 
             foreach (var child in control.GetVisualChildren())
             {
                 var foundChild = child as Control;
-                if (foundChild != null && foundChild.Name == name&& foundChild is T)
-                    return (T)foundChild;
+                if (foundChild != null && (name==null||foundChild.Name == name)&& foundChild is T child1)
+                    return child1;
                 else
                 {
-                    var result = (T)((foundChild).GetChildOfType<Control>(name));
+                    var result = ((foundChild).GetChildOfType<T>(name));
                     if (result != null)
-                        return result;
+                        return (T)result;
                 }
             }
 

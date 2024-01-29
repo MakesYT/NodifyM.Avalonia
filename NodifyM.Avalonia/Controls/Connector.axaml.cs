@@ -106,7 +106,7 @@ public class Connector : ContentControl
     #endregion
     protected internal NodifyEditor? Editor { get; private set; }
     protected Control? Thumb { get; private set; }
-    protected Node? Container { get; private set; }
+    protected BaseNode? Container { get; private set; }
     public static bool AllowPendingConnectionCancellation { get; set; } = true;
 
     /// <summary>
@@ -165,11 +165,6 @@ public class Connector : ContentControl
     
     protected void UpdateAnchor(Point location)
     {
-        if (Application.Current.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime applicationLifetime)
-        {
-            var mainWindowDataContext = applicationLifetime.MainWindow.DataContext;
-               
-        }
         _lastUpdatedContainerPosition = location;
         if ( Container != null)
         {
@@ -183,9 +178,14 @@ public class Connector : ContentControl
   protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        Container = this.GetParentOfType<Node>();
+        Container = this.GetParentOfType<BaseNode>();
+        
         Editor =  this.GetParentOfType<NodifyEditor>();
         Thumb = this.GetChildOfType<Control>("PART_Connector");
+        if (Thumb is null)
+        {
+            
+        }
         Loaded += OnConnectorLoaded;
         Unloaded += OnConnectorUnloaded;
     }

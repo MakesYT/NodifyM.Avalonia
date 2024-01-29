@@ -11,7 +11,7 @@
         x:DataType="example:MainWindowViewModel"
         Title="Nodify.Avalonia.Example">
     <Grid>
-        
+
 
         <controls:NodifyEditor
             Background="Transparent"
@@ -19,8 +19,30 @@
             Connections="{Binding Connections}"
             PendingConnection="{Binding PendingConnection}"
             DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
+            <controls:NodifyEditor.DataTemplates>
+                <DataTemplate DataType="viewModelBase:KnotNodeViewModel">
+                    <controls:KnotNode  Content="{Binding Connector}">
+                        <controls:KnotNode.ContentTemplate>
+                            <DataTemplate DataType="viewModelBase:ConnectorViewModelBase">
+                                <controls:Connector
+                                    VerticalAlignment="Center"
+                                    IsConnected="{Binding IsConnected}"
+                                    Anchor="{Binding Anchor, Mode=OneWayToSource}">
+                                    <controls:Connector.BorderBrush>
+                                        <SolidColorBrush
+                                            Color="CornflowerBlue"
+                                            Opacity="0.5" />
+                                    </controls:Connector.BorderBrush>
+                                </controls:Connector>
+                            </DataTemplate>
+                        </controls:KnotNode.ContentTemplate>
+                    </controls:KnotNode>
+                </DataTemplate>
+
+            </controls:NodifyEditor.DataTemplates>
             <controls:NodifyEditor.Resources>
                 <converters:FlowToDirectionConverter x:Key="FlowToDirectionConverter" />
+
             </controls:NodifyEditor.Resources>
             <controls:NodifyEditor.GridLineTemplate>
                 <DataTemplate>
@@ -32,21 +54,21 @@
                                             Spacing="30"
                                             Thickness="0.5"
                                             Brush="LightGray"
-                                            ZIndex="-2"/>
+                                            ZIndex="-2" />
                 </DataTemplate>
             </controls:NodifyEditor.GridLineTemplate>
             <controls:NodifyEditor.ConnectionTemplate>
                 <DataTemplate DataType="{x:Type viewModelBase:ConnectionViewModelBase}">
                     <Grid>
-                        <controls:CircuitConnection
-                            Direction="{Binding Source.Flow,Converter={StaticResource FlowToDirectionConverter}}"
+                        <controls:Connection
+                            Direction="{Binding .,Converter={StaticResource FlowToDirectionConverter}}"
                             Source="{Binding Source.Anchor}" Focusable="True"
                             Target="{Binding Target.Anchor}">
-                            <controls:CircuitConnection.Stroke>
+                            <controls:Connection.Stroke>
                                 <SolidColorBrush Color="Red"
                                                  Opacity="0.5" />
-                            </controls:CircuitConnection.Stroke>
-                        </controls:CircuitConnection>
+                            </controls:Connection.Stroke>
+                        </controls:Connection>
                     </Grid>
 
                 </DataTemplate>
@@ -138,6 +160,7 @@
                         </controls:Node.OutputConnectorTemplate>
                     </controls:Node>
                 </DataTemplate>
+
             </controls:NodifyEditor.ItemTemplate>
 
         </controls:NodifyEditor>

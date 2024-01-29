@@ -25,8 +25,8 @@
         <Setter Property="IsConnected" Value="{Binding IsConnected,Mode=TwoWay}"></Setter>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type controls:Connector}">
-                    <Ellipse x:Name="Connector" 
+                <ControlTemplate  TargetType="{x:Type controls:Connector}">
+                    <Ellipse x:Name="PART_Connector"
                              Width="{TemplateBinding Width}"
                              Height="{TemplateBinding Height}"
                              Stroke="{TemplateBinding BorderBrush}"
@@ -35,6 +35,9 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style Selector="controls|Connector[IsConnected=True] /template/ Ellipse#PART_Connector">
+        <Setter Property="Fill" Value="{Binding BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" />
     </Style>
     
 </Styles>

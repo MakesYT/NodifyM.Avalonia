@@ -9,11 +9,21 @@ namespace NodifyM.Avalonia.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value is ConnectionViewModelBase connectionViewModelBase)
+            {
+                if (connectionViewModelBase.source.Flow is ConnectorViewModelBase.ConnectorFlow.Input )
+                {
+                    return ConnectionDirection.Backward;
+                }
+                if (connectionViewModelBase.target.Flow is ConnectorViewModelBase.ConnectorFlow.Input)
+                {
+                    return ConnectionDirection.Forward;
+                }
+            }
             if (value is ConnectorViewModelBase.ConnectorFlow flow)
             {
                 return flow == ConnectorViewModelBase.ConnectorFlow.Output ? ConnectionDirection.Forward : ConnectionDirection.Backward;
             }
-
             return value;
         }
 
