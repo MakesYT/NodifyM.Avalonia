@@ -31,7 +31,16 @@ public class BaseNode : ContentControl
         PointerPressed += OnPointerPressed;
         PointerMoved += OnPointerMoved;
         PointerReleased += OnPointerReleased;
+       
     }
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _editor = this.GetParentOfType<NodifyEditor>();
+    }
+
+    private NodifyEditor _editor;
     /// <summary>
     /// 记录上一次鼠标位置
     /// </summary>
@@ -97,7 +106,7 @@ public class BaseNode : ContentControl
         var offset = currentMousePosition - lastMousePosition;
 
 
-        ((BaseNodeViewModel)DataContext).Location = new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY);
+        ((BaseNodeViewModel)DataContext).Location = _editor.TryAlignNode(this,new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY));
         RaiseEvent(new RoutedEventArgs(LocationChangedEvent,this));
     }
 }

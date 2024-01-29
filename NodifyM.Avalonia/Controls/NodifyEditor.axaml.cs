@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -345,4 +346,80 @@ public class NodifyEditor : SelectingItemsControl
     }
 
     #endregion
+
+    public Point TryAlignNode(BaseNode control,Point point)
+    {
+        double x = (int)point.X;
+        double y = (int)point.Y;
+        double nowIntervalX = 10;
+        double nowIntervalY = 10;
+        foreach (var child in ItemsPanelRoot.Children)
+        {
+            var node = (BaseNode)child.GetVisualChildren().First();
+            if (node == control)
+            {
+                continue;
+            }
+
+
+            #region LT
+
+            var intervalX = Math.Abs(node.Location.X - x);
+            if (intervalX < 10&&nowIntervalX>intervalX)
+            {
+                x = node.Location.X;
+                nowIntervalX = intervalX;
+            }
+            var intervalX2 = Math.Abs(node.Location.X+node.Bounds.Width - x);
+            if (intervalX2 < 10&&nowIntervalX>intervalX2)
+            {
+                x = node.Location.X+node.Bounds.Width;
+                nowIntervalX = intervalX2;
+            }
+            var intervalY = Math.Abs(node.Location.Y - y);
+            if (intervalY < 10&&nowIntervalY>intervalY)
+            {
+                y = node.Location.Y;
+                nowIntervalY = intervalY;
+            }
+            var intervalY2 = Math.Abs(node.Location.Y+node.Bounds.Height - y);
+            if (intervalY2 < 10&&nowIntervalY>intervalY2)
+            {
+                y = node.Location.Y+node.Bounds.Height;
+                nowIntervalY = intervalY2;
+            }
+
+            #endregion
+            #region RB
+
+            var intervalX3 = Math.Abs(node.Location.X-control.Bounds.Width - x);
+            if (intervalX3 < 10&&nowIntervalX>intervalX3)
+            {
+                x = node.Location.X-control.Bounds.Width;
+                nowIntervalX = intervalX3;
+            }
+            var intervalX4 = Math.Abs(node.Location.X-control.Bounds.Width+node.Bounds.Width - x);
+            if (intervalX4 < 10&&nowIntervalX>intervalX4)
+            {
+                x = node.Location.X-control.Bounds.Width+node.Bounds.Width;
+                nowIntervalX = intervalX4;
+            }
+            var intervalY3 = Math.Abs(node.Location.Y-control.Bounds.Height - y);
+            if (intervalY3 < 10&&nowIntervalY>intervalY3)
+            {
+                y = node.Location.Y-control.Bounds.Height;
+                nowIntervalY = intervalY3;
+            }
+            var intervalY4 = Math.Abs(node.Location.Y-control.Bounds.Height+node.Bounds.Height - y);
+            if (intervalY4 < 10&&nowIntervalY>intervalY4)
+            {
+                y = node.Location.Y-control.Bounds.Height+node.Bounds.Height;
+                nowIntervalY = intervalY4;
+            }
+
+            #endregion
+        }
+        Debug.WriteLine($"First {point},To {x},{y}");
+        return new Point(x,y);
+    }
 }
