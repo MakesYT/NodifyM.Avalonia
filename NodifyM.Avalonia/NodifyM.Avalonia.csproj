@@ -8,8 +8,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageProjectUrl>https://github.com/MakesYT/NodifyM.Avalonia</PackageProjectUrl>
         <LangVersion>10</LangVersion>
-        <Version>1.0.3</Version>
-        <VersionPrefix>1</VersionPrefix>
+        <Version>1.0.4</Version>
     </PropertyGroup>
 
     <ItemGroup>

@@ -8,6 +8,18 @@ A collection of controls for node based editors designed for MVVM.
 This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on the Avalonia platform and is not a 1:1 replica of Nodify, but they have many similarities.
 ![image](https://raw.githubusercontent.com/MakesYT/NodifyM.Avalonia/master/assets/Kitopia1706512452013.png)
 
+## Features
+ - Designed from the start to work with **MVVM**
+ - Built-in dark and light **themes**
+ - **Selecting**， **zooming**， **panning**
+ - Select， move, **_auto align_**  和 connect nodes
+### What are the differences compared to Nodify
+ - **Supports** 
+   - auto align Node
+ - **Nonsupport**
+   - Select multiple nodes
+ - **Will be supported in the future**
+   - **auto panning** when close to edge
 ## Usage
 ### NodifyEditor
  - `Press` and `Hold` -> Move the all show items
@@ -32,6 +44,9 @@ This project is still in its early stages and lacks many events compared to **No
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.4
+ - Add align Node configuration properties
+ - Add Node automatic alignment
 ### 1.0.3
  - Added the connection SplitConnection and DisconnectConnection commands
  - Add CircuitConnection
