@@ -33,27 +33,42 @@ namespace NodifyM.Avalonia.Helpers
 
             
         }
-        public static T? GetChildOfType<T>(this Control control,string? name=null)
+        public static T? GetChildOfType<T>(this Control control, string? name = null)
             where T : Control
         {
-            if ((name ==null||control.Name == name)&& control is T control1)
-                return control1;
+            var stack = new Stack<Control>();
+            stack.Push(control);
 
-            foreach (var child in control.GetVisualChildren())
+            while (stack.Count > 0)
             {
-                var foundChild = child as Control;
-                if (foundChild != null && (name==null||foundChild.Name == name)&& foundChild is T child1)
-                    return child1;
-                else
+                var currentControl = stack.Pop();
+        
+                if (string.IsNullOrEmpty(name) && currentControl is T targetControl)
                 {
-                    var result = ((foundChild).GetChildOfType<T>(name));
-                    if (result != null)
-                        return (T)result;
+                    return targetControl;
+                }
+
+                foreach (var child in currentControl.GetVisualChildren())
+                {
+                    var childControl = child as Control;
+                    if (childControl != null)
+                    {
+                        if (string.IsNullOrEmpty(name) || childControl.Name == name)
+                        {
+                            if (childControl is T targetChild)
+                            {
+                                return targetChild;
+                            }
+                        }
+                
+                        stack.Push(childControl);
+                    }
                 }
             }
 
             return null;
         }
+
         public static T? GetVisualAt<T>(this Control control,Point anchor)
             where T : Control
         {
