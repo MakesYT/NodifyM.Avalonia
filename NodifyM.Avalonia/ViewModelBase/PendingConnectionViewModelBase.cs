@@ -6,7 +6,7 @@ namespace NodifyM.Avalonia.ViewModelBase;
 
 public partial class PendingConnectionViewModelBase : ObservableObject
 {
-    private string[] _previewTargetNames = new string[] { "不能自己连接自己", "连接","丢弃连接" };
+    private string[] _previewTargetNames = new string[] { "Can't connect itself", "Connect","Drop Connect" };
     
     [ObservableProperty] private object? _previewTarget;
     [ObservableProperty] private string? _previewText;
