@@ -6,7 +6,7 @@
 A collection of controls for node based editors designed for MVVM.
 ## About
 This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on the Avalonia platform and is not a 1:1 replica of Nodify, but they have many similarities.
-![image](https://raw.githubusercontent.com/MakesYT/NodifyM.Avalonia/master/assets/Kitopia1706627027148.png)
+![image](https://raw.githubusercontent.com/MakesYT/NodifyM.Avalonia/master/assets/Kitopia1706627075934.png)
 
 ## Features
  - Designed from the start to work with **MVVM**
