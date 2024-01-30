@@ -370,7 +370,8 @@ public class NodifyEditor : SelectingItemsControl
         double nowIntervalX = AlignmentRange;
         double nowIntervalY = AlignmentRange;
 
-        foreach (var child in ItemsPanelRoot.Children)
+        if (ItemsPanelRoot?.Children == null) return point;
+        foreach (var child in ItemsPanelRoot?.Children)
         {
             var node = (BaseNode)child.GetVisualChildren().First();
             if (node == control)
@@ -391,18 +392,21 @@ public class NodifyEditor : SelectingItemsControl
                 x = regionX;
                 nowIntervalX = intervalX;
             }
+
             var intervalX2 = Math.Abs(regionX + node.Bounds.Width - x);
             if (intervalX2 < nowIntervalX)
             {
                 x = regionX + node.Bounds.Width;
                 nowIntervalX = intervalX2;
             }
+
             var intervalY = Math.Abs(regionY - y);
             if (intervalY < nowIntervalY)
             {
                 y = regionY;
                 nowIntervalY = intervalY;
             }
+
             var intervalY2 = Math.Abs(regionY + node.Bounds.Height - y);
             if (intervalY2 < nowIntervalY)
             {
@@ -417,18 +421,21 @@ public class NodifyEditor : SelectingItemsControl
                 x = regionX - controlWidth;
                 nowIntervalX = intervalX3;
             }
+
             var intervalX4 = Math.Abs(regionX - controlWidth + node.Bounds.Width - x);
             if (intervalX4 < nowIntervalX)
             {
                 x = regionX - controlWidth + node.Bounds.Width;
                 nowIntervalX = intervalX4;
             }
+
             var intervalY3 = Math.Abs(regionY - controlHeight - y);
             if (intervalY3 < nowIntervalY)
             {
                 y = regionY - controlHeight;
                 nowIntervalY = intervalY3;
             }
+
             var intervalY4 = Math.Abs(regionY - controlHeight + node.Bounds.Height - y);
             if (intervalY4 < nowIntervalY)
             {

@@ -9,6 +9,7 @@ public partial class ConnectionViewModelBase: ObservableObject
 {
     [ObservableProperty] public ConnectorViewModelBase source;
     [ObservableProperty] public ConnectorViewModelBase target;
+    [ObservableProperty] public string text;
 
     private NodifyEditorViewModelBase nodifyEditor
     {
@@ -21,7 +22,13 @@ public partial class ConnectionViewModelBase: ObservableObject
         Source = source;
         Target = target;
     }
-    
+    public ConnectionViewModelBase(NodifyEditorViewModelBase nodifyEditor,ConnectorViewModelBase source, ConnectorViewModelBase target, string text)
+    {
+        this.nodifyEditor = nodifyEditor;
+        Source = source;
+        Target = target;
+        Text = text;
+    }
     [RelayCommand]
     public virtual void DisconnectConnection(ConnectionViewModelBase connection)
     {

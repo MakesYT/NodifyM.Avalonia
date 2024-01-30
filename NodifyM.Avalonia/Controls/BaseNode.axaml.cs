@@ -105,8 +105,8 @@ public class BaseNode : ContentControl
         var currentMousePosition = e.GetPosition(((Visual)this.GetLogicalParent()).GetVisualParent());
         var offset = currentMousePosition - lastMousePosition;
 
+        ((BaseNodeViewModel)DataContext).Location = e.KeyModifiers.HasFlag(KeyModifiers.Shift) ? new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY) : _editor.TryAlignNode(this,new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY));
 
-        ((BaseNodeViewModel)DataContext).Location = _editor.TryAlignNode(this,new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY));
         RaiseEvent(new RoutedEventArgs(LocationChangedEvent,this));
     }
 }

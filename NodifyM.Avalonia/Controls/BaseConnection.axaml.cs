@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls.Shapes;
@@ -101,7 +102,7 @@ public enum ArrowHeadShape
     Rectangle
 }
 
-public class BaseConnection : Shape
+public class BaseConnection : BaseConnectionShape
 {
     #region Dependency Properties
 
@@ -293,24 +294,33 @@ public class BaseConnection : Shape
 
     public BaseConnection()
     {
-        Shape.AffectsGeometry<BaseConnection>(SourceProperty, TargetProperty);
+        BaseConnectionShape.AffectsGeometry<BaseConnection>(SourceProperty, TargetProperty,TextProperty);
     }
     /// <summary>
     /// Gets a vector that has its coordinates set to 0.
     /// </summary>
     protected static readonly Vector ZeroVector = new Vector(0d, 0d);
 
-    private  StreamGeometry _geometry = new StreamGeometry
+    protected override Geometry? CreateDefiningTextGeometry()
     {
-    };
-    
+        if (Text is null)
+        {
+            return null;
+        }
+        (Vector sourceOffset, Vector targetOffset) = GetOffset();
+        Point source = Source + sourceOffset;
+        Point target = Target + targetOffset;
+        var formattedText = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface("Inter"), TextSize, Brushes.Black);
+        return (formattedText.BuildGeometry(new Point((source.X + target.X)*TextPoint.Point.X,  (source.Y + target.Y)*TextPoint.Point.Y)));
+    }
 
     protected override Geometry CreateDefiningGeometry()
     {
         {
-            _geometry = new StreamGeometry();
+            var _geometry = new StreamGeometry();
             using (StreamGeometryContext context = _geometry.Open())
             {
+                
                 context.SetFillRule( FillRule.EvenOdd);
                 (Vector sourceOffset, Vector targetOffset) = GetOffset();
                 Point source = Source + sourceOffset;

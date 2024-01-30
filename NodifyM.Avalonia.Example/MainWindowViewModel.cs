@@ -22,7 +22,7 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
             Title = "B 1",
             Flow = ConnectorViewModelBase.ConnectorFlow.Output
         };
-        Connections.Add(new ConnectionViewModelBase(this,output1,knot1.Connector));
+        Connections.Add(new ConnectionViewModelBase(this,output1,knot1.Connector,"Test"));
         Connections.Add(new ConnectionViewModelBase(this,knot1.Connector,input1));
         Nodes  =new(){
                 new NodeViewModelBase()

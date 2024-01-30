@@ -6,7 +6,7 @@
 A collection of controls for node based editors designed for MVVM.
 ## About
 This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on the Avalonia platform and is not a 1:1 replica of Nodify, but they have many similarities.
-![image](https://raw.githubusercontent.com/MakesYT/NodifyM.Avalonia/master/assets/Kitopia1706512452013.png)
+![image](https://raw.githubusercontent.com/MakesYT/NodifyM.Avalonia/master/assets/Kitopia1706627027148.png)
 
 ## Features
  - Designed from the start to work with **MVVM**
@@ -26,6 +26,7 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
  -  Mouse wheel -> Zoom all show items
 ### Node
  - `Press` and `Hold` -> Move the Node
+ - `Press Move` and `Hold Shift` -> Move the Node(without automatically align)
  - `Press` the Node -> Select the Node
 ### Connection
  - `Press` and `Hold` the Connector and move to another Connector -> Create a new connection
@@ -44,6 +45,9 @@ This project is still in its early stages and lacks many events compared to **No
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.5
+ - Added the ability to temporarily without automatically align Node while holding Shift
+ - Added the ability to display text on Connection
 ### 1.0.4
  - Add align Node configuration properties
  - Add Node automatic alignment

@@ -61,6 +61,8 @@
                 <DataTemplate DataType="{x:Type viewModelBase:ConnectionViewModelBase}">
                     <Grid>
                         <controls:Connection
+                            Text="{Binding Text}"
+                            TextPoint="50%,50%"
                             SplitCommand="{Binding SplitConnectionCommand}"
                             DisconnectCommand="{Binding DisconnectConnectionCommand}"
                             Direction="{Binding .,Converter={StaticResource FlowToDirectionConverter}}"
