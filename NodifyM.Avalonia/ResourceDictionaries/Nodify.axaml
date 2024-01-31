@@ -12,7 +12,7 @@
         <controls:NodeOutput />
     </DataTemplate>
     <DataTemplate x:Key="AlignmentLineTemplate" DataType="viewModelBase:AlignmentLineViewModel">
-        <Line StrokeThickness="0.5" Stroke="{StaticResource NodifyEditor.AlignmentLineBrush}"  
+        <Line StrokeThickness="1" Stroke="{StaticResource NodifyEditor.AlignmentLineBrush}"  
               StartPoint="{Binding Start}"
               EndPoint="{Binding End}"
               IsVisible="{Binding IsVisible}"

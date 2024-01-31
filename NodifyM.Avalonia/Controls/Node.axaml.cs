@@ -54,13 +54,7 @@ public class Node : BaseNode
     public static readonly AvaloniaProperty<IEnumerable> OutputProperty =
         AvaloniaProperty.Register<Node, IEnumerable>(nameof(Output));
 
-    public static readonly AvaloniaProperty<bool> IsSelectedProperty =
-        AvaloniaProperty.Register<Node, bool>(nameof(IsSelected));
-    public bool IsSelected
-    {
-        get => (bool)GetValue(IsSelectedProperty);
-        set => SetValue(IsSelectedProperty, value);
-    }
+   
 
     public Brush ContentBrush
     {

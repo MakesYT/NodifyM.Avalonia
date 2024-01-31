@@ -19,7 +19,7 @@
     <Color x:Key="Node.HeaderForegroundColor">White</Color>
     <Color x:Key="Node.HeaderColor">#5C6A98</Color>
     <Color x:Key="Node.FooterColor">#5C6A98</Color>
-    <Color x:Key="Node.BorderColor">Transparent</Color>
+    <Color x:Key="Node.BorderColor">#CBCCDF</Color>
 
     <!--STATE NODE-->
     <Color x:Key="StateNode.BackgroundColor">#5C6A98</Color>

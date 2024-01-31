@@ -15,6 +15,7 @@ using Avalonia.Threading;
 using Avalonia.VisualTree;
 using NodifyM.Avalonia.Events;
 using NodifyM.Avalonia.Helpers;
+using NodifyM.Avalonia.ViewModelBase;
 
 namespace NodifyM.Avalonia.Controls;
 
@@ -355,7 +356,7 @@ public class NodifyEditor : SelectingItemsControl
     public static readonly AvaloniaProperty<bool> AllowAlignProperty = AvaloniaProperty.Register<NodifyEditor, bool>(nameof(AllowAlign),BoxValue.True);
     
     public static readonly StyledProperty<IDataTemplate> AlignmentLineTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(AlignmentLineTemplate));
-    public static readonly StyledProperty<AvaloniaList<object>> AlignmentLineProperty = AvaloniaProperty.Register<NodifyEditor, AvaloniaList<object>>(nameof(AlignmentLine));
+    public static readonly StyledProperty<AvaloniaList<object>> AlignmentLineProperty = AvaloniaProperty.Register<NodifyEditor, AvaloniaList<object>>(nameof(AlignmentLine),new AvaloniaList<object>());
     public AvaloniaList<object> AlignmentLine
     {
         get => GetValue(AlignmentLineProperty);
@@ -377,6 +378,10 @@ public class NodifyEditor : SelectingItemsControl
         get => (bool)GetValue(AllowAlignProperty);
         set => SetValue(AllowAlignProperty, value);
     }
+    public void ClearAlignmentLine()
+    {
+        AlignmentLine.Clear();
+    }
     public Point TryAlignNode(BaseNode control,Point point)
     {
         AlignmentLine.Clear();
@@ -386,7 +391,8 @@ public class NodifyEditor : SelectingItemsControl
         double y = (int)point.Y;
         double nowIntervalX = AlignmentRange;
         double nowIntervalY = AlignmentRange;
-
+        var movingNodeWidth = control.Bounds.Width;
+        var movingNodeHeight = control.Bounds.Height;
         if (ItemsPanelRoot?.Children == null) return point;
         foreach (var child in ItemsPanelRoot?.Children)
         {
@@ -395,76 +401,141 @@ public class NodifyEditor : SelectingItemsControl
             {
                 continue;
             }
-
-            // 合并两个区域的代码
-            var regionX = node.Location.X;
-            var regionY = node.Location.Y;
-            var controlWidth = control.Bounds.Width;
-            var controlHeight = control.Bounds.Height;
-
-            // 计算左上角区域的边界
-            var intervalX = Math.Abs(regionX - x);
-            if (intervalX < nowIntervalX)
+            
+            var nodeLocationX = node.Location.X;
+            var nodeLocationY = node.Location.Y;
+            var nodeWidth = node.Bounds.Width;
+            var nodeHeight = node.Bounds.Height;
+            
+            
+            //上->上
+            var intervalY = Math.Abs(nodeLocationY - y);
+            if (intervalY <= nowIntervalY)
             {
-                x = regionX;
-                
-                nowIntervalX = intervalX;
-            }
-
-            var intervalX2 = Math.Abs(regionX + node.Bounds.Width - x);
-            if (intervalX2 < nowIntervalX)
-            {
-                x = regionX + node.Bounds.Width;
-                nowIntervalX = intervalX2;
-            }
-
-            var intervalY = Math.Abs(regionY - y);
-            if (intervalY < nowIntervalY)
-            {
-                y = regionY;
+                y = nodeLocationY;
                 nowIntervalY = intervalY;
+                AlignmentLine.Add(x <= nodeLocationX
+                    ? new AlignmentLineViewModel(new Point(nodeLocationX + nodeWidth, y ), new Point(control.Location.X, y ))
+                    : new AlignmentLineViewModel(new Point(nodeLocationX, y ),
+                        new Point(control.Location.X + movingNodeWidth, y )));
             }
-
-            var intervalY2 = Math.Abs(regionY + node.Bounds.Height - y);
-            if (intervalY2 < nowIntervalY)
+            //上->下
+            var intervalY3 = Math.Abs(nodeLocationY - movingNodeHeight - y);
+            if (intervalY3 <= nowIntervalY)
             {
-                y = regionY + node.Bounds.Height;
-                nowIntervalY = intervalY2;
-            }
-
-            // 计算右下角区域的边界
-            var intervalX3 = Math.Abs(regionX - controlWidth - x);
-            if (intervalX3 < nowIntervalX)
-            {
-                x = regionX - controlWidth;
-                nowIntervalX = intervalX3;
-            }
-
-            var intervalX4 = Math.Abs(regionX - controlWidth + node.Bounds.Width - x);
-            if (intervalX4 < nowIntervalX)
-            {
-                x = regionX - controlWidth + node.Bounds.Width;
-                nowIntervalX = intervalX4;
-            }
-
-            var intervalY3 = Math.Abs(regionY - controlHeight - y);
-            if (intervalY3 < nowIntervalY)
-            {
-                y = regionY - controlHeight;
+                y = nodeLocationY - movingNodeHeight;
                 nowIntervalY = intervalY3;
+                AlignmentLine.Add(x <= nodeLocationX
+                    ? new AlignmentLineViewModel(new Point(nodeLocationX + nodeWidth, nodeLocationY ), new Point(control.Location.X, nodeLocationY ))
+                    : new AlignmentLineViewModel(new Point(nodeLocationX, nodeLocationY ),
+                        new Point(control.Location.X + movingNodeWidth, nodeLocationY )));
+            }
+            //下->下
+            var intervalY4 = Math.Abs(nodeLocationY - movingNodeHeight + nodeHeight - y);
+            if (intervalY4 <= nowIntervalY)
+            {
+                y = nodeLocationY - movingNodeHeight + nodeHeight;
+                nowIntervalY = intervalY4;
+                AlignmentLine.Add(x <= nodeLocationX
+                    ? new AlignmentLineViewModel(new Point(nodeLocationX + nodeWidth, y+movingNodeHeight ), new Point(control.Location.X, y+movingNodeHeight ))
+                    : new AlignmentLineViewModel(new Point(nodeLocationX, y+movingNodeHeight ),
+                        new Point(control.Location.X + movingNodeWidth, y+movingNodeHeight )));
+            }
+            //下->上
+            var intervalY2 = Math.Abs(nodeLocationY + nodeHeight - y);
+            if (intervalY2 <= nowIntervalY)
+            {
+               
+                y = nodeLocationY + nodeHeight;
+                nowIntervalY = intervalY2;
+                AlignmentLine.Add(x <= nodeLocationX
+                    ? new AlignmentLineViewModel(new Point(nodeLocationX + nodeWidth, y ), new Point(control.Location.X, y ))
+                    : new AlignmentLineViewModel(new Point(nodeLocationX, y ),
+                        new Point(control.Location.X + movingNodeWidth, y )));
+            }
+            //左->右
+            var intervalX3 = Math.Abs(nodeLocationX - movingNodeWidth - x);
+            if (intervalX3 <= nowIntervalX)
+            {
+                x = nodeLocationX - movingNodeWidth;
+                nowIntervalX = intervalX3;
+                AlignmentLine.Add(y <= nodeLocationY
+                    ? new AlignmentLineViewModel(new Point(x+movingNodeWidth, control.Location.Y), 
+                        new Point(x+movingNodeWidth, nodeLocationY+nodeHeight))
+                    : new AlignmentLineViewModel(new Point(x+movingNodeWidth, control.Location.Y+movingNodeHeight),
+                        new Point(x+movingNodeWidth, nodeLocationY)));
+            }
+            
+            //左->左
+            var intervalX = Math.Abs(nodeLocationX - x);
+            if (intervalX <= nowIntervalX)
+            {
+                x = nodeLocationX;
+                nowIntervalX = intervalX;
+                AlignmentLine.Add(y <= nodeLocationY
+                    ? new AlignmentLineViewModel(new Point(x, control.Location.Y), 
+                        new Point(x, nodeLocationY+nodeHeight))
+                    : new AlignmentLineViewModel(new Point(x, control.Location.Y+movingNodeHeight),
+                        new Point(x, nodeLocationY)));
+            }
+            //右->右
+            var intervalX4 = Math.Abs(nodeLocationX - movingNodeWidth + nodeWidth - x);
+            if (intervalX4 <= nowIntervalX)
+            {
+                x = nodeLocationX - movingNodeWidth + nodeWidth;
+                nowIntervalX = intervalX4;
+                AlignmentLine.Add(y <= nodeLocationY
+                    ? new AlignmentLineViewModel(new Point(x+movingNodeWidth, control.Location.Y), 
+                        new Point(x+movingNodeWidth, nodeLocationY+nodeHeight))
+                    : new AlignmentLineViewModel(new Point(x+movingNodeWidth, control.Location.Y+movingNodeHeight),
+                        new Point(x+movingNodeWidth, nodeLocationY)));
             }
 
-            var intervalY4 = Math.Abs(regionY - controlHeight + node.Bounds.Height - y);
-            if (intervalY4 < nowIntervalY)
+            //右->左
+            var intervalX2 = Math.Abs(nodeLocationX + nodeWidth - x);
+            if (intervalX2 <= nowIntervalX)
             {
-                y = regionY - controlHeight + node.Bounds.Height;
-                nowIntervalY = intervalY4;
+                x = nodeLocationX + nodeWidth;
+                nowIntervalX = intervalX2;
+                AlignmentLine.Add(y <= nodeLocationY
+                    ? new AlignmentLineViewModel(new Point(x, control.Location.Y), 
+                        new Point(x, nodeLocationY+nodeHeight))
+                    : new AlignmentLineViewModel(new Point(x, control.Location.Y+movingNodeHeight),
+                        new Point(x, nodeLocationY)));
+            }
+            
+
+        }
+
+        for (var index = AlignmentLine.Count - 1; index >= 0; index--)
+        {
+            var o = AlignmentLine[index];
+            if (o is AlignmentLineViewModel alignmentLineViewModel)
+            {
+                if (alignmentLineViewModel.Start.X.Equals(alignmentLineViewModel.End.X))
+                {
+                    //竖向
+                    if (!alignmentLineViewModel.Start.X.Equals(x)&&!alignmentLineViewModel.Start.X.Equals(x+movingNodeWidth))
+                    {
+                        AlignmentLine.RemoveAt(index);
+                    }
+                }
+
+                if (alignmentLineViewModel.Start.Y.Equals(alignmentLineViewModel.End.Y))
+                {
+                    //横向
+                    if (!alignmentLineViewModel.Start.Y.Equals(y)&&!alignmentLineViewModel.Start.Y.Equals(y+movingNodeHeight))
+                    {
+                        AlignmentLine.RemoveAt(index);
+                    }
+                }
             }
         }
-        
+
         return new Point(x, y);
 
     }
+    
 
     #endregion
 }

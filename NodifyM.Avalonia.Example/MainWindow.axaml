@@ -112,7 +112,6 @@
                         <controls:Node.Styles>
                             <Style Selector="controls|Node[IsSelected=False]:pointerover">
                                 <Setter Property="BorderBrush" Value="AliceBlue"></Setter>
-                                <Setter Property="BorderThickness" Value="2"></Setter>
                             </Style>
                         </controls:Node.Styles>
                         <controls:Node.InputConnectorTemplate>

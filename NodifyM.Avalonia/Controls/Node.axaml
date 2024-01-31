@@ -11,6 +11,7 @@
    
     <Style Selector="controls|Node">
         <Setter Property="BorderBrush" Value="{StaticResource Node.BorderBrush}"></Setter>
+        
         <Setter Property="Background" Value="{StaticResource Node.BackgroundBrush}"></Setter>
         <Setter Property="HeaderBrush" Value="{StaticResource Node.HeaderBrush}"></Setter>
         <Setter Property="FooterBrush" Value="{StaticResource Node.FooterBrush}"></Setter>
@@ -104,10 +105,9 @@
     </Style>
     <Style Selector="controls|Node[IsSelected=False]:pointerover">
         <Setter Property="BorderBrush" Value="LightBlue"></Setter>
-        <Setter Property="BorderThickness" Value="2"></Setter>
+        
     </Style>
     <Style Selector="controls|Node[IsSelected=True]">
         <Setter Property="BorderBrush" Value="Orange"></Setter>
-        <Setter Property="BorderThickness" Value="2"></Setter>
     </Style>
 </Styles>

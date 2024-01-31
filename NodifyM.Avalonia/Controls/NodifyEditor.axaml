@@ -30,8 +30,8 @@
                 <Border
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
-                    <Canvas Background="{StaticResource NodifyEditor.BackgroundBrush}" >
-                        <ItemsPresenter Canvas.Top="{TemplateBinding OffsetY}" Canvas.Left="{TemplateBinding OffsetX}" ItemsPanel="{TemplateBinding ItemsPanel}"  />
+                    <Canvas  Background="{StaticResource NodifyEditor.BackgroundBrush}" >
+                        <ItemsPresenter RenderTransform="{TemplateBinding ViewTranslateTransform}" ItemsPanel="{TemplateBinding ItemsPanel}"  />
                         <ContentPresenter ZIndex="-2" ContentTemplate="{TemplateBinding GridLineTemplate}"/>
                         <ContentPresenter Name="PendingConnection" Content="{TemplateBinding PendingConnection}"
                                           ContentTemplate="{TemplateBinding PendingConnectionTemplate}" />
@@ -61,7 +61,7 @@
                             <ItemsControl.Styles>
                                 <Style Selector="ItemsControl">
                                     <Setter Property="ZIndex"
-                                            Value="-1" />
+                                            Value="2" />
                                 </Style>
                             </ItemsControl.Styles>
                             <ItemsControl.ItemsPanel>

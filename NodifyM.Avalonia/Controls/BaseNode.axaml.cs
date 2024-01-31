@@ -13,8 +13,15 @@ namespace NodifyM.Avalonia.Controls;
 public class BaseNode : ContentControl
 {
     public static readonly AvaloniaProperty<Point> LocationProperty =
-        AvaloniaProperty.Register<Node, Point>(nameof(Location));
-    public static readonly RoutedEvent LocationChangedEvent = RoutedEvent.Register<RoutedEventArgs>(nameof(LocationChanged), RoutingStrategies.Bubble, typeof(Node));
+        AvaloniaProperty.Register<BaseNode, Point>(nameof(Location));
+    public static readonly RoutedEvent LocationChangedEvent = RoutedEvent.Register<RoutedEventArgs>(nameof(LocationChanged), RoutingStrategies.Bubble, typeof(BaseNode));
+    public static readonly AvaloniaProperty<bool> IsSelectedProperty =
+        AvaloniaProperty.Register<BaseNode, bool>(nameof(IsSelected));
+    public bool IsSelected
+    {
+        get => (bool)GetValue(IsSelectedProperty);
+        set => SetValue(IsSelectedProperty, value);
+    }
     public event EventHandler<RoutedEventArgs> LocationChanged
     {
         add => AddHandler(LocationChangedEvent, value);
@@ -63,9 +70,14 @@ public class BaseNode : ContentControl
         foreach (var visual in parent)
         {
             visual.ZIndex = 0;
-           
+            var first = visual.GetVisualChildren().First();
+            if (first is BaseNode baseNode)
+            {
+                baseNode.IsSelected = false;
+            }
         }
         visualParent.ZIndex = 1;
+        this.IsSelected = true;
         if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
         // 启动拖动
         isDragging = true;
@@ -88,7 +100,7 @@ public class BaseNode : ContentControl
         isDragging = false;
         e.Handled = true;
         // 停止计时器
-
+        _editor.ClearAlignmentLine();
 
         // var currentPoint = e.GetCurrentPoint(this);
         //  Debug.WriteLine($"停止拖动坐标X:{OffsetX} Y:{OffsetY}");
@@ -105,7 +117,14 @@ public class BaseNode : ContentControl
         var currentMousePosition = e.GetPosition(((Visual)this.GetLogicalParent()).GetVisualParent());
         var offset = currentMousePosition - lastMousePosition;
 
-        ((BaseNodeViewModel)DataContext).Location = e.KeyModifiers.HasFlag(KeyModifiers.Shift) ? new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY) : _editor.TryAlignNode(this,new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY));
+        if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+        {
+            _editor.ClearAlignmentLine();
+            ((BaseNodeViewModel)DataContext).Location = new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY);
+        }
+        else
+            ((BaseNodeViewModel)DataContext).Location = _editor.TryAlignNode(this,
+                new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY));
 
         RaiseEvent(new RoutedEventArgs(LocationChangedEvent,this));
     }
