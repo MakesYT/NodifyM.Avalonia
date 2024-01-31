@@ -16,6 +16,7 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
 ### What are the differences compared to Nodify
  - **Supports** 
    - auto align Node
+   - display text on Connection
  - **Nonsupport**
    - Select multiple nodes
  - **Will be supported in the future**
