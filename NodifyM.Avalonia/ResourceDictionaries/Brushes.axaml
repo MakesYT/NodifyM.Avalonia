@@ -19,6 +19,9 @@
                      
                      Opacity="0.1"
                      Color="{DynamicResource NodifyEditor.SelectionRectangleColor}" />
+    <SolidColorBrush x:Key="NodifyEditor.AlignmentLineBrush"
+                     
+                     Color="{DynamicResource NodifyEditor.AlignmentLine}" />
 
     <!--ITEM CONTAINER-->
 

@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:controls="clr-namespace:NodifyM.Avalonia.Controls">
+                    xmlns:controls="clr-namespace:NodifyM.Avalonia.Controls"
+                    xmlns:viewModelBase="clr-namespace:NodifyM.Avalonia.ViewModelBase">
     <!-- Add Resources Here -->
 
     <DataTemplate x:Key="DefaultInputConnectorTemplate">
@@ -10,6 +11,14 @@
     <DataTemplate x:Key="DefaultOutputConnectorTemplate">
         <controls:NodeOutput />
     </DataTemplate>
+    <DataTemplate x:Key="AlignmentLineTemplate" DataType="viewModelBase:AlignmentLineViewModel">
+        <Line StrokeThickness="0.5" Stroke="{StaticResource NodifyEditor.AlignmentLineBrush}"  
+              StartPoint="{Binding Start}"
+              EndPoint="{Binding End}"
+              IsVisible="{Binding IsVisible}"
+              />
+    </DataTemplate>
+   
     <DataTemplate x:Key="ConnectionTemplate">
         <controls:Connection />
     </DataTemplate>

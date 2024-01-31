@@ -22,6 +22,8 @@
                 Value="{StaticResource PendingConnectionTemplate}" />
         <Setter Property="GridLineTemplate" 
                 Value="{StaticResource GridLineTemplate}"></Setter>
+        <Setter Property="AlignmentLineTemplate" 
+                Value="{StaticResource AlignmentLineTemplate}" />
         <Setter Property="Template">
             <ControlTemplate>
 
@@ -37,6 +39,25 @@
                                       ItemsSource="{TemplateBinding Connections}"
                                       ItemTemplate="{TemplateBinding ConnectionTemplate}"
                                       IsTabStop="False">
+                            <ItemsControl.Styles>
+                                <Style Selector="ItemsControl">
+                                    <Setter Property="ZIndex"
+                                            Value="-1" />
+                                </Style>
+                            </ItemsControl.Styles>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas
+                                        Width="{Binding $parent[Canvas].Bounds.Width}"
+                                        Height="{Binding $parent[Canvas].Bounds.Height}"
+                                        RenderTransform="{TemplateBinding ViewTranslateTransform}"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                        <ItemsControl 
+                            ItemsSource="{TemplateBinding AlignmentLine}"
+                            ItemTemplate="{TemplateBinding AlignmentLineTemplate}"
+                            IsTabStop="False">
                             <ItemsControl.Styles>
                                 <Style Selector="ItemsControl">
                                     <Setter Property="ZIndex"

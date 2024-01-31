@@ -6,7 +6,7 @@
     <Color x:Key="NodifyEditor.BackgroundColor">White</Color>
     <Color x:Key="NodifyEditor.ForegroundColor">Black</Color>
     <Color x:Key="NodifyEditor.SelectionRectangleColor">#1e90ff</Color>
-
+    <Color x:Key="NodifyEditor.AlignmentLine">#7EB4EA</Color>
     <!--ITEM CONTAINER-->
 
     <Color x:Key="ItemContainer.BorderColor">#7EB4EA</Color>

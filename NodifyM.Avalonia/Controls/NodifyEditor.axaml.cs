@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 using Avalonia;
+using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
@@ -352,6 +353,20 @@ public class NodifyEditor : SelectingItemsControl
 
     public static readonly AvaloniaProperty<int> AlignmentRangeProperty = AvaloniaProperty.Register<NodifyEditor, int>(nameof(AlignmentRange),10);
     public static readonly AvaloniaProperty<bool> AllowAlignProperty = AvaloniaProperty.Register<NodifyEditor, bool>(nameof(AllowAlign),BoxValue.True);
+    
+    public static readonly StyledProperty<IDataTemplate> AlignmentLineTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(AlignmentLineTemplate));
+    public static readonly StyledProperty<AvaloniaList<object>> AlignmentLineProperty = AvaloniaProperty.Register<NodifyEditor, AvaloniaList<object>>(nameof(AlignmentLine));
+    public AvaloniaList<object> AlignmentLine
+    {
+        get => GetValue(AlignmentLineProperty);
+        set => SetValue(AlignmentLineProperty, value);
+    }
+    public IDataTemplate AlignmentLineTemplate
+    {
+        get => (DataTemplate)GetValue(AlignmentLineTemplateProperty);
+        set => SetValue(AlignmentLineTemplateProperty, value);
+    }
+    
     public int AlignmentRange
     {
         get => (int)GetValue(AlignmentRangeProperty);
@@ -364,6 +379,8 @@ public class NodifyEditor : SelectingItemsControl
     }
     public Point TryAlignNode(BaseNode control,Point point)
     {
+        AlignmentLine.Clear();
+        
         if (!AllowAlign) return point;
         double x = (int)point.X;
         double y = (int)point.Y;
@@ -390,6 +407,7 @@ public class NodifyEditor : SelectingItemsControl
             if (intervalX < nowIntervalX)
             {
                 x = regionX;
+                
                 nowIntervalX = intervalX;
             }
 
@@ -443,7 +461,7 @@ public class NodifyEditor : SelectingItemsControl
                 nowIntervalY = intervalY4;
             }
         }
-
+        
         return new Point(x, y);
 
     }
