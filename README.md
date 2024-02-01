@@ -12,7 +12,7 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
  - Designed from the start to work with **MVVM**
  - Built-in dark and light **themes**
  - **Selecting**， **zooming**， **panning**
- - Select， move, **_auto align_**  和 connect nodes
+ - Select， move, **_auto align_**, **auto panning** when close to edge and connect nodes
 ### What are the differences compared to Nodify
  - **Supports** 
    - auto align Node
@@ -20,7 +20,7 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
  - **Nonsupport**
    - Select multiple nodes
  - **Will be supported in the future**
-   - **auto panning** when close to edge
+   - none
 ## Usage
 ### NodifyEditor
  - `Press` and `Hold` -> Move the all show items
@@ -46,6 +46,8 @@ This project is still in its early stages and lacks many events compared to **No
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.7
+- Added Node **auto panning** when close to edge
 ### 1.0.6
 - Fixed Node IsSelected property
 - Fixed Node BorderBrush Style

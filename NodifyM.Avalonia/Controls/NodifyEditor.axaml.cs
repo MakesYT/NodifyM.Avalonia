@@ -7,6 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Media;
@@ -175,10 +176,12 @@ public class NodifyEditor : SelectingItemsControl
         AddHandler(Connector.DisconnectEvent, new ConnectorEventHandler(OnConnectorDisconnected));
         AddHandler(Connector.PendingConnectionStartedEvent, new PendingConnectionEventHandler(OnConnectionStarted));
         AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
-        
+        AddHandler(BaseNode.LocationChangedEvent,new NodeLocationEventHandler( OnNodeLocationChanged));
         AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
         
     }
+
+    
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
@@ -193,6 +196,8 @@ public class NodifyEditor : SelectingItemsControl
         ScaleTransform = scaleTransform;
         renderTransform.Children.Add(scaleTransform);
         RenderTransform = renderTransform;
+        AutoPanningTimer=new DispatcherTimer(TimeSpan.FromMilliseconds(10), DispatcherPriority.Normal,HandleAutoPanning);
+        AutoPanningTimer.Stop();
     }
 
 
@@ -240,7 +245,7 @@ public class NodifyEditor : SelectingItemsControl
         isDragging = false;
         e.Handled = true;
         // 停止计时器
-        
+        AutoPanningTimer.Stop();
         // var currentPoint = e.GetCurrentPoint(this);
         //  Debug.WriteLine($"停止拖动坐标X:{OffsetX} Y:{OffsetY}");
     }
@@ -537,5 +542,102 @@ public class NodifyEditor : SelectingItemsControl
     }
     
 
+    #endregion
+
+    #region Auto Panning
+    
+    public static readonly AvaloniaProperty<bool> AllowAutoPanningProperty = AvaloniaProperty.Register<NodifyEditor, bool>(nameof(AllowAutoPanning),BoxValue.True);
+    public static readonly AvaloniaProperty<int> AutoPanningSpeedProperty = AvaloniaProperty.Register<NodifyEditor, int>(nameof(AutoPanningSpeed),10);
+    public static readonly AvaloniaProperty<double> AutoPanningXEdgeDistanceProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(AutoPanningXEdgeDistance),0.02); 
+    public static readonly AvaloniaProperty<double> AutoPanningYEdgeDistanceProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(AutoPanningYEdgeDistance),0.04);
+    public double AutoPanningXEdgeDistance
+    {
+        get => (double)GetValue(AutoPanningXEdgeDistanceProperty);
+        set => SetValue(AutoPanningXEdgeDistanceProperty, value);
+    }
+    public double AutoPanningYEdgeDistance
+    {
+        get => (double)GetValue(AutoPanningYEdgeDistanceProperty);
+        set => SetValue(AutoPanningYEdgeDistanceProperty, value);
+    }
+    
+    public int AutoPanningSpeed
+    {
+        get => (int)GetValue(AutoPanningSpeedProperty);
+        set => SetValue(AutoPanningSpeedProperty, value);
+    }
+    public bool AllowAutoPanning
+    {
+        get => (bool)GetValue(AllowAutoPanningProperty);
+        set => SetValue(AllowAutoPanningProperty, value);
+    }
+    
+    
+    public static readonly RoutedEvent NodifyAutoPanningEvent = RoutedEvent.Register<NodifyAutoPanningEventArgs>(nameof(NodifyAutoPanning), RoutingStrategies.Bubble, typeof(NodifyEditor));
+    public event NodifyAutoPanningEventHandler NodifyAutoPanning
+    {
+        add => AddHandler(NodifyAutoPanningEvent, value);
+        remove => RemoveHandler(NodifyAutoPanningEvent, value);
+    }
+    DispatcherTimer AutoPanningTimer;
+    NodeLocationEventArgs locationChangedEventArgs;
+    BaseNode baseNode;
+    private void OnNodeLocationChanged(object? sender, NodeLocationEventArgs e)
+    {
+        if (!AllowAutoPanning)
+        {
+            return;
+        }
+        baseNode= e.Sender;
+        locationChangedEventArgs = e;
+        if (!AutoPanningTimer.IsEnabled)
+        {
+            AutoPanningTimer.Start();
+        }
+
+        if (e.Stop)
+        {
+            AutoPanningTimer.Stop();
+        }
+       
+    }
+
+    private void HandleAutoPanning(object? sender, EventArgs eventArgs)
+    {
+        var offset = 10/Zoom;
+        if (OffsetX+locationChangedEventArgs.Location.X<Bounds.Width*AutoPanningXEdgeDistance)
+        {
+            OffsetX += offset;
+            ViewTranslateTransform.X = OffsetX;
+            ((BaseNodeViewModel)baseNode.DataContext).Location += new Point(-offset,0);
+            locationChangedEventArgs.Location+=new Point(-offset,0);
+            RaiseEvent(new NodifyAutoPanningEventArgs(NodifyAutoPanningEvent, baseNode));
+        }else if (OffsetX+baseNode.Bounds.Width+locationChangedEventArgs.Location.X>Bounds.Width*(1-AutoPanningXEdgeDistance))
+        {
+            OffsetX -= offset;
+            ViewTranslateTransform.X = OffsetX;
+            ((BaseNodeViewModel)baseNode.DataContext).Location += new Point(offset,0);
+            locationChangedEventArgs.Location+=new Point(offset,0);
+            RaiseEvent(new NodifyAutoPanningEventArgs(NodifyAutoPanningEvent, baseNode));
+        }else if (OffsetY+locationChangedEventArgs.Location.Y<Bounds.Height*AutoPanningYEdgeDistance)
+        {
+            OffsetY += offset;
+            ViewTranslateTransform.Y = OffsetY;
+            ((BaseNodeViewModel)baseNode.DataContext).Location += new Point(0,-offset);
+            locationChangedEventArgs.Location+=new Point(0,-offset);
+            RaiseEvent(new NodifyAutoPanningEventArgs(NodifyAutoPanningEvent, baseNode));
+        }else if (OffsetY+baseNode.Bounds.Height+locationChangedEventArgs.Location.Y>Bounds.Height* (1-AutoPanningYEdgeDistance))
+        {
+            OffsetY -= offset;
+            ViewTranslateTransform.Y = OffsetY;
+            ((BaseNodeViewModel)baseNode.DataContext).Location += new Point(0,offset);
+            locationChangedEventArgs.Location += new Point(0, offset);
+            RaiseEvent(new NodifyAutoPanningEventArgs(NodifyAutoPanningEvent, baseNode));
+        }
+        else
+        {
+            AutoPanningTimer.Stop();
+        }
+    }
     #endregion
 }

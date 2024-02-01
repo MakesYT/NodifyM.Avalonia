@@ -5,6 +5,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
 using Avalonia.VisualTree;
+using NodifyM.Avalonia.Events;
 using NodifyM.Avalonia.Helpers;
 using NodifyM.Avalonia.ViewModelBase;
 
@@ -14,7 +15,7 @@ public class BaseNode : ContentControl
 {
     public static readonly AvaloniaProperty<Point> LocationProperty =
         AvaloniaProperty.Register<BaseNode, Point>(nameof(Location));
-    public static readonly RoutedEvent LocationChangedEvent = RoutedEvent.Register<RoutedEventArgs>(nameof(LocationChanged), RoutingStrategies.Bubble, typeof(BaseNode));
+    public static readonly RoutedEvent LocationChangedEvent = RoutedEvent.Register<NodeLocationEventArgs>(nameof(LocationChanged), RoutingStrategies.Bubble, typeof(BaseNode));
     public static readonly AvaloniaProperty<bool> IsSelectedProperty =
         AvaloniaProperty.Register<BaseNode, bool>(nameof(IsSelected));
     public bool IsSelected
@@ -22,7 +23,7 @@ public class BaseNode : ContentControl
         get => (bool)GetValue(IsSelectedProperty);
         set => SetValue(IsSelectedProperty, value);
     }
-    public event EventHandler<RoutedEventArgs> LocationChanged
+    public event NodeLocationEventHandler LocationChanged
     {
         add => AddHandler(LocationChangedEvent, value);
         remove => RemoveHandler(LocationChangedEvent, value);
@@ -45,7 +46,19 @@ public class BaseNode : ContentControl
     {
         base.OnApplyTemplate(e);
         _editor = this.GetParentOfType<NodifyEditor>();
+        _editor.NodifyAutoPanning += NodifyAutoPanningEvent;
     }
+
+    private void NodifyAutoPanningEvent(object sender, NodifyAutoPanningEventArgs e)
+    {
+        if (e.Node != this)
+        {
+            return;
+        }
+        RaiseEvent(new NodeLocationEventArgs(((BaseNodeViewModel)DataContext).Location,this,LocationChangedEvent));
+
+    }
+
 
     private NodifyEditor _editor;
     /// <summary>
@@ -104,6 +117,7 @@ public class BaseNode : ContentControl
 
         // var currentPoint = e.GetCurrentPoint(this);
         //  Debug.WriteLine($"停止拖动坐标X:{OffsetX} Y:{OffsetY}");
+        RaiseEvent(new NodeLocationEventArgs(((BaseNodeViewModel)DataContext).Location,this,LocationChangedEvent,true));
     }
 
     private void OnPointerMoved(object sender, PointerEventArgs e)
@@ -126,6 +140,6 @@ public class BaseNode : ContentControl
             ((BaseNodeViewModel)DataContext).Location = _editor.TryAlignNode(this,
                 new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY));
 
-        RaiseEvent(new RoutedEventArgs(LocationChangedEvent,this));
+        RaiseEvent(new NodeLocationEventArgs(((BaseNodeViewModel)DataContext).Location,this,LocationChangedEvent));
     }
 }
