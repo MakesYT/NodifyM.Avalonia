@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using Avalonia;
+using Avalonia.Styling;
+using CommunityToolkit.Mvvm.Input;
 using NodifyM.Avalonia.ViewModelBase;
 
 namespace NodifyM.Avalonia.Example;
@@ -90,5 +92,16 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
     public override void DisconnectConnector(ConnectorViewModelBase connector)
     {
         base.DisconnectConnector(connector);
+    }
+    [RelayCommand]
+    private void ChangeTheme()
+    {
+        if (Application.Current.ActualThemeVariant==ThemeVariant.Dark)
+        {
+            Application.Current.RequestedThemeVariant = ThemeVariant.Light;
+        }else
+        {
+            Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
+        }
     }
 }

@@ -7,8 +7,12 @@
     </Design.PreviewWith>
     <Styles.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceInclude x:Key="Light" Source="avares://NodifyM.Avalonia/ResourceDictionaries/Light.axaml" />
+                <ResourceInclude x:Key="Dark"  Source="avares://NodifyM.Avalonia/ResourceDictionaries/Dark.axaml" />
+            </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://NodifyM.Avalonia/ResourceDictionaries/Light.axaml" />
+                
                 <ResourceInclude Source="avares://NodifyM.Avalonia/ResourceDictionaries/Nodify.axaml" />
                 <ResourceInclude Source="avares://NodifyM.Avalonia/ResourceDictionaries/Brushes.axaml" />
             </ResourceDictionary.MergedDictionaries>

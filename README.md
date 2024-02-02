@@ -46,6 +46,11 @@ This project is still in its early stages and lacks many events compared to **No
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.8
+- Added Light and Dark themes follow the Avalonia toggle
+- Fixed invalid Connection Text Brush modifications
+- Optimize the Dark theme color
+- Added GridLine color definition
 ### 1.0.7
 - Added Node **auto panning** when close to edge
 ### 1.0.6

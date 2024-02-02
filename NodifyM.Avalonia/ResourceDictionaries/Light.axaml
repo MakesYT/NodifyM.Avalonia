@@ -7,6 +7,7 @@
     <Color x:Key="NodifyEditor.ForegroundColor">Black</Color>
     <Color x:Key="NodifyEditor.SelectionRectangleColor">#1e90ff</Color>
     <Color x:Key="NodifyEditor.AlignmentLine">#7EB4EA</Color>
+    <Color x:Key="GridLinesColor">#CBCCDF</Color>
     <!--ITEM CONTAINER-->
 
     <Color x:Key="ItemContainer.BorderColor">#7EB4EA</Color>
@@ -55,6 +56,7 @@
 
     <!--CONNECTION-->
     <Color x:Key="Connection.StrokeColor">#5CA2C9</Color>
+    <Color x:Key="Connection.TextColor">Black</Color>
 
     <!--LINE CONNECTION-->
     <Color x:Key="LineConnection.StrokeColor">#5CA2C9</Color>

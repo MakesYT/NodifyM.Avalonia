@@ -178,7 +178,6 @@ public class NodifyEditor : SelectingItemsControl
         AddHandler(Connector.PendingConnectionCompletedEvent, new PendingConnectionEventHandler(OnConnectionCompleted));
         AddHandler(BaseNode.LocationChangedEvent,new NodeLocationEventHandler( OnNodeLocationChanged));
         AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
-        
     }
 
     

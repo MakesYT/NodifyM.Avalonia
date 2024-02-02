@@ -187,6 +187,7 @@ public class Connector : ContentControl
     }
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
+        e.GetCurrentPoint(this).Pointer.Capture(this);
         base.OnPointerPressed(e);
         e.Handled = true;
         var currentPoint = e.GetCurrentPoint(this);

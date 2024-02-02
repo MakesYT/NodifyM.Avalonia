@@ -22,7 +22,9 @@
     <SolidColorBrush x:Key="NodifyEditor.AlignmentLineBrush"
                      
                      Color="{DynamicResource NodifyEditor.AlignmentLine}" />
-
+    <SolidColorBrush x:Key="GridLinesColorBrush"
+                     
+                     Color="{DynamicResource GridLinesColor}" />
     <!--ITEM CONTAINER-->
 
     <SolidColorBrush x:Key="ItemContainer.BorderBrush"
@@ -181,7 +183,9 @@
     <SolidColorBrush x:Key="Connection.StrokeBrush"
                      
                      Color="{DynamicResource Connection.StrokeColor}" />
-
+    <SolidColorBrush x:Key="Connection.TextColorBrush"
+                     
+                     Color="{DynamicResource Connection.TextColor}" />
     <!--LINE CONNECTION-->
 
     <SolidColorBrush x:Key="LineConnection.StrokeBrush"

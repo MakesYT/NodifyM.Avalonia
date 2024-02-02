@@ -11,7 +11,7 @@
         x:DataType="example:MainWindowViewModel"
         Title="Nodify.Avalonia.Example">
     <Grid>
-
+        <Button ZIndex="1" Content="Switch Theme" Command="{Binding ChangeThemeCommand}"></Button>
 
         <controls:NodifyEditor
             Background="Transparent"
@@ -53,7 +53,7 @@
                                             Height="{Binding $parent[controls:NodifyEditor].Bounds.Height}"
                                             Spacing="30"
                                             Thickness="0.5"
-                                            Brush="LightGray"
+                                            Brush="{StaticResource GridLinesColorBrush}"
                                             ZIndex="-2" />
                 </DataTemplate>
             </controls:NodifyEditor.GridLineTemplate>
@@ -61,6 +61,7 @@
                 <DataTemplate DataType="{x:Type viewModelBase:ConnectionViewModelBase}">
                     <Grid>
                         <controls:Connection
+                            TextBrush="{StaticResource Connection.TextColorBrush}"
                             Text="{Binding Text}"
                             TextPoint="50%,50%"
                             SplitCommand="{Binding SplitConnectionCommand}"

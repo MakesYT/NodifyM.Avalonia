@@ -77,7 +77,7 @@ public class BaseNode : ContentControl
 
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
     {
-
+        e.GetCurrentPoint(this).Pointer.Capture(this);
         var visualParent = this.GetVisualParent();
         var parent = visualParent.GetVisualParent().GetVisualChildren();
         foreach (var visual in parent)
@@ -118,6 +118,13 @@ public class BaseNode : ContentControl
         // var currentPoint = e.GetCurrentPoint(this);
         //  Debug.WriteLine($"停止拖动坐标X:{OffsetX} Y:{OffsetY}");
         RaiseEvent(new NodeLocationEventArgs(((BaseNodeViewModel)DataContext).Location,this,LocationChangedEvent,true));
+    }
+
+    protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
+    {
+        base.OnPointerCaptureLost(e);
+        RaiseEvent(new NodeLocationEventArgs(((BaseNodeViewModel)DataContext).Location,this,LocationChangedEvent,true));
+        _editor.ClearAlignmentLine();
     }
 
     private void OnPointerMoved(object sender, PointerEventArgs e)

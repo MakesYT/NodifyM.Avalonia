@@ -4,10 +4,11 @@
 
     <!--NODIFY EDITOR-->
 
-    <Color x:Key="NodifyEditor.BackgroundColor">#1E1E1E</Color>
+    <Color x:Key="NodifyEditor.BackgroundColor">#484848</Color>
     <Color x:Key="NodifyEditor.ForegroundColor">White</Color>
     <Color x:Key="NodifyEditor.SelectionRectangleColor">DodgerBlue</Color>
     <Color x:Key="NodifyEditor.AlignmentLine">DodgerBlue</Color>
+    <Color x:Key="GridLinesColor">#333337</Color>
     <!--ITEM CONTAINER-->
 
     <Color x:Key="ItemContainer.BorderColor">DodgerBlue</Color>
@@ -35,7 +36,7 @@
     <Color x:Key="GroupingNode.BorderColor">Transparent</Color>
 
     <!--KNOT NODE-->
-    <Color x:Key="KnotNode.BackgroundColor">Transparent</Color>
+    <Color x:Key="KnotNode.BackgroundColor">#1E1E1E</Color>
     <Color x:Key="KnotNode.ForegroundColor">DodgerBlue</Color>
     <Color x:Key="KnotNode.BorderColor">Transparent</Color>
 
@@ -56,7 +57,7 @@
 
     <!--CONNECTION-->
     <Color x:Key="Connection.StrokeColor">DodgerBlue</Color>
-
+    <Color x:Key="Connection.TextColor">White</Color>
     <!--LINE CONNECTION-->
     <Color x:Key="LineConnection.StrokeColor">DodgerBlue</Color>
 

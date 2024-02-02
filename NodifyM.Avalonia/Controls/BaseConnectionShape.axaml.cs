@@ -280,7 +280,7 @@ public abstract class BaseConnectionShape : Control
         var textGeometry = RenderedTextGeometry;
         if (textGeometry != null)
         {
-            context.DrawGeometry(TextBrush, new ImmutablePen(TextBrush.ToImmutable(), 0.5), textGeometry);
+            context.DrawGeometry(TextBrush, new Pen(TextBrush, 0.5), textGeometry);
         }
     }
 
@@ -462,7 +462,7 @@ public abstract class BaseConnectionShape : Control
     public static readonly StyledProperty<string?> TextProperty =
         AvaloniaProperty.Register<BaseConnectionShape, string?>(nameof(Text));
     public static readonly StyledProperty<RelativePoint> TextPointProperty = AvaloniaProperty.Register<BaseConnectionShape, RelativePoint>(nameof (TextPoint), RelativePoint.Center);
-
+    
     /// <summary>Gets or sets the start point for the gradient.</summary>
     public RelativePoint TextPoint
     {

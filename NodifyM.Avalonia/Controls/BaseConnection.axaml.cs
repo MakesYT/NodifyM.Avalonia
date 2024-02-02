@@ -294,7 +294,7 @@ public class BaseConnection : BaseConnectionShape
 
     public BaseConnection()
     {
-        BaseConnectionShape.AffectsGeometry<BaseConnection>(SourceProperty, TargetProperty,TextProperty);
+        BaseConnectionShape.AffectsGeometry<BaseConnectionShape>(SourceProperty, TargetProperty,TextProperty,TextBrushProperty,TextPointProperty);
     }
     /// <summary>
     /// Gets a vector that has its coordinates set to 0.
@@ -310,7 +310,7 @@ public class BaseConnection : BaseConnectionShape
         (Vector sourceOffset, Vector targetOffset) = GetOffset();
         Point source = Source + sourceOffset;
         Point target = Target + targetOffset;
-        var formattedText = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface("Inter"), TextSize, Brushes.Black);
+        var formattedText = new FormattedText(Text, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, new Typeface("Inter"), TextSize, TextBrush);
         return (formattedText.BuildGeometry(new Point((source.X + target.X)*TextPoint.Point.X,  (source.Y + target.Y)*TextPoint.Point.Y)));
     }
 
