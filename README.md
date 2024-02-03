@@ -40,7 +40,8 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
  - Hold `Alt` and `Click` Connector -> Remove all the Connections on the Connector
 
 ## Notice
-This project is still in its early stages and lacks many events compared to **Nodify**, but it is already available
+### Some known problems
+1. Do not use `Mode=OneWayToSource` when you have multiple Nodify bound to the same ViewModel, this is a bug from [Avalonia](https://github.com/AvaloniaUI/Avalonia/issues/4438)
 
 ## Example
 #### please see the [NodifyM.Avalonia.Example](https://github.com/MakesYT/NodifyM.Avalonia/tree/master/NodifyM.Avalonia.Example)
