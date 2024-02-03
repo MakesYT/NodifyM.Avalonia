@@ -50,7 +50,7 @@
                                     <Canvas
                                         Width="{Binding $parent[Canvas].Bounds.Width}"
                                         Height="{Binding $parent[Canvas].Bounds.Height}"
-                                        RenderTransform="{TemplateBinding ViewTranslateTransform}"/>
+                                        RenderTransform="{Binding $parent[controls:NodifyEditor].ViewTranslateTransform}"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>
@@ -69,7 +69,7 @@
                                     <Canvas
                                         Width="{Binding $parent[Canvas].Bounds.Width}"
                                         Height="{Binding $parent[Canvas].Bounds.Height}"
-                                        RenderTransform="{TemplateBinding ViewTranslateTransform}"/>
+                                        RenderTransform="{Binding $parent[controls:NodifyEditor].ViewTranslateTransform}"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                         </ItemsControl>

@@ -33,7 +33,7 @@ public class NodifyEditor : SelectingItemsControl
     public static readonly AvaloniaProperty<double> ZoomProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(Zoom),1d);
     public static readonly AvaloniaProperty<double> OffsetXProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(OffsetX),1d);
     public static readonly AvaloniaProperty<double> OffsetYProperty = AvaloniaProperty.Register<NodifyEditor, double>(nameof(OffsetY),1d);
-    public static readonly StyledProperty<TranslateTransform> ViewTranslateTransformProperty = AvaloniaProperty.Register<NodifyEditor, TranslateTransform>(nameof(ViewTranslateTransform),new TranslateTransform());
+    public static readonly StyledProperty<TranslateTransform> ViewTranslateTransformProperty = AvaloniaProperty.Register<NodifyEditor, TranslateTransform>(nameof(ViewTranslateTransform));
     public static readonly AvaloniaProperty<IEnumerable> ConnectionsProperty = AvaloniaProperty.Register<NodifyEditor, IEnumerable>(nameof(Connections));
     public TranslateTransform ViewTranslateTransform
     {
@@ -197,6 +197,8 @@ public class NodifyEditor : SelectingItemsControl
         RenderTransform = renderTransform;
         AutoPanningTimer=new DispatcherTimer(TimeSpan.FromMilliseconds(10), DispatcherPriority.Normal,HandleAutoPanning);
         AutoPanningTimer.Stop();
+        ViewTranslateTransform = new TranslateTransform();
+        AlignmentLine = new AvaloniaList<object>();
     }
 
 
@@ -360,7 +362,7 @@ public class NodifyEditor : SelectingItemsControl
     public static readonly AvaloniaProperty<bool> AllowAlignProperty = AvaloniaProperty.Register<NodifyEditor, bool>(nameof(AllowAlign),BoxValue.True);
     
     public static readonly StyledProperty<IDataTemplate> AlignmentLineTemplateProperty = AvaloniaProperty.Register<NodifyEditor,IDataTemplate>(nameof(AlignmentLineTemplate));
-    public static readonly StyledProperty<AvaloniaList<object>> AlignmentLineProperty = AvaloniaProperty.Register<NodifyEditor, AvaloniaList<object>>(nameof(AlignmentLine),new AvaloniaList<object>());
+    public static readonly StyledProperty<AvaloniaList<object>> AlignmentLineProperty = AvaloniaProperty.Register<NodifyEditor, AvaloniaList<object>>(nameof(AlignmentLine));
     public AvaloniaList<object> AlignmentLine
     {
         get => GetValue(AlignmentLineProperty);
@@ -608,28 +610,28 @@ public class NodifyEditor : SelectingItemsControl
         {
             OffsetX += offset;
             ViewTranslateTransform.X = OffsetX;
-            ((BaseNodeViewModel)baseNode.DataContext).Location += new Point(-offset,0);
+            baseNode.Location += new Point(-offset,0);
             locationChangedEventArgs.Location+=new Point(-offset,0);
             RaiseEvent(new NodifyAutoPanningEventArgs(NodifyAutoPanningEvent, baseNode));
         }else if (OffsetX+baseNode.Bounds.Width+locationChangedEventArgs.Location.X>Bounds.Width*(1-AutoPanningXEdgeDistance))
         {
             OffsetX -= offset;
             ViewTranslateTransform.X = OffsetX;
-            ((BaseNodeViewModel)baseNode.DataContext).Location += new Point(offset,0);
+            baseNode.Location += new Point(offset,0);
             locationChangedEventArgs.Location+=new Point(offset,0);
             RaiseEvent(new NodifyAutoPanningEventArgs(NodifyAutoPanningEvent, baseNode));
         }else if (OffsetY+locationChangedEventArgs.Location.Y<Bounds.Height*AutoPanningYEdgeDistance)
         {
             OffsetY += offset;
             ViewTranslateTransform.Y = OffsetY;
-            ((BaseNodeViewModel)baseNode.DataContext).Location += new Point(0,-offset);
+            baseNode.Location += new Point(0,-offset);
             locationChangedEventArgs.Location+=new Point(0,-offset);
             RaiseEvent(new NodifyAutoPanningEventArgs(NodifyAutoPanningEvent, baseNode));
         }else if (OffsetY+baseNode.Bounds.Height+locationChangedEventArgs.Location.Y>Bounds.Height* (1-AutoPanningYEdgeDistance))
         {
             OffsetY -= offset;
             ViewTranslateTransform.Y = OffsetY;
-            ((BaseNodeViewModel)baseNode.DataContext).Location += new Point(0,offset);
+            baseNode.Location += new Point(0,offset);
             locationChangedEventArgs.Location += new Point(0, offset);
             RaiseEvent(new NodifyAutoPanningEventArgs(NodifyAutoPanningEvent, baseNode));
         }

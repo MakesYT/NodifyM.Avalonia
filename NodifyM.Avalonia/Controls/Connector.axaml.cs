@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Diagnostics;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -124,10 +125,10 @@ public class Connector : ContentControl
         //DefaultStyleKeyProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(typeof(Connector)));
         FocusableProperty.OverrideMetadata(typeof(Connector), new StyledPropertyMetadata<bool>(BoxValue.True));
     }
-    private void OnConnectorLoaded(object sender, RoutedEventArgs? e)
+    private void OnConnectorLoaded()
         => TrySetAnchorUpdateEvents(true);
 
-    private void OnConnectorUnloaded(object sender, RoutedEventArgs e)
+    private void OnConnectorUnloaded()
         => TrySetAnchorUpdateEvents(false);
     private void TrySetAnchorUpdateEvents(bool value)
     {
@@ -172,7 +173,6 @@ public class Connector : ContentControl
             Point relativeLocation = Thumb.TranslatePoint(new Point((Thumb.Bounds.Width - containerMargin.Width)/2,
                 (Thumb.Bounds.Height -containerMargin.Height)/2), Container)!.Value;
             Anchor = new Point(location.X + relativeLocation.X, location.Y + relativeLocation.Y);
-            ((ConnectorViewModelBase)DataContext).Anchor = Anchor;
         }
     }
   protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -182,9 +182,9 @@ public class Connector : ContentControl
         
         Editor =  this.GetParentOfType<NodifyEditor>();
         Thumb = this.GetChildOfType<Control>("PART_Connector");
-        Loaded += OnConnectorLoaded;
-        Unloaded += OnConnectorUnloaded;
+        
     }
+  
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         e.GetCurrentPoint(this).Pointer.Capture(this);
@@ -336,6 +336,13 @@ public class Connector : ContentControl
     {
         base.OnLoaded(e);
         UpdateAnchor();
-        IsConnected= ((ConnectorViewModelBase)DataContext).IsConnected;
+        OnConnectorLoaded();
+        
+    }
+
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        base.OnUnloaded(e);
+       OnConnectorUnloaded();
     }
 }

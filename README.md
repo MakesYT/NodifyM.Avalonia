@@ -47,6 +47,9 @@ This project is still in its early stages and lacks many events compared to **No
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.9
+- Allows not to use the built-in ViewModelBase
+- Fixed ViewTranslateTransform and AlignmentLine exceptions when multiple NodifyEditor
 ### 1.0.8
 - Added Light and Dark themes follow the Avalonia toggle
 - Fixed invalid Connection Text Brush modifications

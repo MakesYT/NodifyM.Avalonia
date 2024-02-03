@@ -11,9 +11,12 @@
         x:DataType="example:MainWindowViewModel"
         Title="Nodify.Avalonia.Example">
     <Grid>
-        <Button ZIndex="1" Content="Switch Theme" Command="{Binding ChangeThemeCommand}"></Button>
+        <StackPanel ZIndex="1">
+            <Button  Content="Switch Theme" Command="{Binding ChangeThemeCommand}"></Button>
+            <Button ZIndex="1" Content="new"  Click="Button_OnClick"></Button>
+        </StackPanel>
 
-        <controls:NodifyEditor
+        <controls:NodifyEditor x:Name="Editor"
             Background="Transparent"
             ItemsSource="{Binding Nodes }"
             Connections="{Binding Connections}"
@@ -21,7 +24,9 @@
             DisconnectConnectorCommand="{Binding DisconnectConnectorCommand}">
             <controls:NodifyEditor.DataTemplates>
                 <DataTemplate DataType="viewModelBase:KnotNodeViewModel">
-                    <controls:KnotNode  Content="{Binding Connector}">
+                    <controls:KnotNode
+                        Location="{Binding Location,Mode=TwoWay}"
+                        Content="{Binding Connector}">
                         <controls:KnotNode.ContentTemplate>
                             <DataTemplate DataType="viewModelBase:ConnectorViewModelBase">
                                 <controls:Connector
@@ -108,6 +113,7 @@
                     <controls:Node x:Name="Node"
                                    Input="{Binding Input}"
                                    Header="{Binding Title}"
+                                   Location="{Binding Location,Mode=TwoWay}"
                                    VerticalAlignment="Center"
                                    Output="{Binding Output}">
                         <controls:Node.Styles>

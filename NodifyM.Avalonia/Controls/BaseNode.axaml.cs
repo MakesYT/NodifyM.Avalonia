@@ -55,7 +55,7 @@ public class BaseNode : ContentControl
         {
             return;
         }
-        RaiseEvent(new NodeLocationEventArgs(((BaseNodeViewModel)DataContext).Location,this,LocationChangedEvent));
+        RaiseEvent(new NodeLocationEventArgs(Location,this,LocationChangedEvent));
 
     }
 
@@ -99,8 +99,8 @@ public class BaseNode : ContentControl
         lastMousePosition = e.GetPosition((Visual)relativeTo);
 
         // Debug.WriteLine($"记录当前坐标X:{lastMousePosition.X} Y:{lastMousePosition.Y}");
-        _startOffsetX = ((BaseNodeViewModel)DataContext).Location.X;
-        _startOffsetY = ((BaseNodeViewModel)DataContext).Location.Y;
+        _startOffsetX = Location.X;
+        _startOffsetY = Location.Y;
         e.Handled = true;
     }
 
@@ -117,13 +117,13 @@ public class BaseNode : ContentControl
 
         // var currentPoint = e.GetCurrentPoint(this);
         //  Debug.WriteLine($"停止拖动坐标X:{OffsetX} Y:{OffsetY}");
-        RaiseEvent(new NodeLocationEventArgs(((BaseNodeViewModel)DataContext).Location,this,LocationChangedEvent,true));
+        RaiseEvent(new NodeLocationEventArgs(Location,this,LocationChangedEvent,true));
     }
 
     protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
     {
         base.OnPointerCaptureLost(e);
-        RaiseEvent(new NodeLocationEventArgs(((BaseNodeViewModel)DataContext).Location,this,LocationChangedEvent,true));
+        RaiseEvent(new NodeLocationEventArgs(Location,this,LocationChangedEvent,true));
         _editor.ClearAlignmentLine();
     }
 
@@ -141,12 +141,12 @@ public class BaseNode : ContentControl
         if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
         {
             _editor.ClearAlignmentLine();
-            ((BaseNodeViewModel)DataContext).Location = new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY);
+            Location = new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY);
         }
         else
-            ((BaseNodeViewModel)DataContext).Location = _editor.TryAlignNode(this,
+            Location = _editor.TryAlignNode(this,
                 new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY));
 
-        RaiseEvent(new NodeLocationEventArgs(((BaseNodeViewModel)DataContext).Location,this,LocationChangedEvent));
+        RaiseEvent(new NodeLocationEventArgs(Location,this,LocationChangedEvent));
     }
 }
