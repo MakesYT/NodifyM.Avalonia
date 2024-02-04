@@ -104,7 +104,7 @@ public class Node : BaseNode
         set => SetValue(FooterTemplateProperty, value);
     }
 
-    public DataTemplate HeaderTemplate
+    public IDataTemplate HeaderTemplate
     {
         get => (DataTemplate)GetValue(HeaderTemplateProperty);
         set => SetValue(HeaderTemplateProperty, value);
@@ -113,7 +113,7 @@ public class Node : BaseNode
     /// <summary>
     /// Gets or sets the template used to display the content of the control's <see cref="Input"/> connectors.
     /// </summary>
-    public DataTemplate InputConnectorTemplate
+    public IDataTemplate InputConnectorTemplate
     {
         get => (DataTemplate)GetValue(InputConnectorTemplateProperty);
         set => SetValue(InputConnectorTemplateProperty, value);
@@ -122,7 +122,7 @@ public class Node : BaseNode
     /// <summary>
     /// Gets or sets the template used to display the content of the control's <see cref="Output"/> connectors.
     /// </summary>
-    public DataTemplate OutputConnectorTemplate
+    public IDataTemplate OutputConnectorTemplate
     {
         get => (DataTemplate)GetValue(OutputConnectorTemplateProperty);
         set => SetValue(OutputConnectorTemplateProperty, value);
