@@ -48,6 +48,9 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.10
+- Fixed Node Header/Input/OutputTemplate allow use IDataTemplate
+- Added Avalonia.Diagnostics Condition
 ### 1.0.9
 - Allows not to use the built-in ViewModelBase
 - Fixed ViewTranslateTransform and AlignmentLine exceptions when multiple NodifyEditor
