@@ -48,6 +48,9 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.11
+- Added automatic adaptation to display all Nodes when NodifyEditor is initialized
+- Optimize child node search
 ### 1.0.10
 - Fixed Node Header/Input/OutputTemplate allow use IDataTemplate
 - Added Avalonia.Diagnostics Condition

@@ -1,4 +1,5 @@
-﻿using Avalonia;
+﻿using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.VisualTree;
 
@@ -36,13 +37,13 @@ namespace NodifyM.Avalonia.Helpers
         public static T? GetChildOfType<T>(this Control control, string? name = null)
             where T : Control
         {
-            var stack = new Stack<Control>();
-            stack.Push(control);
+            var queue = new Queue<Control>();
+            queue.Enqueue(control);
 
-            while (stack.Count > 0)
+            while (queue.Count > 0)
             {
-                var currentControl = stack.Pop();
-        
+                var currentControl = queue.Dequeue();
+
                 if (string.IsNullOrEmpty(name) && currentControl is T targetControl)
                 {
                     return targetControl;
@@ -60,8 +61,8 @@ namespace NodifyM.Avalonia.Helpers
                                 return targetChild;
                             }
                         }
-                
-                        stack.Push(childControl);
+
+                        queue.Enqueue(childControl);
                     }
                 }
             }

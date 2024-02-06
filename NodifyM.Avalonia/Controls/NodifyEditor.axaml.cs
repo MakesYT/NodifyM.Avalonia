@@ -197,10 +197,60 @@ public class NodifyEditor : SelectingItemsControl
         RenderTransform = renderTransform;
         AutoPanningTimer=new DispatcherTimer(TimeSpan.FromMilliseconds(10), DispatcherPriority.Normal,HandleAutoPanning);
         AutoPanningTimer.Stop();
-        ViewTranslateTransform = new TranslateTransform();
+        
         AlignmentLine = new AvaloniaList<object>();
+        
     }
 
+    protected override void OnLoaded(RoutedEventArgs e)
+    {
+        base.OnLoaded(e);
+        var T = 0.0d;
+        var L = 0.0d;
+        var B = this.Bounds.Height;
+        var R = this.Bounds.Width;
+        var childOfType = this.GetChildOfType<Canvas>("NodeItemsPresenter");
+        foreach (var logicalChild in childOfType.GetVisualChildren())
+        {
+            var logicalChildLogicalChild = ((BaseNode)logicalChild.GetVisualChildren().First());
+            var location = logicalChildLogicalChild.Location;
+            if (location.Y< L)
+            {
+                L = location.Y;
+            }
+            if (location.X < T)
+            {
+                T = location.X;
+            }
+            if (location.Y+ logicalChildLogicalChild.Bounds.Height> B)
+            {
+                B = location.Y+ logicalChildLogicalChild.Bounds.Height;
+            }
+            if (location.X + logicalChildLogicalChild.Bounds.Width > R)
+            {
+                R = location.X + logicalChildLogicalChild.Bounds.Width;
+            }
+            
+        }
+        ViewTranslateTransform = new TranslateTransform(-L,-T);
+        OffsetY = -T;
+        OffsetX = -L;
+        if (1/(Math.Abs(T - B) / _initHeight)<ScaleTransform.ScaleY)
+        {
+            ScaleTransform.ScaleY = 1/(Math.Abs(T - B) / _initHeight);
+            ScaleTransform.ScaleX = 1/(Math.Abs(T - B) / _initHeight);
+        }
+        if (1/(Math.Abs(L - R) / _initWeight)<ScaleTransform.ScaleY)
+        {
+            ScaleTransform.ScaleY =  1/(Math.Abs(L - R) / _initWeight);
+            ScaleTransform.ScaleX =  1/(Math.Abs(L - R) / _initWeight);
+        }
+        Zoom = ScaleTransform.ScaleY;
+        _nowScale = Zoom;
+        Width = _initWeight / Zoom;
+        Height = _initHeight /  Zoom;
+        
+    }
 
 
     /// <summary>

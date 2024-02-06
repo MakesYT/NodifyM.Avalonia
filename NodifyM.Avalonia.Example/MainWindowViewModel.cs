@@ -29,7 +29,7 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
         Nodes  =new(){
                 new NodeViewModelBase()
                 {
-                    Location = new Point(400, 100),
+                    Location = new Point(400, 2000),
                     Title = "Node 1",
                     Input = new ObservableCollection<ConnectorViewModelBase>
                     {
@@ -49,6 +49,7 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
                 new NodeViewModelBase()
                 {
                     Title = "Node 2",
+                    Location = new Point(-100,-100),
                     Input = new ObservableCollection<ConnectorViewModelBase>
                     {
                         new ConnectorViewModelBase()
