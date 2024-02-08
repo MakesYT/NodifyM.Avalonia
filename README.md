@@ -48,6 +48,9 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.12
+- Fixed the adaptive node layout calculation error
+- Added node centerline alignment
 ### 1.0.11
 - Added automatic adaptation to display all Nodes when NodifyEditor is initialized
 - Optimize child node search

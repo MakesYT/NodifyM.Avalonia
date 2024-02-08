@@ -207,20 +207,20 @@ public class NodifyEditor : SelectingItemsControl
         base.OnLoaded(e);
         var T = 0.0d;
         var L = 0.0d;
-        var B = this.Bounds.Height;
-        var R = this.Bounds.Width;
+        var B = 0d;
+        var R = 0d;
         var childOfType = this.GetChildOfType<Canvas>("NodeItemsPresenter");
         foreach (var logicalChild in childOfType.GetVisualChildren())
         {
             var logicalChildLogicalChild = ((BaseNode)logicalChild.GetVisualChildren().First());
             var location = logicalChildLogicalChild.Location;
-            if (location.Y< L)
+            if (location.Y< T)
             {
-                L = location.Y;
+                T = location.Y;
             }
-            if (location.X < T)
+            if (location.X < L)
             {
-                T = location.X;
+                L = location.X;
             }
             if (location.Y+ logicalChildLogicalChild.Bounds.Height> B)
             {
@@ -559,7 +559,30 @@ public class NodifyEditor : SelectingItemsControl
                     : new AlignmentLineViewModel(new Point(x, control.Location.Y+movingNodeHeight),
                         new Point(x, nodeLocationY)));
             }
-            
+            //竖中
+            var intervalX5 = Math.Abs((nodeLocationX + nodeWidth/2) - (x + movingNodeWidth/2));
+            if (intervalX5 <= nowIntervalX)
+            {
+                x = (nodeLocationX + nodeWidth/2)-movingNodeWidth/2;
+                nowIntervalX = intervalX5;
+                AlignmentLine.Add(y <= nodeLocationY
+                    ? new AlignmentLineViewModel(new Point(x+movingNodeWidth/2, control.Location.Y), 
+                        new Point(x+movingNodeWidth/2, nodeLocationY+nodeHeight))
+                    : new AlignmentLineViewModel(new Point(x+movingNodeWidth/2, control.Location.Y+movingNodeHeight),
+                        new Point(x+movingNodeWidth/2, nodeLocationY)));
+            }
+            // 横中
+            var intervalY5 = Math.Abs(nodeLocationY + nodeHeight/2 - y-movingNodeHeight/2);
+            if (intervalY5 <= nowIntervalY)
+            {
+               
+                y = nodeLocationY + nodeHeight/2-movingNodeHeight/2;
+                nowIntervalY = intervalY5;
+                AlignmentLine.Add(x <= nodeLocationX
+                    ? new AlignmentLineViewModel(new Point(nodeLocationX + nodeWidth, y+movingNodeHeight/2 ), new Point(control.Location.X, y +movingNodeHeight/2))
+                    : new AlignmentLineViewModel(new Point(nodeLocationX, y+movingNodeHeight/2 ),
+                        new Point(control.Location.X + movingNodeWidth, y+movingNodeHeight/2 )));
+            }
 
         }
 
@@ -571,7 +594,7 @@ public class NodifyEditor : SelectingItemsControl
                 if (alignmentLineViewModel.Start.X.Equals(alignmentLineViewModel.End.X))
                 {
                     //竖向
-                    if (!alignmentLineViewModel.Start.X.Equals(x)&&!alignmentLineViewModel.Start.X.Equals(x+movingNodeWidth))
+                    if (!alignmentLineViewModel.Start.X.Equals(x)&&!alignmentLineViewModel.Start.X.Equals(x+movingNodeWidth)&&!alignmentLineViewModel.Start.X.Equals(x+movingNodeWidth/2))
                     {
                         AlignmentLine.RemoveAt(index);
                     }
@@ -580,7 +603,7 @@ public class NodifyEditor : SelectingItemsControl
                 if (alignmentLineViewModel.Start.Y.Equals(alignmentLineViewModel.End.Y))
                 {
                     //横向
-                    if (!alignmentLineViewModel.Start.Y.Equals(y)&&!alignmentLineViewModel.Start.Y.Equals(y+movingNodeHeight))
+                    if (!alignmentLineViewModel.Start.Y.Equals(y)&&!alignmentLineViewModel.Start.Y.Equals(y+movingNodeHeight)&&!alignmentLineViewModel.Start.Y.Equals(y+movingNodeHeight/2))
                     {
                         AlignmentLine.RemoveAt(index);
                     }
