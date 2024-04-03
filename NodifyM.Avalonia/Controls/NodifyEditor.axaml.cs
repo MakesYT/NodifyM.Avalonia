@@ -179,7 +179,22 @@ public class NodifyEditor : SelectingItemsControl
         AddHandler(BaseNode.LocationChangedEvent,new NodeLocationEventHandler( OnNodeLocationChanged));
         AddHandler(BaseConnection.DisconnectEvent, new ConnectionEventHandler(OnRemoveConnection));
     }
-
+    public void SelectItem(BaseNode node)
+    {
+        var visual = this.GetChildOfType<Canvas>("NodeItemsPresenter").Children;
+        foreach (var visualChild in visual)
+        {
+            visualChild.ZIndex = 0;
+            if (visualChild.GetChildOfType<BaseNode>() is BaseNode n)
+            {
+                n.IsSelected = false;
+            }
+            
+        }
+        node.IsSelected = true;
+        node.GetVisualParent().ZIndex = 1;
+        SelectedItem = node.DataContext;
+    }
     
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -281,6 +296,7 @@ public class NodifyEditor : SelectingItemsControl
                 n.IsSelected = false;
             }
         }
+        SelectedItem=null;
         if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
         isDragging = true;
         lastMousePosition = e.GetPosition(this);

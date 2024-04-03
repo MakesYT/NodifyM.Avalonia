@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using NodifyM.Avalonia.Events;
 using NodifyM.Avalonia.Helpers;
 using NodifyM.Avalonia.ViewModelBase;
@@ -203,6 +204,8 @@ public class Connector : ContentControl
             }
             else
             {
+                Editor.SelectItem(this.GetParentOfType<BaseNode>());
+                
                 UpdateAnchor();
                 OnConnectorDragStarted();
             }

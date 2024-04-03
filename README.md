@@ -48,6 +48,9 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.13
+- Fixed SelectedNode Property
+- Added the ability to select and drag the Node corresponding to the Connector
 ### 1.0.12
 - Fixed the adaptive node layout calculation error
 - Added node centerline alignment

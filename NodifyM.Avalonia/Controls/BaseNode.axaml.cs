@@ -78,19 +78,9 @@ public class BaseNode : ContentControl
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
     {
         e.GetCurrentPoint(this).Pointer.Capture(this);
-        var visualParent = this.GetVisualParent();
-        var parent = visualParent.GetVisualParent().GetVisualChildren();
-        foreach (var visual in parent)
-        {
-            visual.ZIndex = 0;
-            var first = visual.GetVisualChildren().First();
-            if (first is BaseNode baseNode)
-            {
-                baseNode.IsSelected = false;
-            }
-        }
-        visualParent.ZIndex = 1;
-        this.IsSelected = true;
+        
+        
+        _editor.SelectItem(this);
         if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
         // 启动拖动
         isDragging = true;
