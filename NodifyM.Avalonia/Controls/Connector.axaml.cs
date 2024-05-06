@@ -1,16 +1,12 @@
-﻿using System.Diagnostics;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.VisualTree;
 using NodifyM.Avalonia.Events;
 using NodifyM.Avalonia.Helpers;
-using NodifyM.Avalonia.ViewModelBase;
 
 namespace NodifyM.Avalonia.Controls;
 
@@ -20,11 +16,21 @@ public class Connector : ContentControl
 
     #region Routed Events
 
-    public static readonly RoutedEvent PendingConnectionStartedEvent = RoutedEvent.Register<Connector,PendingConnectionEventArgs>(nameof(PendingConnectionStarted),RoutingStrategies.Bubble);
-    public static readonly RoutedEvent PendingConnectionCompletedEvent = RoutedEvent.Register<Connector,PendingConnectionEventArgs>(nameof(PendingConnectionCompleted),RoutingStrategies.Bubble);
-    public static readonly RoutedEvent PendingConnectionDragEvent = RoutedEvent.Register<Connector,PendingConnectionEventArgs>(nameof(PendingConnectionDrag),RoutingStrategies.Bubble);
-    public static readonly RoutedEvent DisconnectEvent = RoutedEvent.Register<Connector,PendingConnectionEventArgs>(nameof(Disconnect),RoutingStrategies.Bubble);
-        
+    public static readonly RoutedEvent PendingConnectionStartedEvent =
+        RoutedEvent.Register<Connector, PendingConnectionEventArgs>(nameof(PendingConnectionStarted),
+            RoutingStrategies.Bubble);
+
+    public static readonly RoutedEvent PendingConnectionCompletedEvent =
+        RoutedEvent.Register<Connector, PendingConnectionEventArgs>(nameof(PendingConnectionCompleted),
+            RoutingStrategies.Bubble);
+
+    public static readonly RoutedEvent PendingConnectionDragEvent =
+        RoutedEvent.Register<Connector, PendingConnectionEventArgs>(nameof(PendingConnectionDrag),
+            RoutingStrategies.Bubble);
+
+    public static readonly RoutedEvent DisconnectEvent =
+        RoutedEvent.Register<Connector, PendingConnectionEventArgs>(nameof(Disconnect), RoutingStrategies.Bubble);
+
 
     /// <summary>Triggered by the <see cref="Connector.Connect"/> gesture.</summary>
     public event PendingConnectionEventHandler PendingConnectionStarted
@@ -60,12 +66,18 @@ public class Connector : ContentControl
 
     #region Dependency Properties
 
-       
-    public static readonly StyledProperty<Point> AnchorProperty = AvaloniaProperty.Register<Connector, Point>(nameof(Anchor), BoxValue.Point);
-    public static readonly StyledProperty<bool> IsConnectedProperty = AvaloniaProperty.Register<Connector, bool>(nameof(Anchor), BoxValue.False);
-    public static readonly AvaloniaProperty<ICommand> DisconnectCommandProperty = AvaloniaProperty.Register<Connector, ICommand>(nameof(DisconnectCommand));
-    public static readonly AvaloniaProperty<bool> IsPendingConnectionProperty = AvaloniaProperty.Register<Connector, bool>(nameof(IsPendingConnection), BoxValue.False);
-    
+    public static readonly StyledProperty<Point> AnchorProperty =
+        AvaloniaProperty.Register<Connector, Point>(nameof(Anchor), BoxValue.Point);
+
+    public static readonly StyledProperty<bool> IsConnectedProperty =
+        AvaloniaProperty.Register<Connector, bool>(nameof(Anchor), BoxValue.False);
+
+    public static readonly AvaloniaProperty<ICommand> DisconnectCommandProperty =
+        AvaloniaProperty.Register<Connector, ICommand>(nameof(DisconnectCommand));
+
+    public static readonly AvaloniaProperty<bool> IsPendingConnectionProperty =
+        AvaloniaProperty.Register<Connector, bool>(nameof(IsPendingConnection), BoxValue.False);
+
 
     /// <summary>
     /// Gets the location where <see cref="Connection"/>s can be attached to. 
@@ -106,6 +118,7 @@ public class Connector : ContentControl
     }
 
     #endregion
+
     protected internal NodifyEditor? Editor { get; private set; }
     protected Control? Thumb { get; private set; }
     protected BaseNode? Container { get; private set; }
@@ -120,17 +133,21 @@ public class Connector : ContentControl
     /// Gets the <see cref="NodifyEditor"/> that owns this <see cref="Container"/>.
     /// </summary>
     private Point _lastUpdatedContainerPosition;
+
     private Point _thumbCenter;
+
     static Connector()
     {
         //DefaultStyleKeyProperty.OverrideMetadata(typeof(Connector), new FrameworkPropertyMetadata(typeof(Connector)));
         FocusableProperty.OverrideMetadata(typeof(Connector), new StyledPropertyMetadata<bool>(BoxValue.True));
     }
+
     private void OnConnectorLoaded()
         => TrySetAnchorUpdateEvents(true);
 
     private void OnConnectorUnloaded()
         => TrySetAnchorUpdateEvents(false);
+
     private void TrySetAnchorUpdateEvents(bool value)
     {
         if (Container != null && Editor != null)
@@ -142,17 +159,20 @@ public class Connector : ContentControl
                 Container.SizeChanged += OnContainerSizeChanged;
             }
             // If events are already hooked and we are asked to unsubscribe
-            else if ( !value)
+            else if (!value)
             {
                 Container.LocationChanged -= OnLocationChanged;
                 Container.SizeChanged -= OnContainerSizeChanged;
             }
         }
     }
+
     private void OnContainerSizeChanged(object sender, SizeChangedEventArgs e)
         => UpdateAnchor(Container!.Location);
+
     private void OnLocationChanged(object sender, RoutedEventArgs e)
         => UpdateAnchor(Container!.Location);
+
     public void UpdateAnchor()
     {
         if (Container != null)
@@ -160,39 +180,40 @@ public class Connector : ContentControl
             UpdateAnchor(Container.Location);
         }
     }
+
     /// <summary>
     /// Updates the <see cref="Anchor"/> and applies optimizations if needed based on <see cref="EnableOptimizations"/> flag
     /// </summary>
     /// <param name="location"></param>
-    
     protected void UpdateAnchor(Point location)
     {
         _lastUpdatedContainerPosition = location;
-        if ( Container != null)
+        if (Container != null)
         {
             Size containerMargin = (Size)Container.Bounds.Size - (Size)Container.DesiredSize;
-            Point relativeLocation = Thumb.TranslatePoint(new Point((Thumb.Bounds.Width - containerMargin.Width)/2,
-                (Thumb.Bounds.Height -containerMargin.Height)/2), Container)!.Value;
+            Point relativeLocation = Thumb.TranslatePoint(new Point((Thumb.Bounds.Width - containerMargin.Width) / 2,
+                (Thumb.Bounds.Height - containerMargin.Height) / 2), Container)!.Value;
             Anchor = new Point(location.X + relativeLocation.X, location.Y + relativeLocation.Y);
         }
     }
-  protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
         Container = this.GetParentOfType<BaseNode>();
-        
-        Editor =  this.GetParentOfType<NodifyEditor>();
+
+        Editor = this.GetParentOfType<NodifyEditor>();
         Thumb = this.GetChildOfType<Control>("PART_Connector");
-        
     }
-  
+
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        e.GetCurrentPoint(this).Pointer.Capture(this);
         base.OnPointerPressed(e);
+        e.GetCurrentPoint(this)
+         .Pointer.Capture(this);
         e.Handled = true;
         var currentPoint = e.GetCurrentPoint(this);
-        if (currentPoint.Properties.IsLeftButtonPressed&& e.KeyModifiers.HasFlag(KeyModifiers.Alt))
+        if (currentPoint.Properties.IsLeftButtonPressed && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
             OnDisconnect();
         }
@@ -205,21 +226,20 @@ public class Connector : ContentControl
             else
             {
                 Editor.SelectItem(this.GetParentOfType<BaseNode>());
-                
+
                 UpdateAnchor();
                 OnConnectorDragStarted();
             }
         }
     }
 
-  
 
     protected override void OnPointerMoved(PointerEventArgs e)
     {
         base.OnPointerMoved(e);
         if (IsPendingConnection)
         {
-            Vector offset = e.GetPosition(Thumb)-_thumbCenter;
+            Vector offset = e.GetPosition(Thumb) - _thumbCenter;
             OnConnectorDrag(offset);
         }
     }
@@ -227,25 +247,27 @@ public class Connector : ContentControl
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         base.OnPointerReleased(e);
-        Vector offset = e.GetPosition(Thumb)-_thumbCenter;
+        Vector offset = e.GetPosition(Thumb) - _thumbCenter;
         var point = new Point(Anchor.X + offset.X, Anchor.Y + offset.Y);
         var currentPoint = e.GetCurrentPoint(this);
         e.Handled = EnableStickyConnections && IsPendingConnection;
-        if (!EnableStickyConnections&&e.InitialPressMouseButton.HasFlag( MouseButton.Left))
+        if (!EnableStickyConnections && e.InitialPressMouseButton.HasFlag(MouseButton.Left))
         {
             OnConnectorDragCompleted(point);
             e.Handled = true;
         }
-        else if (AllowPendingConnectionCancellation && IsPendingConnection&&(currentPoint.Properties.IsRightButtonPressed))
+        else if (AllowPendingConnectionCancellation && IsPendingConnection &&
+                 (currentPoint.Properties.IsRightButtonPressed))
         {
             // Cancel pending connection
-            OnConnectorDragCompleted(point,true);
-           // ReleaseMouseCapture();
+            OnConnectorDragCompleted(point, true);
+            // ReleaseMouseCapture();
 
             // Don't show context menu
             e.Handled = true;
         }
     }
+
     protected override void OnKeyUp(KeyEventArgs e)
     {
         if (AllowPendingConnectionCancellation && e.Key.HasFlag(global::Avalonia.Input.Key.Escape))
@@ -254,6 +276,7 @@ public class Connector : ContentControl
             OnConnectorDragCompleted(cancel: true);
         }
     }
+
     protected override void OnPointerCaptureLost(PointerCaptureLostEventArgs e)
     {
         base.OnPointerCaptureLost(e);
@@ -262,7 +285,6 @@ public class Connector : ContentControl
 
     protected virtual void OnDisconnect()
     {
-        
         if (IsConnected && !IsPendingConnection)
         {
             object? connector = DataContext;
@@ -282,6 +304,7 @@ public class Connector : ContentControl
             }
         }
     }
+
     protected virtual void OnConnectorDrag(Vector offset)
     {
         var args = new PendingConnectionEventArgs(DataContext)
@@ -302,6 +325,7 @@ public class Connector : ContentControl
         {
             _thumbCenter = new Point(Thumb.Bounds.Width / 2, Thumb.Bounds.Height / 2);
         }
+
         var args = new PendingConnectionEventArgs(DataContext)
         {
             RoutedEvent = PendingConnectionStartedEvent,
@@ -311,15 +335,16 @@ public class Connector : ContentControl
 
         RaiseEvent(args);
         IsPendingConnection = !args.Canceled;
-
-        
     }
 
-    protected virtual void OnConnectorDragCompleted(Point? point=null,bool cancel = false)
+    protected virtual void OnConnectorDragCompleted(Point? point = null, bool cancel = false)
     {
         if (IsPendingConnection)
         {
-            Control? elem = (Editor != null&&point.HasValue) ? PendingConnection.GetPotentialConnector(Editor, PendingConnection.GetAllowOnlyConnectorsAttached(Editor),point.Value) : null;
+            Control? elem = (Editor != null && point.HasValue)
+                ? PendingConnection.GetPotentialConnector(Editor,
+                    PendingConnection.GetAllowOnlyConnectorsAttached(Editor), point.Value)
+                : null;
 
             var args = new PendingConnectionEventArgs(DataContext)
             {
@@ -340,12 +365,11 @@ public class Connector : ContentControl
         base.OnLoaded(e);
         UpdateAnchor();
         OnConnectorLoaded();
-        
     }
 
     protected override void OnUnloaded(RoutedEventArgs e)
     {
         base.OnUnloaded(e);
-       OnConnectorUnloaded();
+        OnConnectorUnloaded();
     }
 }
