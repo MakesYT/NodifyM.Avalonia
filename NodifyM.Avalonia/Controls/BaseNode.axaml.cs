@@ -44,6 +44,11 @@ public class BaseNode : ContentControl
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         base.OnPointerReleased(e);
+        if (e.Handled)
+        {
+            return;
+        }
+
         if (!isDragging) return;
         // 停止拖动
         isDragging = false;
@@ -59,11 +64,15 @@ public class BaseNode : ContentControl
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
+        if (e.Handled)
+        {
+            return;
+        }
+
         _editor.SelectItem(this);
         if (!e.GetCurrentPoint(this)
-              .Properties.IsLeftButtonPressed) return;
-        e.GetCurrentPoint(this)
-         .Pointer.Capture(this);
+                .Properties.IsLeftButtonPressed) return;
+        e.GetCurrentPoint(this).Pointer.Capture(this);
         // 启动拖动
         isDragging = true;
         // 记录当前坐标
@@ -78,9 +87,14 @@ public class BaseNode : ContentControl
     protected override void OnPointerMoved(PointerEventArgs e)
     {
         base.OnPointerMoved(e);
+        if (e.Handled)
+        {
+            return;
+        }
+
         if (!e.GetCurrentPoint(((Visual)this.GetLogicalParent()).GetVisualParent())
-              .Properties
-              .IsLeftButtonPressed) return;
+                .Properties
+                .IsLeftButtonPressed) return;
 
         // 如果没有启动拖动，则不执行
         if (!isDragging) return;

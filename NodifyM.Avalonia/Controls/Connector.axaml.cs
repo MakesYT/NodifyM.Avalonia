@@ -209,22 +209,29 @@ public class Connector : ContentControl
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-        e.GetCurrentPoint(this)
-         .Pointer.Capture(this);
-        e.Handled = true;
+
         var currentPoint = e.GetCurrentPoint(this);
         if (currentPoint.Properties.IsLeftButtonPressed && e.KeyModifiers.HasFlag(KeyModifiers.Alt))
         {
+            e.GetCurrentPoint(this)
+                .Pointer.Capture(this);
+            e.Handled = true;
             OnDisconnect();
         }
         else if (currentPoint.Properties.IsLeftButtonPressed)
         {
             if (EnableStickyConnections && IsPendingConnection)
             {
+                e.GetCurrentPoint(this)
+                    .Pointer.Capture(this);
+                e.Handled = true;
                 OnConnectorDragCompleted(e.GetPosition(Editor));
             }
             else
             {
+                e.GetCurrentPoint(this)
+                    .Pointer.Capture(this);
+                e.Handled = true;
                 Editor.SelectItem(this.GetParentOfType<BaseNode>());
 
                 UpdateAnchor();
