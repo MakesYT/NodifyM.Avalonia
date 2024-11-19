@@ -9,6 +9,6 @@ public partial class NodeViewModelBase : BaseNodeViewModel
 
     [ObservableProperty] private string _title;
     [ObservableProperty] private string _footer;
-    [ObservableProperty] private ObservableCollection<ConnectorViewModelBase> input = new();
-    [ObservableProperty] private ObservableCollection<ConnectorViewModelBase> output = new();
+    [ObservableProperty] private ObservableCollection<object> input = new();
+    [ObservableProperty] private ObservableCollection<object> output = new();
 }

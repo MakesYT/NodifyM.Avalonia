@@ -64,9 +64,23 @@ public class BaseNode : ContentControl
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
+        
         if (e.Handled)
         {
             return;
+        }
+
+        if (e.Source is Control control)
+        {
+            if (control is ComboBox)
+            {
+                return;
+            }
+
+            if (control.TemplatedParent is ComboBox)
+            {
+                return;
+            }
         }
 
         _editor.SelectItem(this);

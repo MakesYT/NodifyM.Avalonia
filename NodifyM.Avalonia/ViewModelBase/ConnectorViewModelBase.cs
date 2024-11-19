@@ -17,5 +17,7 @@ public partial class ConnectorViewModelBase : ObservableObject
     private string _title;
     [ObservableProperty]
     private bool _isConnected;
+    [ObservableProperty]
+    private bool _canConnect;
     public ConnectorFlow? Flow { get;  set; }
 }

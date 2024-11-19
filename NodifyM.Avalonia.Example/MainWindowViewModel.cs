@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.Input;
 using NodifyM.Avalonia.ViewModelBase;
@@ -27,16 +28,25 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
         Connections.Add(new ConnectionViewModelBase(this,output1,knot1.Connector,"Test"));
         Connections.Add(new ConnectionViewModelBase(this,knot1.Connector,input1));
         Nodes  =new(){
+                
                 new NodeViewModelBase()
                 {
                     Location = new Point(400, 2000),
                     Title = "Node 1",
-                    Input = new ObservableCollection<ConnectorViewModelBase>
+                    Input = new ObservableCollection<object>
                     {
                         input1,
-                       
+                       new ComboBox()
+                       {
+                            ItemsSource = new ObservableCollection<object>
+                            {
+                                 "Item 1",
+                                 "Item 2",
+                                 "Item 3"
+                                 }
+                       }
                     },
-                    Output = new ObservableCollection<ConnectorViewModelBase>
+                    Output = new ObservableCollection<object>
                     {
                        
                         new ConnectorViewModelBase()
@@ -50,7 +60,7 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
                 {
                     Title = "Node 2",
                     Location = new Point(-100,-100),
-                    Input = new ObservableCollection<ConnectorViewModelBase>
+                    Input = new ObservableCollection<object>
                     {
                         new ConnectorViewModelBase()
                         {
@@ -63,7 +73,7 @@ public partial class MainWindowViewModel : NodifyEditorViewModelBase{
                             Title = "Input 2"
                         }
                     },
-                    Output = new ObservableCollection<ConnectorViewModelBase>
+                    Output = new ObservableCollection<object>
                     {
                         output1,
                         new ConnectorViewModelBase()
