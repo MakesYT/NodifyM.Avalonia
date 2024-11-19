@@ -40,6 +40,8 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
  - Hold `Alt` and `Click` Connector -> Remove all the Connections on the Connector
 
 ## Notice
+1. ViewModelBase is for reference only, you don't need to use it, there are binding methods in Example's AXAML code.
+
 ### Some known problems
 1. Do not use `Mode=OneWayToSource` when you have multiple Nodify bound to the same ViewModel, this is a bug from [Avalonia](https://github.com/AvaloniaUI/Avalonia/issues/4438)
 
@@ -48,6 +50,9 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
 #### You can git clone the project and run `NodifyM.Avalonia.Example`
 
 ## Changelog
+### 1.0.16
+- Optimization No longer forces connector type
+- Fix If the connector is a Combobox can't click to expand it
 
 ### 1.0.15
 
