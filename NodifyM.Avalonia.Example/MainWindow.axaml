@@ -79,6 +79,11 @@
                                 <SolidColorBrush Color="Red"
                                                  Opacity="0.5" />
                             </controls:Connection.Stroke>
+                            <controls:Connection.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="_Delete" />
+                                </ContextMenu>
+                            </controls:Connection.ContextMenu>
                         </controls:Connection>
                     </Grid>
 
