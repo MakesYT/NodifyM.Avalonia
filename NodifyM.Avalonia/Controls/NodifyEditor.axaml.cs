@@ -287,6 +287,10 @@ public class NodifyEditor : SelectingItemsControl
     
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        if (e.Handled)
+        {
+            return;
+        }
         var visual = ((Control)sender).GetLogicalChildren();
         foreach (var visualChild in visual)
         {
@@ -319,6 +323,10 @@ public class NodifyEditor : SelectingItemsControl
 
     private void OnPointerMoved(object? sender, PointerEventArgs e)
     {
+        if (e.Handled)
+        {
+            return;
+        }
         if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
         
         // 如果没有启动拖动，则不执行

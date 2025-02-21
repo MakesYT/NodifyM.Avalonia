@@ -63,7 +63,7 @@ public class BaseNode : ContentControl
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
-        base.OnPointerPressed(e);
+       // base.OnPointerPressed(e);
         
         if (e.Handled)
         {
@@ -76,8 +76,7 @@ public class BaseNode : ContentControl
             {
                 return;
             }
-
-            if (control.TemplatedParent is ComboBox)
+            if (control.GetParentOfType<ComboBox>()is not null)
             {
                 return;
             }
@@ -100,7 +99,7 @@ public class BaseNode : ContentControl
 
     protected override void OnPointerMoved(PointerEventArgs e)
     {
-        base.OnPointerMoved(e);
+        
         if (e.Handled)
         {
             return;
@@ -126,6 +125,7 @@ public class BaseNode : ContentControl
                 new Point((offset.X + _startOffsetX), offset.Y + _startOffsetY));
 
         RaiseEvent(new NodeLocationEventArgs(Location, this, LocationChangedEvent));
+        e.Handled = true;
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
