@@ -19,9 +19,9 @@ This project is a refactoring of [Nodify](https://github.com/miroiu/nodify) on t
    - auto align Node
    - display text on Connection
  - **Nonsupport**
-   - Select multiple nodes
+   - None
  - **Will be supported in the future**
-   - none
+   - Select multiple nodes
 ## Usage
 ### NodifyEditor
  - `Press` and `Hold` -> Move the all show items
